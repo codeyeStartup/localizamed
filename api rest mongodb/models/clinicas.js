@@ -1,0 +1,81 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const UserSchema = new Schema({
+  nome:{
+    type: String,
+    required: true,
+    maxlength: 50
+  },
+  razao_social:{
+    type: String,
+    required: true,
+    maxlength: 80
+  },
+  email:{
+    type: String,
+    required: true,
+    maxlength: 80
+  },
+  senha:{
+    type: String,
+    required: true,
+    maxlength: 100
+  },
+  cnpj:{
+    type: String,
+    required: true,
+    maxlength: 14
+  },
+  latitude:{
+    type:Number,
+    //revisa essa merda
+  },
+  longitude:{
+    type:Number
+    //essa aqui tambem
+  },
+  descricao:{
+    type: String,
+    required: true,
+    maxlength: 300
+  },
+  logradouro:{
+    type: String,
+    required: true,
+    maxlength: 50
+  },
+  bairro:{
+    type: String,
+    required: true,
+    maxlength: 50
+  },
+  uf:{
+    type: String,
+    //required: true,
+    maxlength: 20
+  },
+  fone_1:{
+    type: String,
+    required: true,
+    maxlength: 15
+  },
+  fone_2:{
+    type: String,
+    maxlength: 15
+  },
+  caminho_foto:{
+    type: String,
+    required: true,
+    maxlength: 100
+  }, 
+  
+}, 
+    //timestamps fornece a data de cadastro e atualização
+  {
+    timestamps: true 
+  }
+);
+
+module.exports = mongoose.model('clinicas', UserSchema);
+
