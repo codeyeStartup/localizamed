@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:localizamed_app/components/tab_medico.dart';
+import 'package:localizamed_app/models/medicos_get.dart';
 
-class CardMedico extends StatefulWidget {
+class CardMedicoScreen extends StatefulWidget {
   @override
-  _LauraState createState() => _LauraState();
+  _CardMedicoScreenState createState() => _CardMedicoScreenState();
 }
 
-class _LauraState extends State<CardMedico> {
+class _CardMedicoScreenState extends State<CardMedicoScreen> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -14,29 +16,31 @@ class _LauraState extends State<CardMedico> {
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: size.width/ 2.9, top: size.height/ 60),
-                child: Row(
-                  children: <Widget>[
-                    Text("LocalizaMed",
-                        style: TextStyle(
-                          fontSize: size.width / 20,
-                        )),
-                    Image(
-                      image: AssetImage('images/pin.png'),
-                      width: size.width / 20,
-                      height: size.height / 20,
+          body: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: size.width/ 2.9, top: size.height/ 60),
+                    child: Row(
+                      children: <Widget>[
+                        Text("LocalizaMed",
+                            style: TextStyle(
+                              fontSize: size.width / 20,
+                            )),
+                        Image(
+                          image: AssetImage('images/pinred.png'),
+                          width: size.width / 20,
+                          height: size.height / 20,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  MedCard(),
+                ],
               ),
-              MedCard(),
-            ],
-          ),
-        )
+            ),
+          )
       ),
     );
   }
