@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/screens/clinica_painel.dart';
 import 'package:localizamed_app/screens/medico_painel.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -32,10 +33,7 @@ class _BottomMenuState extends State<BottomMenu> {
       style: optionStyle,
     ),
     CardMedicoScreen(),
-    Text(
-      'Index 4: School',
-      style: optionStyle,
-    ),
+    ClinicaCardScreen(),
   ];
 
   void _onItemTapped(int index) {

@@ -17,22 +17,24 @@ const UserSchema = new Schema({
     required: true,
     maxlength: 80
   },
-  senha:{
+  /* senha:{
     type: String,
     required: true,
     maxlength: 100
-  },
+  }, */
   cnpj:{
     type: String,
     required: true,
     maxlength: 14
   },
   latitude:{
-    type:Number,
+    type: Number,
+    required: true
     //revisa essa merda
   },
   longitude:{
-    type:Number
+    type: Number,
+    required: true
     //essa aqui tambem
   },
   descricao:{
@@ -40,7 +42,7 @@ const UserSchema = new Schema({
     required: true,
     maxlength: 300
   },
-  logradouro:{
+  cidade:{
     type: String,
     required: true,
     maxlength: 50
@@ -52,8 +54,8 @@ const UserSchema = new Schema({
   },
   uf:{
     type: String,
-    //required: true,
-    maxlength: 20
+    required: true,
+    maxlength: 2
   },
   fone_1:{
     type: String,

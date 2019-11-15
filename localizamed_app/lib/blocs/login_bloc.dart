@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:localizamed_app/blocs/conexaoAPI.dart';
 import 'package:localizamed_app/validators/login_validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'dart:convert';
 
 //estados do login
@@ -19,11 +21,19 @@ class LoginBloc extends BlocBase with LoginValidators{
   Stream<String> get outSenha => _senhaController.stream.transform(validaSenha);
   Stream<LoginState> get outState => _stateController.stream;
   Stream<bool> get outSubmitValid => Observable.combineLatest2(
-      outEmail, outSenha, (a, b) => true
+      outEmail, outSenha, (a, b,) => true
   );
+
+  //Stream<bool> get outkkk => Observable.concat(streams)
 
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _senhaController.sink.add;
+
+  //verificar se o usuário já está logado
+   /* LoginBloc(){  
+    String variavel = prefs.getString('nome_sessao');
+    _stateController.add(LoginState.SUCESSO);
+  }  */
 
   //Login com a API
   Future<void> login() async{
@@ -32,7 +42,7 @@ class LoginBloc extends BlocBase with LoginValidators{
     
     _stateController.add(LoginState.CARREGANDO);
 
-    String url = "http://192.168.0.200:8081/login";
+    String url = ConexaoAPI().api + "login";
     Map<String, String> headers = {"Accept": "application/json"};    
     
     try {
@@ -43,6 +53,8 @@ class LoginBloc extends BlocBase with LoginValidators{
           "senha": senha
         });  
         if(response.statusCode == 201){
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('email', 'useremail@gmail.com');
           _stateController.add(LoginState.SUCESSO);
         } else{
           _stateController.add(LoginState.FALHA);

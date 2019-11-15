@@ -14,10 +14,10 @@ class LoginValidators {
 
   final validaSenha = StreamTransformer<String, String>.fromHandlers(
     handleData: (senha, sink){
-      if(senha.length >= 4){
+      if(senha.length >= 6){
         sink.add(senha);
       } else {
-        sink.addError("Senha inválida, deve conter pelo menos 4 caracteres");
+        sink.addError("Senha inválida, deve conter pelo menos 6 caracteres");
       }
     }
   );
