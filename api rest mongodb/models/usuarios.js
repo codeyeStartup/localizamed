@@ -1,41 +1,48 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     nome:{
         type: String,
-        required: true,
+        //required: true,
         maxlength: 80
     },
     email:{
         type: String,
-        required: true,
-        maxlength: 80
+        //required: true,
+        maxlength: 80,
+        unique: true
     },
     senha:{
         type: String,
-        required: true,
+        //required: true,
+        maxlength: 100
+    },
+    cidade:{
+        type: String,
+        //required: true,
         maxlength: 100
     },
     logradouro:{
         type: String,
-        required: true,
+        //required: true,
         maxlength: 50
     },
     bairro:{
         type: String,
-        required: true,
+        //required: true,
         maxlength: 50
     },
     uf:{
         type: String,
-        required: true,
+        //required: true,
         maxlength: 2
     },
     fone_1:{
         type: String,
-        required: true,
-        maxlength: 15
+        //required: true,
+        maxlength: 16
     },
     fone_2:{
         type: String,
@@ -43,11 +50,11 @@ const UserSchema = new Schema({
     },
     cpf:{
         type: String,
-        maxlength: 11
+        maxlength: 20
     },
     rg:{
         type: String,
-        maxlength: 14
+        maxlength: 20
     },
     caminho_foto:{
         type: String,
@@ -63,7 +70,7 @@ const UserSchema = new Schema({
     }, */
     data_nascimento:{
         type: Date,
-        required: true        
+        //required: true        
     }, 
      
 },
@@ -73,4 +80,5 @@ const UserSchema = new Schema({
     }
 );
 
+UserSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('usuarios', UserSchema);
