@@ -3,13 +3,24 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); 
 var mongodb = require('mongodb');
-//const ModelUsuario = require('./models/usuarios');
+const fs = require('fs');
+const multiparty = require('connect-multiparty');
 
 //body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multiparty());
 
-//let _db = null;
+app.use(function(req, res, next){
+
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.setHeader("Access-Control-Allow-Headers", "content-type");
+	res.setHeader("Access-Control-Allow-Credentials", true);
+
+	next();
+});
+
 //conexão com o banco
 mongoose.connect('mongodb+srv://localizamed:startup2019@cluster0-b3dwf.mongodb.net/db_localizamed?retryWrites=true&w=majority', {
     useNewUrlParser: true,

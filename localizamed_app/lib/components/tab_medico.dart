@@ -13,7 +13,7 @@ class MedCard extends StatefulWidget {
 }
 
 class _MedCardState extends State<MedCard> with AutomaticKeepAliveClientMixin {
-  ConexaoAPI conexaoApi;
+ ConexaoAPI conexaoApi;
 
   @override
   
@@ -107,6 +107,6 @@ class _MedCardState extends State<MedCard> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  // TODO: implement wantKeepAlive
+  
   bool get wantKeepAlive => true;
 }

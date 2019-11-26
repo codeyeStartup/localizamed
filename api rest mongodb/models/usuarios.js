@@ -46,7 +46,7 @@ const UserSchema = new Schema({
     },
     fone_2:{
         type: String,
-        maxlength: 15
+        maxlength: 16
     },
     cpf:{
         type: String,

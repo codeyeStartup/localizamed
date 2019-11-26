@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/screens/clinica_painel.dart';
 import 'package:localizamed_app/screens/medico_painel.dart';
+import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -15,7 +16,8 @@ class BottomMenu extends StatefulWidget {
   _BottomMenuState createState() => _BottomMenuState();
 }
 
-class _BottomMenuState extends State<BottomMenu> {
+class _BottomMenuState extends State<BottomMenu>{
+
   int _selectedIndex = 0;
   static  TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -28,10 +30,7 @@ class _BottomMenuState extends State<BottomMenu> {
       'Index 1: Business',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    UserColapsed(),
     CardMedicoScreen(),
     ClinicaCardScreen(),
   ];
@@ -205,4 +204,7 @@ class _BottomMenuState extends State<BottomMenu> {
         )
     );
   }
+
+
+  
 }

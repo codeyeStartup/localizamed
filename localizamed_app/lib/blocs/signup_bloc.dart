@@ -147,7 +147,7 @@ increment(); */
 
       if (response.statusCode == 201) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('email', 'useremail@gmail.com');
+        prefs.setString('email', _emailController.value);
         print("Cadastrado com Sucesso!");
         _stateController.add(SignupState.SUCESSO);
         

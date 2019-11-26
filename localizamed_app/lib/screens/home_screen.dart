@@ -1,14 +1,15 @@
- import 'package:flutter/material.dart';
+/*  import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/screens/medico_painel.dart';
 
 class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    var checkSelected = ['blue', 'green'];
-    bool ind = false;
-    var i;
+    //var checkSelected = ['blue', 'green'];
+    //bool ind = false;
+   // var i;
     //bool checkSelected = true;
 
           return new MaterialApp(
@@ -19,19 +20,17 @@ class HomeScreen extends StatelessWidget {
                 body: TabBarView(
                   children: [
                     new Container(
-                      color: Colors.yellow,
+                      color: Colors.white,
                     ),
                     new Container(
                       color: Colors.white,
                     ),
                     new Container(
-                      color: Colors.orange,),
-                    new Container(  
-                      color: Colors.lightGreen,
-                    ),
+                      color: Colors.orange,),                    
                     new Container(
                       color: Colors.red,
                     ),
+                    CardMedicoScreen(),
                   ],
                 ),
                 bottomNavigationBar: new TabBar(
@@ -62,13 +61,14 @@ class HomeScreen extends StatelessWidget {
 ),
 );
 }
-} 
+}  */
 
 //Color _color = Colors.red;
 
 //----------------------------------------------
 
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:localizamed_app/screens/medico_painel.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -153,11 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(color: Colors.blue,),
             Container(color: Colors.pink),
             Container(color: Colors.orange),
-            Container(color: Colors.yellow),
+            CardMedicoScreen(),
             Container(color: Colors.red),
           ],
         ),
       ),
     );
   }
-}  */
+} 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:localizamed_app/blocs/conexaoAPI.dart';
 import 'package:localizamed_app/components/tab_medico.dart';
 
 List<Medicos> parseMedicos(String responseBody){
@@ -11,9 +12,11 @@ List<Medicos> parseMedicos(String responseBody){
 }
 
 Future<List<Medicos>> getMedicos(http.Client client) async {
-  final response = await http.get(Uri.encodeFull('http://192.168.0.211:8081/medicos'),
+  final response = await http.get(Uri.encodeFull( ConexaoAPI().api + 'medicos'),
      headers: {"Accept": "application/json"}
-  );
+     
+  ); 
+  //print(response.body);  
    
   
   if (response.statusCode == 200) {
@@ -22,7 +25,7 @@ Future<List<Medicos>> getMedicos(http.Client client) async {
     
   } else {
     print("Entrou no exception de erro");
-    throw Exception('Falha ao carregar um Medicos');    
+    throw Exception('Falha ao carregar Medicos');    
   }
 }
 

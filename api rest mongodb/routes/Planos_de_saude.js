@@ -88,7 +88,7 @@ planosDeSaudeRouter.delete('/planos_de_saude/:id', (req, res, next)=>{
 });
 
 //função de ATUALIZAR planos de saude
-planos_de_saudeRouter.put('/planos_de_saude/:id', (req, res, next)=>{
+planosDeSaudeRouter.put('/planos_de_saude/:id', (req, res, next)=>{
 
     async function atualizarPlanos_de_saude(){
         try{

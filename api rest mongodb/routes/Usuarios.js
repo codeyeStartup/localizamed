@@ -21,7 +21,7 @@ usuarioRouter.get('/usuarios', (req, res, next)=>{
     AllUsuarios();
 });
 
-//função para RETORNAR UM ÚNICO USUÁRIO
+//função para RETORNAR UM ÚNICO USUÁRIO PELO ID
 usuarioRouter.get('/usuario/:id', (req, res, next) => {
     async function findUsuario(){
         Usuarios.findById(req.params.id).then((usuario) => {
@@ -38,6 +38,23 @@ usuarioRouter.get('/usuario/:id', (req, res, next) => {
     findUsuario();
 });
 
+//função para RETORNAR USUÁRIO PELO RANGE
+usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
+    async function GetUser(){
+    Usuarios.findOne({ email: req.params.email}).then((usuario) => {
+            res.status(200);
+            res.json(usuario);
+        }).catch((erro) => {
+            if(erro){
+                res.status(417).send({ message: "Nenhum usuário encontrado"});
+                throw erro;
+            }
+        });
+   
+}
+    GetUser();
+});
+
 //função de INSERIR dados no banco
 usuarioRouter.post('/usuarios', (req, res, next)=>{
 
@@ -48,22 +65,22 @@ usuarioRouter.post('/usuarios', (req, res, next)=>{
             data_nascimento: req.body.data_nascimento,
             senha: bcrypt.hashSync(req.body.senha, 10),
             //senha: req.body.senha,
-            logradouro: req.body.logradouro,
-            bairro: req.body.bairro,
+            //logradouro: req.body.logradouro,
+            //bairro: req.body.bairro,
+            cidade: req.body.cidade,
             uf: req.body.uf,
             fone_1: req.body.fone_1,
             fone_2: req.body.fone_2,
             cpf: req.body.cpf,
             rg: req.body.rg,
-            caminho_foto: req.body.caminho_foto,
+            //caminho_foto: req.body.caminho_foto,
             });
-
 
         try{
             const result = await usuarios.save();
             console.log("Operação realizada com sucesso");
             res.status(201).send({ message: "Cadastrado com sucesso!"});
-            console.log(usuarios)
+            //console.log(usuarios)
             /* res.statusCode = 201;
             res.send(); */
         } catch(erro){
@@ -117,7 +134,7 @@ usuarioRouter.delete('/usuario/:id', (req, res, next)=>{
         });
     }
 
-    deletarUsuario();
+    deletarUsuario(); 
 
 });
 
