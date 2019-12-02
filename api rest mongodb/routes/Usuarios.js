@@ -138,9 +138,33 @@ usuarioRouter.delete('/usuario/:id', (req, res, next)=>{
 
 });
 
+usuarioRouter.patch('/usuarioUpdate/:email', (req, res, next)=>{
+
+    async function atualizarUsuario(){
+        try{
+            Usuarios.findOneAndUpdate(
+            	{email: req.params.email},
+            	req.body,
+             	function(erro) {
+                if (erro) {
+                	res.status(417).send({ message: "Falha ao atualizar"});
+                    throw erro;
+                }
+                console.log(req.body);
+                res.status(201).send("Atualizado com sucesso!");
+            });
+        } catch{
+            res.status(417).send("Entrei no catch de erro");
+        }
+
+};
+
+atualizarUsuario();
+});
+
 
 //função de ATUALIZAR um usuário
-usuarioRouter.put('/usuario/:id', (req, res, next)=>{
+/*usuarioRouter.put('/usuarioUpdate/:id', (req, res, next)=>{
 
     async function atualizarUsuario(){
         try{
@@ -158,5 +182,5 @@ usuarioRouter.put('/usuario/:id', (req, res, next)=>{
 
 atualizarUsuario();
 });
-
+*/
 module.exports = usuarioRouter;

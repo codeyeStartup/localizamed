@@ -15,7 +15,7 @@ const UserSchema = new Schema({
   },
   crm:{
     type: String, 
-    required: true,
+    //required: true,
     maxlength: 10
   },
   caminho_foto:{

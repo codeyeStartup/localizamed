@@ -1,6 +1,8 @@
 import 'dart:async';
-import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
+import 'package:localizamed_app/blocs/user_bloc.dart';
+import 'package:localizamed_app/classes/user_class.dart';
 import 'package:localizamed_app/validators/signup_validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //estados do cadastro
 enum SignupState { IDLE, CARREGANDO, SUCESSO, FALHA, CATCH_ERRO }
+enum UpdateState { IDLE, SUCESSO, FALHA, CATCH_ERRO}
 
 class SingletonBloc with SignupValidator {
   static SingletonBloc _signupBloc;
@@ -30,6 +33,9 @@ class SingletonBloc with SignupValidator {
   BehaviorSubject<String> _rgController;
   BehaviorSubject<String> _extraTelefoneController;
   BehaviorSubject<SignupState> _stateController;
+  BehaviorSubject<UpdateState> _updateController;
+  BehaviorSubject<String> _ufUpdateController;
+  
 
   //Streams
   Stream<String> get outNome => _nomeController.stream.transform(validaNome);
@@ -45,6 +51,8 @@ class SingletonBloc with SignupValidator {
   Stream<String> get outRg => _rgController.stream;
   Stream<String> get outExtraTel => _extraTelefoneController.stream;
   Stream<SignupState> get outState => _stateController.stream;
+  Stream<UpdateState> get outUpState => _updateController.stream;
+  Stream<String> get outUfUpdate => _ufUpdateController.stream;
 
   //Sink<String> get inNome => _nomeController;
 
@@ -79,6 +87,19 @@ class SingletonBloc with SignupValidator {
       ) =>
           true);
 
+  Stream<bool> get apagar => Observable.combineLatest2(
+      outNome,
+      outNome,
+      (
+        a,
+        b,
+      ) =>
+          true);
+
+  //validador do botão de UPDATE
+  /* Stream<bool> get validaUpdate => Observable.combineLatest4(
+    streamA, streamB, streamC, streamD, combiner) */
+
   SingletonBloc._() {
 //inicilize seus métodos e instancie seus controller aqui
 /* _contador = BehaviorSubject<int>();
@@ -94,6 +115,8 @@ increment(); */
     _rgController = BehaviorSubject<String>();
     _extraTelefoneController = BehaviorSubject<String>();
     _stateController = BehaviorSubject<SignupState>();
+    _updateController = BehaviorSubject<UpdateState>();
+    _ufUpdateController = BehaviorSubject<String>();
   }
 
 //manda uma mensagem de erro caso requisitos não estejam validados
@@ -107,20 +130,22 @@ increment(); */
   Function(String) get changeCpf => _cpfController.sink.add;
   Function(String) get changeRg => _rgController.sink.add;
   Function(String) get changeExtraTel => _extraTelefoneController.sink.add;
+  Function(String) get changeUfUpdate => _ufUpdateController.sink.add;
 
 //se precisar chamar algum método, chama assim:
 
+  //Função de CADASTRAR usuário
   Future<void> signUp() async {
     final nome = _nomeController.value;
     final dataNasc = _dataNascController.value.toString();
-    final email = _emailController.value;
+    final email = _emailController.value.trim();
     final uf = _ufController.value;
     final cidade = _cidadeController.value;
     final telefone = _telefoneController.value;
     final cpf = ' ';
     final rg = ' ';
     final extraTel = ' ';
-    final senha = _senhaController.value;
+    final senha = _senhaController.value.trim();
 
     String url = ConexaoAPI().api + "usuarios";
     Map<String, String> headers = {"Accept": "application/json"};
@@ -150,7 +175,6 @@ increment(); */
         prefs.setString('email', _emailController.value);
         print("Cadastrado com Sucesso!");
         _stateController.add(SignupState.SUCESSO);
-        
       } else {
         print("deu errado");
         _stateController.add(SignupState.FALHA);
@@ -159,6 +183,42 @@ increment(); */
       print("robson");
       print(erro);
       return _stateController.add(SignupState.CATCH_ERRO);
+    }
+  }
+
+  //Função de ATUALIZAR usuário
+  Future<void> updateUser() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString('email');
+    String url = ConexaoAPI().api + 'usuarioUpdate/' + email;
+    Map<String, String> headers = {"Accept": "application/json"};
+ 
+    try {
+      http.Response response = await http.patch(url, headers: headers, body: {
+        "nome": _nomeController.value,
+        "email": _emailController.value,  
+        "cidade": _cidadeController.value,
+        "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
+        "fone_1": _telefoneController.value
+      });
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('email', _emailController.value);
+
+      if(response.statusCode == 201){
+        print("Atualizado com Sucesso!");
+        print(_ufController.value);
+        _updateController.add(UpdateState.SUCESSO);
+      } else {
+        print("deu errado");
+        print(_nomeController.value);
+        _updateController.add(UpdateState.FALHA);
+      }
+    } catch (erro) {
+      print("robson");
+      print(erro);
+      return _updateController.add(UpdateState.CATCH_ERRO);
     }
   }
 
@@ -173,7 +233,8 @@ increment(); */
     _senhaController.close();
     _cpfController.close();
     _rgController.close();
-    _extraTelefoneController.close();
+    _extraTelefoneController.close();    
     _stateController.close();
+    _updateController.close();
   }
 }

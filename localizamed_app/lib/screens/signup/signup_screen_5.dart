@@ -250,12 +250,6 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                               BorderSide(color: Colors.white),
                                         ),
                                       ),
-                                      /* validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Coloque um telefone válido';
-                                }
-                                return null;
-                              }, */
                                     );
                                   }),
                             ],

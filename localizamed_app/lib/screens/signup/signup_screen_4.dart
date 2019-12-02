@@ -112,7 +112,7 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                                         errorText: snapshot.hasError
                                             ? snapshot.error
                                             : null,
-                                        hintText: 'Seu senha',
+                                        hintText: 'Sua senha',
                                         hintStyle: TextStyle(
                                             color: Color.fromRGBO(
                                                 255, 255, 255, 0.5),

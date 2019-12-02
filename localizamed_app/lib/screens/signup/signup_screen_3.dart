@@ -201,12 +201,6 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                               BorderSide(color: Colors.white),
                                         ),
                                       ),
-                                      /* validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Cidade invalida';
-                                        }
-                                        return null;
-                                      }, */
                                     );
                                   }),
 

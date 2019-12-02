@@ -11,7 +11,7 @@ class UserApiProvider{
  Future<Usuario> getUsuario() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString('email');
-  final response = await http.get(ConexaoAPI().api + 'usuarioFindOne/' + email,      
+  final response = await http.get(Uri.encodeFull(ConexaoAPI().api + 'usuarioFindOne/' + email),      
       headers: {"Accept": "application/json"});
       //print(response.body);      
 

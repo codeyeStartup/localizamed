@@ -33,8 +33,8 @@ class LoginBloc extends BlocBase with LoginValidators {
 
   //Login com a API
   Future<void> login() async {
-    final email = _emailController.value;
-    final senha = _senhaController.value;
+    final email = _emailController.value.trim();
+    final senha = _senhaController.value.trim();
 
     _stateController.add(LoginState.CARREGANDO);
 
