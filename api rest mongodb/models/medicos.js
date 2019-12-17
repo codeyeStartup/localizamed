@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const MedicoSchema = new Schema({
   //cod_medico:{type:Integer},
   nome:{
     type: String,
@@ -10,7 +10,7 @@ const UserSchema = new Schema({
   },
   formacao:{
     type: String, 
-    required: true,
+    //required: true,
     maxlength: 200
   },
   crm:{
@@ -26,15 +26,20 @@ const UserSchema = new Schema({
   cidade:{
     type: String,
     maxlength: 100
-  }
-  /* data_cadastro:{
-    type: Date,
-    default: Date.now
-  }, 
-  data_atualizacao:{
-    type: Date,
-    default: Date.now
-  }, */
+  },
+  sexo:{
+    type: String,
+    maxlength: 1,
+    required: true,
+  },
+  temFoto:{
+    type: String, 
+    maxlength: 1
+  },
+  especialidade:{
+    type: String,
+    maxlength: 50
+  },
 },
     //timestamps fornece a data de cadastro e atualização
   {
@@ -42,4 +47,4 @@ const UserSchema = new Schema({
   }
 );
 
-module.exports = mongoose.model('medicos', UserSchema);
+module.exports = mongoose.model('medicos', MedicoSchema);

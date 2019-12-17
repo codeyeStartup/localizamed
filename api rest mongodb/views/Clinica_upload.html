@@ -35,6 +35,7 @@
                     var nome = document.getElementById("nome").value;
                     var razao_social = document.getElementById("razao_social").value;
                     var email = document.getElementById("email").value;
+                    var site = document.getElementById("site").value;
 					var cnpj = document.getElementById("cnpj").value;
 					var latitude = document.getElementById("latitude").value;                   
 					var longitude = document.getElementById("longitude").value;
@@ -50,6 +51,7 @@
                     formData.append("nome", nome);
                     formData.append("razao_social", razao_social);
 					formData.append("email", email);
+					formData.append("site", site);
 					formData.append("cnpj", cnpj);
 					formData.append("latitude", latitude);
 					formData.append("longitude", longitude);
@@ -112,6 +114,7 @@
                             <input type="text" name="nome" id="nome" class="form-control" placeholder="nome" autocomplete="off">
 							<input type="text" name="razao_social" id="razao_social" class="form-control" placeholder="razao_social" autocomplete="off">							
 							<input type="text" name="email" id="email" class="form-control" placeholder="email" autocomplete="off">
+							<input type="text" name="site" id="site" class="form-control" placeholder="site" autocomplete="off">
 							<input type="text" name="cnpj" id="cnpj" class="form-control" placeholder="cnpj" autocomplete="off">
 							<input type="text" name="latitude" id="latitude" class="form-control" placeholder="latitude" autocomplete="off">
 							<input type="text" name="longitude" id="longitude" class="form-control" placeholder="longitude" autocomplete="off">

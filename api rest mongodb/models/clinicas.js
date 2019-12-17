@@ -2,80 +2,96 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  nome:{
+  nome: {
     type: String,
     required: true,
     maxlength: 50
   },
-  razao_social:{
+  razao_social: {
+    type: String,
+    //required: true,
+    maxlength: 80
+  },
+  email: {
     type: String,
     required: true,
     maxlength: 80
   },
-  email:{
+  site: {
     type: String,
     required: true,
-    maxlength: 80
+    maxlength: 50
   },
   /* senha:{
     type: String,
     required: true,
     maxlength: 100
   }, */
-  cnpj:{
+  cnpj: {
     type: String,
-    required: true,
+    //required: true,
     maxlength: 14
   },
-  latitude:{
+  latitude: {
     type: Number,
     required: true
     //revisa essa merda
   },
-  longitude:{
+  longitude: {
     type: Number,
     required: true
     //essa aqui tambem
   },
-  descricao:{
+  descricao: {
     type: String,
-    required: true,
+    //required: true,
     maxlength: 300
   },
-  cidade:{
+  cidade: {
     type: String,
     required: true,
     maxlength: 50
   },
-  bairro:{
+  bairro: {
     type: String,
     required: true,
     maxlength: 50
   },
-  uf:{
+  uf: {
     type: String,
     required: true,
     maxlength: 2
   },
-  fone_1:{
+  fone_1: {
     type: String,
     required: true,
     maxlength: 15
   },
-  fone_2:{
+  fone_2: {
     type: String,
     maxlength: 15
   },
-  caminho_foto:{
+  caminho_foto: {
     type: String,
     required: true,
     maxlength: 100
-  }, 
-  
-}, 
-    //timestamps fornece a data de cadastro e atualização
+  },
+  medico: [{
+    medicoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'medicos'
+    }
+  }],
+  exame_consulta: [{
+    exame_consulta_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'exames_consultas'
+    }
+  }],
+},
+  //timestamps fornece a data de cadastro e atualização
   {
-    timestamps: true 
+    timestamps: true
   }
 );
 

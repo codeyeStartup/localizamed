@@ -15,15 +15,7 @@ const UserSchema = new Schema({
   },
   preco:{
     type: Number,    
-  },
-  data_cadastro:{
-    type: Date,
-    default: Date.now
-  }, 
-  data_atualizacao:{
-    type: Date,
-    default: Date.now
-  },
+  },  
 }, 
   //timestamps fornece a data de cadastro e atualização
   {

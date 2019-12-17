@@ -43,10 +43,9 @@ exames_consultasRouter.post('/exames_consultas', (req, res, next)=>{
 
     async function salvaExame_Consulta(){
         const exame_consulta = new Exames_Consultas({
-            nome: req.body.nome,
-            tipo: req.body.tipo,
-            preco: req.body.preco,
-            data_atualizacao: null
+            nome: req.body.nome.trim(),
+            tipo: req.body.tipo.trim(),
+            preco: req.body.preco,            
             });
 
 

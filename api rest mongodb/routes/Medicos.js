@@ -42,10 +42,10 @@ medicoRouter.get('/medico/:id', (req, res, next) => {
 medicoRouter.post('/medicos',  (req, res, next)=>{
 
 
-    var date = new Date();
+    /* var date = new Date();
 	time_stamp = date.getTime();
 
-    
+
 	var url_imagem = time_stamp + '_' + req.files.caminho_foto.originalFilename;
 
 	var path_origem = req.files.caminho_foto.path;
@@ -55,15 +55,18 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
 		if(err){
 			res.status(500).json({error: err});
 			return;
-		}
+		} */
         
     async function salvaMedico(){
         const medicos = new Medicos({
             nome: req.body.nome,
-            formacao: req.body.formacao,
-            crm: req.body.crm,
+            //formacao: req.body.formacao,
+            //crm: req.body.crm,
+            especialidade: req.body.especialidade,
             cidade: req.body.cidade,
-            caminho_foto: url_imagem
+            sexo: req.body.sexo,
+            temFoto: req.body.temFoto,
+            //caminho_foto: url_imagem
             });
 
 
@@ -78,7 +81,7 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
     }
 
     salvaMedico();
-    }); 
+    //}); 
 });
 
 //rota das imagens

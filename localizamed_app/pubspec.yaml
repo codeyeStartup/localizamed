@@ -37,6 +37,8 @@ dependencies:
   flutter_speed_dial: ^1.2.4
   async: ^2.4.0
   intl: ^0.15.8
+  url_launcher: ^5.2.7
+  json_serializable: ^3.2.3
 
 
 dev_dependencies:

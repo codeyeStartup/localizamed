@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:localizamed_app/screens/bottom_menu_screen.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:localizamed_app/blocs/user_bloc.dart';
 import 'package:localizamed_app/blocs/signup_bloc.dart';
@@ -57,7 +58,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context)
-                .pop(MaterialPageRoute(builder: (context) => UserColapsed()));
+                .pop();
           },
           icon: Icon(
             Icons.arrow_back,
@@ -235,7 +236,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          UserColapsed()));
+                                                          BottomMenu()));
                                             }
                                           },
                                         ),

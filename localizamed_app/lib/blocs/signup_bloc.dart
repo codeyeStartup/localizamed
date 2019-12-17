@@ -208,7 +208,6 @@ increment(); */
 
       if(response.statusCode == 201){
         print("Atualizado com Sucesso!");
-        print(_ufController.value);
         _updateController.add(UpdateState.SUCESSO);
       } else {
         print("deu errado");

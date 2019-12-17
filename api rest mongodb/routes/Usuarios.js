@@ -60,19 +60,19 @@ usuarioRouter.post('/usuarios', (req, res, next)=>{
 
     async function salvaUsuario(){
         const usuarios = new Usuarios({
-            nome: req.body.nome,
-            email: req.body.email,
+            nome: req.body.nome.trim(),
+            email: req.body.email.trim(),
             data_nascimento: req.body.data_nascimento,
-            senha: bcrypt.hashSync(req.body.senha, 10),
+            senha: bcrypt.hashSync(req.body.senha.trim(), 10),
             //senha: req.body.senha,
             //logradouro: req.body.logradouro,
             //bairro: req.body.bairro,
-            cidade: req.body.cidade,
-            uf: req.body.uf,
-            fone_1: req.body.fone_1,
-            fone_2: req.body.fone_2,
-            cpf: req.body.cpf,
-            rg: req.body.rg,
+            cidade: req.body.cidade.trim(),
+            uf: req.body.uf.trim(),
+            fone_1: req.body.fone_1.trim(),
+            fone_2: req.body.fone_2.trim(),
+            cpf: req.body.cpf.trim(),
+            rg: req.body.rg.trim(),
             //caminho_foto: req.body.caminho_foto,
             });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:localizamed_app/components/tab_med_in_clin.dart';
 import 'package:localizamed_app/components/tab_medico.dart';
 import 'package:localizamed_app/models/medicos_get.dart';
 
