@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:localizamed_app/data/user_class.dart';
 import 'package:localizamed_app/screens/home_screen.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_2.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_4.dart';

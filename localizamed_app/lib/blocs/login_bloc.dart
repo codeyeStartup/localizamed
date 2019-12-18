@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
-import 'package:localizamed_app/models/user_get.dart';
 import 'package:localizamed_app/validators/login_validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;

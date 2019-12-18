@@ -34,6 +34,7 @@ clinicasRouter.get('/clinica2', async (req, res, next) => {
 });
 //--< ROTA DE TESTE */
 
+
 clinicasRouter.get('/clinicaLastThree', async (req, res, next) => {
     try{
         const clinicas = await Clinicas.find().sort({_id: -1}).limit(3);
@@ -44,33 +45,11 @@ clinicasRouter.get('/clinicaLastThree', async (req, res, next) => {
     }
 });
 
-/*clinicasRouter.get('/clinicaLastThree', (req, res, next) => {
-    async function AllClinicas() {
-        Clinicas.find({}, (erro, dados) => {
-            if (erro) {
-                res.status(417).send({ message: "Nenhum registro recebido" }).sort({_id: -1}).limit(2);
-                
-            }
-            res.status(200);
-            res.json(dados);
-        });
-    }
-
-    AllClinicas();
-});
-
-Clinicas.find()
-  .sort({_id: -1})
-  .limit(2)
-  .then(reviews => {
-    console.log(reviews)
-  });
-*/
 
 //função para RETORNAR UMA ÚNICA CLÍNICA
 clinicasRouter.get('/clinica/:id', (req, res, next) => {
     async function findClinicas() {
-        Clinicas.findById(req.params.id).populate('medico.medicoId','exame_consulta.exame_consulta_id').then((clinicas) => {
+        Clinicas.findById(req.params.id).populate('medico.medicoId').populate('exame_consulta.exame_consulta_id').then((clinicas) => {
             res.status(200);
             res.json(clinicas);
         }).catch((erro) => {

@@ -14,28 +14,30 @@ class _ClinState extends State<ClinicaCardScreen> {
 
     return SafeArea(
       child: Scaffold(
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: size.width/ 2.9, top: size.height/ 60),
-                  child: Row(
-                    children: <Widget>[
-                      Text("LocalizaMed",
-                          style: TextStyle(
-                            fontSize: size.width / 20,
-                          )),
-                      /* Image(
-                        image: AssetImage('images/pin.png'),
-                        color: Colors.green,
-                        width: size.width / 20,
-                        height: size.height / 20,
-                      ), */
-                    ],
+          body: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: size.width/ 2.9, top: size.height/ 60),
+                    child: Row(
+                      children: <Widget>[
+                        Text("LocalizaMed",
+                            style: TextStyle(
+                              fontSize: size.width / 20,
+                            )),
+                        Image(
+                          image: AssetImage('images/pin.png'),
+                          color: Colors.green,
+                          width: size.width / 20,
+                          height: size.height / 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ClinCard(),
-              ],
+                  ClinCard(),
+                ],
+              ),
             ),
           )
       ),

@@ -8,16 +8,26 @@ class ClinicaBloc {
   Repository _repository = Repository();
 
   final _clinicaGet = BehaviorSubject<Clinicas2>();
+  final _clinicasListGet = BehaviorSubject<List<Clinicas>>();
 
   BehaviorSubject<Clinicas2> get clinica => _clinicaGet.stream;
+  BehaviorSubject<List<Clinicas>> get clinicasList => _clinicasListGet.stream;
 
+  //uma UNICA clinica
   getClinica() async {
     Clinicas2 clinicaRes = await _repository.getClinicaById();
     _clinicaGet.sink.add(clinicaRes);
   }
 
+  //lista de TODAS as clinicas
+  getListClinicas() async {
+    List<Clinicas> clinicasRes = await _repository.getClinicas();
+    _clinicasListGet.sink.add(clinicasRes);
+  }
+
   dispose() {
     _clinicaGet.close();
+    _clinicasListGet.close();
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/screens/clinica_painel.dart';
+import 'package:localizamed_app/screens/initial_screen.dart';
 import 'package:localizamed_app/screens/medico_painel.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -22,10 +23,7 @@ class _BottomMenuState extends State<BottomMenu>{
   static  TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: TextStyle(color: Colors.green),
-    ),
+    InitialScreen(),
     Text(
       'Index 1: Business',
       style: optionStyle,

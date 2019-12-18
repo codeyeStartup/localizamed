@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:localizamed_app/components/tab_medico.dart';
 
 class ClinicScreen extends StatefulWidget {
-  ClinicScreen(Clinicas clinica);
+ // ClinicScreen(Clinicas clinica);
 
   @override
   _ClinicScreenState createState() => _ClinicScreenState();

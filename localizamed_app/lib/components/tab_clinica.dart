@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:localizamed_app/blocs/clinica.bloc.dart';
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
 import 'package:localizamed_app/classes/clinica_class.dart';
-import 'package:localizamed_app/models/clinica_get.dart';
-import 'package:http/http.dart' as http;
-import 'package:localizamed_app/repositories/clinica_api_client.dart';
 import 'package:localizamed_app/screens/clinic_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +21,7 @@ class _ClinCardState extends State<ClinCard> {
   Clinicas clinicas = Clinicas();
   @override
   Widget build(BuildContext context) {
+    clinicaBloc.getListClinicas();
     double c_width = MediaQuery.of(context).size.width * 0.0;
 
     return new Container(
@@ -31,8 +29,8 @@ class _ClinCardState extends State<ClinCard> {
         vertical: 10.0,
         horizontal: 24.0,
       ),
-      child: FutureBuilder<List<Clinicas>>(
-          future: getClinicas(http.Client()),
+      child: StreamBuilder(
+          stream: clinicaBloc.clinicasList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -57,7 +55,7 @@ class _ClinCardState extends State<ClinCard> {
                           await SharedPreferences.getInstance();
                       prefId.setString('id', snapshot.data[index].id);
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ClinicScreen(clinicas)));
+                          builder: (context) => ClinicScreen()));
                     },
                     child: Stack(
                       children: <Widget>[

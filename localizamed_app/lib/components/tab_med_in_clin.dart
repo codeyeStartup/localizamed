@@ -78,7 +78,6 @@ class _MedCardState extends State<MedCardInClin> {
                                   title: Text(
                                     snapshot.data.medicosClin[index]
                                         .medicoIdClass.nome,
-                                    //snapshot?.data?.medicosClin[index].nome,
                                     style: TextStyle(fontSize: 20),
                                   ),
                                   subtitle: Text(

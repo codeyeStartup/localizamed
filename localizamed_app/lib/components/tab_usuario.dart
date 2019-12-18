@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:localizamed_app/blocs/user_bloc.dart';
-import 'package:localizamed_app/classes/user_class.dart';
-import 'package:localizamed_app/models/user_get.dart';
 
 class UsuCard extends StatelessWidget {
 

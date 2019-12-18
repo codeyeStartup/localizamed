@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:localizamed_app/classes/clinica_class.dart';
 import 'package:http/http.dart' as http;
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
-import 'package:localizamed_app/components/tab_clinica.dart';
 
 List<Clinicas> parseClinicas(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:localizamed_app/blocs/user_bloc.dart';
 import 'package:localizamed_app/components/tab_usuario.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:localizamed_app/models/user_get.dart';
 import 'package:localizamed_app/screens/login_screen.dart';
 import 'package:localizamed_app/screens/update_user_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
