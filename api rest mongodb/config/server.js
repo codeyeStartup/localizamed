@@ -36,12 +36,14 @@ const clinicaRouter = require("../routes/Clinicas");
 const medicoRouter = require("../routes/Medicos");
 const exames_consultasRouter = require("../routes/Exames_Consultas");
 const planos_de_saudeRouter = require("../routes/Planos_de_saude");
+const especialidadesRouter = require("../routes/Especialidades");
+
 
 app.use(usuariosRouter);
 app.use(clinicaRouter); 
 app.use(medicoRouter);
 app.use(exames_consultasRouter);
 app.use(planos_de_saudeRouter);
-
+app.use(especialidadesRouter);
 
 module.exports = app;

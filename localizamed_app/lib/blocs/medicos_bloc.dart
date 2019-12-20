@@ -1,4 +1,3 @@
-import 'package:localizamed_app/classes/clinica_class.dart';
 import 'package:localizamed_app/classes/medicos_class.dart';
 import 'package:localizamed_app/repositories/repositories.dart';
 import 'package:rxdart/rxdart.dart';

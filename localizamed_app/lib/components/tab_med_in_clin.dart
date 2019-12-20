@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
-import 'package:localizamed_app/blocs/medicos_bloc.dart';
 import 'package:localizamed_app/blocs/clinica.bloc.dart';
-import 'package:localizamed_app/models/clinica_get.dart';
 
 class MedCardInClin extends StatefulWidget {
   @override
@@ -11,13 +9,6 @@ class MedCardInClin extends StatefulWidget {
 
 class _MedCardState extends State<MedCardInClin> {
   ConexaoAPI conexaoApi;
-  /* ClinicaBloc _clinicaBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _clinicaBloc = clinicaBloc.getClinica();
-  } */
 
   @override
   Widget build(BuildContext context) {
