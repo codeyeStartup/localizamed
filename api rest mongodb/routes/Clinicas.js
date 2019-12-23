@@ -54,7 +54,7 @@ clinicasRouter.get('/clinica/:id', (req, res, next) => {
             res.json(clinicas);
         }).catch((erro) => {
             if (erro) {
-                res.status(417).send({ message: "Nenhum usuário encontrado" });
+                res.status(417).send({ message: "Nenhuma clinica encontrada" });
                 throw erro;
             }
         });

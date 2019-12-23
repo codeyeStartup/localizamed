@@ -1,8 +1,6 @@
 import 'package:localizamed_app/classes/clinica_class.dart';
-import 'package:localizamed_app/classes/user_class.dart';
 import 'package:localizamed_app/repositories/repositories.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinicaBloc {
   Repository _repository = Repository();
