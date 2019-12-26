@@ -1,13 +1,12 @@
 const express = require('express');
-const ClinicasMedicosExames = require("../models/clinicas_exames_medicos");
-const fs = require('fs');
+const MedicosEspecialidades = require("../models/medicos_especialidades");
 
-const clinMedExamRouter = express.Router();
+const medicoEspecialidadesRouter = express.Router();
 
 //ROTORNAR TODOS os documentos
-clinMedExamRouter.get('/clin_med_exam', (req, res, next) => {
-    async function AllClinMedExam() {
-        ClinicasMedicosExames.find({}, (erro, dados) => {
+medicoEspecialidadesRouter.get('/medicoEsp', (req, res, next) => {
+    async function AllData() {
+        MedicosEspecialidades.find({}, (erro, dados) => {
             if (erro) {
                 res.status(417).send({ message: "Nenhum registro encontrado" });
             }
@@ -15,15 +14,14 @@ clinMedExamRouter.get('/clin_med_exam', (req, res, next) => {
             res.json(dados);
         });
     }
-    AllClinMedExam();
+    AllData();
 });
 
 //retornar um DOCUMENTO específico
-clinMedExamRouter.get('/clin_exam_med/:id', (req, res, next) => {
+medicoEspecialidadesRouter.get('/medicoEsp/:id', (req, res, next) => {
     async function findOne() {
-        ClinicasMedicosExames.findById(req.params.id)
-            .populate('clinicaId').populate('medico.medicoId')
-            .populate('exame_consulta.exameConsultaId')
+        MedicosEspecialidades.findById(req.params.id)
+            .populate('medicoId').populate('especialidades.especialidadeId')
             .then((dados) => {
                 res.status(200);
                 res.json(dados);
@@ -34,26 +32,20 @@ clinMedExamRouter.get('/clin_exam_med/:id', (req, res, next) => {
                 }
             });
     }
-
     findOne();
 });
 
 //INSERIR UM NOVO documento
-clinMedExamRouter.post('/clin_exam_med', (req, res, next) => {
+medicoEspecialidadesRouter.post('/medicoEsp', (req, res, next) => {
     async function newData() {
-        
-        const data = new ClinicasMedicosExames(req.body,{
-           
-            clinicaId: req.body.clinicaId,
-            medico: req.body.medico[{
-                medicoId: req.body.medicoId
-            }],    
-            exame_consulta: req.body.exame_consulta[{
-                exameConsultaId: req.body.exameConsultaId
-            }]
+        const data = new MedicosEspecialidades(req.body, {
+            medicoId: req.body.medicoId,
+            especialidades: req.body.especialidades[{
+                especialidadeId: req.body.especialidadeId
+            }],
         });
 
-        try {                
+        try {
             const result = await data.save();
             console.log("Operação realizada com sucesso");
             res.status(201).send({ message: "Cadastrado com sucesso!" });
@@ -62,36 +54,31 @@ clinMedExamRouter.post('/clin_exam_med', (req, res, next) => {
             res.status(406).send({ message: "Cadastro falhou" });
         }
     }
-    
+
     newData();
 });
 
 //ATUALIZAR um registro
-clinMedExamRouter.put('/clin_exam_med/:id', (req, res, next) => {
-
+medicoEspecialidadesRouter.put('/medicoEsp/:id', (req, res, next) => {
     async function atualizar() {
         try {
-            ClinicasMedicosExames.findByIdAndUpdate(req.params.id, req.body, function (erro) {
+            MedicosEspecialidades.findByIdAndUpdate(req.params.id, req.body, function (erro) {
                 if (erro) {
                     res.send(erro);
                 }
-                console.log(req.body);
                 res.status(201).send("Atualizado com sucesso!");
             });
         } catch{
             res.status(417).send("Algo deu errado");
         }
-
     };
-
     atualizar();
 });
 
 //DELETAR um registro
-clinMedExamRouter.delete('/clin_exam_med/:id', (req, res, next) => {
-
+medicoEspecialidadesRouter.delete('/medicoEsp/:id', (req, res, next) => {
     async function deletar() {
-        ClinicasMedicosExames.findByIdAndDelete(req.params.id).then((dados) => {
+        MedicosEspecialidades.findByIdAndDelete(req.params.id).then((dados) => {
             if (dados) {
                 res.status(200).send({ message: "Deletado com sucesso" });
             } else {
@@ -109,9 +96,4 @@ clinMedExamRouter.delete('/clin_exam_med/:id', (req, res, next) => {
 
 });
 
-module.exports = clinMedExamRouter;
-
-
-
-
-
+module.exports = medicoEspecialidadesRouter;

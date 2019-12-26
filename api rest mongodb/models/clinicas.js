@@ -73,7 +73,7 @@ const UserSchema = new Schema({
   },
   caminho_foto: {
     type: String,
-    required: true,
+    //required: true,
     maxlength: 100
   },
   medico: [{

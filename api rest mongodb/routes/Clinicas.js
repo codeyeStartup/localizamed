@@ -66,7 +66,7 @@ clinicasRouter.get('/clinica/:id', (req, res, next) => {
 //função de INSERIR dados no banco
 clinicasRouter.post('/clinicas', (req, res, next) => {
 
-    const date = new Date();
+    /* const date = new Date();
     time_stamp = date.getTime();
 
     const url_imagem = time_stamp + '_' + req.files.caminho_foto.originalFilename;
@@ -78,7 +78,7 @@ clinicasRouter.post('/clinicas', (req, res, next) => {
         if (err) {
             res.status(500).json({ error: err });
             return;
-        }
+        } */
 
         async function salvaClinicas() {
             const clinicas = new Clinicas({
@@ -95,7 +95,7 @@ clinicasRouter.post('/clinicas', (req, res, next) => {
                 fone_2: req.body.fone_2,
                 cnpj: req.body.cnpj,
                 descricao: req.body.descricao,
-                caminho_foto: url_imagem,
+                //caminho_foto: url_imagem,
             });
 
             try {
@@ -110,7 +110,7 @@ clinicasRouter.post('/clinicas', (req, res, next) => {
 
         salvaClinicas();
     });
-});
+/* }); */
 
 //rota das imagens
 clinicasRouter.get('/imagensClinica/:caminho_foto', (req, res, next)=>{

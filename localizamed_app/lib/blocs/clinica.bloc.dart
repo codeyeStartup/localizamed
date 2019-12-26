@@ -1,4 +1,5 @@
 import 'package:localizamed_app/classes/clinica_class.dart';
+import 'package:localizamed_app/classes/tres_clinicas_class.dart';
 import 'package:localizamed_app/repositories/repositories.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -7,9 +8,17 @@ class ClinicaBloc {
 
   final _clinicaGet = BehaviorSubject<Clinicas2>();
   final _clinicasListGet = BehaviorSubject<List<Clinicas>>();
+  final _ultimasclinicasListGet = BehaviorSubject<List<TresClinicas>>();
 
   BehaviorSubject<Clinicas2> get clinica => _clinicaGet.stream;
   BehaviorSubject<List<Clinicas>> get clinicasList => _clinicasListGet.stream;
+  BehaviorSubject<List<TresClinicas>> get ultimasclinicasList => _ultimasclinicasListGet.stream;
+
+  //3 Ultimas clinicas
+  getUltimasClinicas() async {
+    List<TresClinicas> clinicasRes = await _repository.getUltimas();
+    _ultimasclinicasListGet.sink.add(clinicasRes);
+  }
 
   //uma UNICA clinica
   getClinica() async {
@@ -26,6 +35,7 @@ class ClinicaBloc {
   dispose() {
     _clinicaGet.close();
     _clinicasListGet.close();
+    _ultimasclinicasListGet.close();
   }
 }
 
