@@ -39,6 +39,7 @@ const planos_de_saudeRouter = require("../routes/Planos_de_saude");
 const especialidadesRouter = require("../routes/Especialidades");
 const clinMedExamRouter = require("../routes/ClinicasMedicosExames");
 const medicoEspecialidadesRouter = require("../routes/MedicosEspecialidades");
+const planoSaude_with_ClinMedExameRouter = require("../routes/PlanoSaude_with_ClinMedExam");
 
 
 app.use(usuariosRouter);
@@ -49,5 +50,6 @@ app.use(planos_de_saudeRouter);
 app.use(especialidadesRouter);
 app.use(clinMedExamRouter);
 app.use(medicoEspecialidadesRouter);
+app.use(planoSaude_with_ClinMedExameRouter);
 
 module.exports = app;

@@ -1,3 +1,3 @@
 require("../models/planos_saude_with_clin_exam_med");
 
-const PlanosDeSaudeWithClinicasExamesConsultas = mongoose.model('planoSaude_ClinExamCons');
+const PlanosDeSaude_With_ClinicasMedicosExames = mongoose.model('planoSaude_ClinMedExame');
