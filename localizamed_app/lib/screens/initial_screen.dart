@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/components/initial_card.dart';
 import 'package:localizamed_app/components/initial_page_view.dart';
 
 class InitialScreen extends StatefulWidget {
@@ -29,11 +30,11 @@ class _InitialScreenState extends State<InitialScreen> {
                             top: MediaQuery.of(context).size.height / 30),
                         child: Row(
                           children: <Widget>[
-                           Image(
+                            Image(
                               image: AssetImage('images/icon.png'),
                               width: 40,
                               height: 40,
-                            ), 
+                            ),
                             Text(
                               'Explore',
                               style: TextStyle(
@@ -87,32 +88,31 @@ class _InitialScreenState extends State<InitialScreen> {
         body: LayoutBuilder(
           builder: (context, constrains) {
             return Container(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width / 8,
-                      top: MediaQuery.of(context).size.height / 10),
-                  padding: EdgeInsets.only(left: 4),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          left: BorderSide(
-                              width: 4,
-                              color: Theme.of(context).primaryColor))),
-                  child: Text(
-                    'Ultimas Clínicas',
-                    style: TextStyle(fontSize: 26, fontFamily: 'Montserrat'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 8,
+                        top: MediaQuery.of(context).size.height / 10),
+                    padding: EdgeInsets.only(left: 4),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            left: BorderSide(
+                                width: 4,
+                                color: Theme.of(context).primaryColor))),
+                    child: Text(
+                      'Ultimas Clínicas',
+                      style: TextStyle(fontSize: 26, fontFamily: 'Montserrat'),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 30,
-                ),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: InitialPageView())
-              ],
-            ));
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 30,
+                  ),                  
+                  InitialCard()
+                ],
+              ),
+            );
           },
         ));
   }

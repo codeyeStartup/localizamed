@@ -8,15 +8,15 @@ class ClinicaBloc {
 
   final _clinicaGet = BehaviorSubject<Clinicas2>();
   final _clinicasListGet = BehaviorSubject<List<Clinicas>>();
-  final _ultimasclinicasListGet = BehaviorSubject<List<TresClinicas>>();
+  final _ultimasclinicasListGet = BehaviorSubject<TresClinicas>();
 
   BehaviorSubject<Clinicas2> get clinica => _clinicaGet.stream;
   BehaviorSubject<List<Clinicas>> get clinicasList => _clinicasListGet.stream;
-  BehaviorSubject<List<TresClinicas>> get ultimasclinicasList => _ultimasclinicasListGet.stream;
+  BehaviorSubject<TresClinicas> get ultimasclinicasList => _ultimasclinicasListGet.stream;
 
   //3 Ultimas clinicas
   getUltimasClinicas() async {
-    List<TresClinicas> clinicasRes = await _repository.getUltimas();
+  TresClinicas clinicasRes = await _repository.getUltimas();
     _ultimasclinicasListGet.sink.add(clinicasRes);
   }
 

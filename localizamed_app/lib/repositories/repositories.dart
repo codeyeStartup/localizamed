@@ -22,6 +22,5 @@ class Repository{
   Future<Clinicas2> getClinicaById() => appClinicaApiProvider.getClinicaById();
   Future<List<Medicos>> getMedicos() => appMedicoApiProvider.getMedicos();
   Future<List<Clinicas>> getClinicas() => appClinicasListApiProvider.getClinicas();
-  Future<List<TresClinicas>> getUltimas() => appUltimasClinicasApiProvider.getUltimas();
-
-  }
+  Future<TresClinicas> getUltimas() => appUltimasClinicasApiProvider.getUltimas();
+ }
