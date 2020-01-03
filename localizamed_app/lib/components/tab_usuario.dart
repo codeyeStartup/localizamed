@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:localizamed_app/blocs/user_bloc.dart';
 
-class UsuCard extends StatelessWidget {
+class UsuCard extends StatefulWidget {
+  @override
+  _UsuCardState createState() => _UsuCardState();
+}
+
+class _UsuCardState extends State<UsuCard> {
+
+  @override
+  void initState(){
+    userBloc.getUser();
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    userBloc.getUser();
+    
     return Container(
         margin: const EdgeInsets.symmetric(
           vertical: 150.0,

@@ -6,22 +6,26 @@ import 'package:localizamed_app/screens/clinic_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinCard extends StatefulWidget {
-  static List<Clinicas> clinicas;
-  final idClin;
-
-  ClinCard({Key key, this.idClin}) : super(key: key);
 
   @override
   _ClinCardState createState() => _ClinCardState();
 }
 
 class _ClinCardState extends State<ClinCard> {
-  var idClin;
 
-  Clinicas clinicas = Clinicas();
   @override
-  Widget build(BuildContext context) {
+  void initState(){
     clinicaBloc.getListClinicas();
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {    
     double c_width = MediaQuery.of(context).size.width * 0.0;
 
     return new Container(

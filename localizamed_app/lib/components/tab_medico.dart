@@ -10,10 +10,25 @@ class MedCard extends StatefulWidget {
 
 class _MedCardState extends State<MedCard> {
   ConexaoAPI conexaoApi;
+  //MedicosBloc medicosBloc;
+
+  @override
+  void initState(){
+    //medicosBloc = new MedicosBloc();
+    medicoBloc.getMedicos();
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    //medicoBloc.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    medicoBloc.getMedicos();
+    //medicoBloc.getMedicos();    
     return new Container(
         margin: const EdgeInsets.symmetric(
           vertical: 16.0,
@@ -23,6 +38,7 @@ class _MedCardState extends State<MedCard> {
             stream: medicoBloc.medico,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
+                
                 return Center(
                     child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),

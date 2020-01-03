@@ -11,8 +11,19 @@ class _MedCardState extends State<MedCardInClin> {
   ConexaoAPI conexaoApi;
 
   @override
-  Widget build(BuildContext context) {
+  void initState(){
     clinicaBloc.getClinica();
+    super.initState();
+  }
+
+  @override
+  void dispose(){    
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
     return new LayoutBuilder(
       builder: (context, constrains) {
         return Container(
