@@ -10,6 +10,7 @@ class MedicoApiProvider {
         headers: {"Accept": "application/json"});
 
     if (response.statusCode == 200) {
+      //print(response.body);
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       return parsed.map<Medicos>((json) => Medicos.fromJson(json)).toList();
     } else {

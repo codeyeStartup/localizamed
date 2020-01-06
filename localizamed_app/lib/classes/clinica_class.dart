@@ -34,34 +34,38 @@ class Clinicas2 {
   final String fone_2;
   final String caminhoFoto;
   final List<MedicosClin> medicosClin;
+  final List<ExamesConsultaClin> examConsultaClin;
   final String teste;
 
-  Clinicas2({
-    this.id,
-    this.idMedico,
-    this.nome,
-    this.razaoSocial,
-    this.email,
-    this.site,
-    this.cnpj,
-    this.latitute,
-    this.longitude,
-    this.descricao,
-    this.cidade,
-    this.bairro,
-    this.uf,
-    this.fone_1,
-    this.fone_2,
-    this.caminhoFoto,
-    this.medicosClin,
-    this.teste,
-  });
+  Clinicas2(
+      {this.id,
+      this.idMedico,
+      this.nome,
+      this.razaoSocial,
+      this.email,
+      this.site,
+      this.cnpj,
+      this.latitute,
+      this.longitude,
+      this.descricao,
+      this.cidade,
+      this.bairro,
+      this.uf,
+      this.fone_1,
+      this.fone_2,
+      this.caminhoFoto,
+      this.medicosClin,
+      this.teste,
+      this.examConsultaClin});
 
   factory Clinicas2.fromJson(Map<String, dynamic> json) {
     return Clinicas2(
       id: json['_id'] as String,
       medicosClin:
           (json['medico'] as List).map((i) => MedicosClin.fromJson(i)).toList(),
+      examConsultaClin: (json['exame_consulta'] as List)
+          .map((i) => ExamesConsultaClin.fromJson(i))
+          .toList(),
       teste: json['especialidade'] as String,
       nome: json['nome'] as String,
       razaoSocial: json['razao_social'] as String,
@@ -113,7 +117,27 @@ class MedicoId {
         especialidade: json['especialidade'],
         sexo: json['sexo'],
         temFoto: json['temFoto'],
-        caminhoFoto: json['caminho_foto']
-        );
+        caminhoFoto: json['caminho_foto']);
+  }
+}
+
+class ExamesConsultaClin {
+  final ExameConsultaId exameConsultaId;
+
+  ExamesConsultaClin({this.exameConsultaId});
+
+  factory ExamesConsultaClin.fromJson(Map<String, dynamic> json) {
+    return ExamesConsultaClin(
+        exameConsultaId: ExameConsultaId.fromJson(json['exame_consulta_id']));
+  }
+}
+
+class ExameConsultaId {
+  final String exame;
+
+  ExameConsultaId({this.exame});
+
+  factory ExameConsultaId.fromJson(Map<String, dynamic> json) {
+    return ExameConsultaId(exame: json['nome']);
   }
 }

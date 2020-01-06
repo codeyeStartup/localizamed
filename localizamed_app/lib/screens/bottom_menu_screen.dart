@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/screens/clinica_painel.dart';
 import 'package:localizamed_app/screens/initial_screen.dart';
 import 'package:localizamed_app/screens/medico_painel.dart';
+import 'package:localizamed_app/screens/search_screen.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -24,10 +25,7 @@ class _BottomMenuState extends State<BottomMenu>{
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
     InitialScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    SearchScreen(),
     UserColapsed(),
     CardMedicoScreen(),
     ClinicaCardScreen(),

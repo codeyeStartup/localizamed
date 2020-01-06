@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:localizamed_app/blocs/login_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/components/msg_sem_internet.dart';
 import 'package:localizamed_app/screens/bottom_menu_screen.dart';
 import 'package:localizamed_app/screens/home_screen.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_home.dart';
@@ -33,7 +34,7 @@ class LoginScreenState extends State<LoginScreen> {
       switch (state) {
         case LoginState.SUCESSO:
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => BottomMenu()));
+              MaterialPageRoute(builder: (context) => MsgInt()));
           break;
         case LoginState.FALHA:
           showDialog(

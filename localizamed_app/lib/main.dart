@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localizamed_app/components/msg_sem_internet.dart';
 import 'package:localizamed_app/screens/login_screen.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

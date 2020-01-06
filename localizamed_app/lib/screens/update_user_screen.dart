@@ -82,11 +82,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 );
               }
 
-              _signupBloc.changeNome(snapshot.data.nome);
-              _signupBloc.changeEmail(snapshot.data.email);
+              //_signupBloc.changeNome(snapshot.data.nome);
+              /* _signupBloc.changeEmail(snapshot.data.email);
               _signupBloc.changeCidade(snapshot.data.cidade);
               _signupBloc.changeUf(snapshot.data.uf);
-              _signupBloc.changeTelefone(snapshot.data.fone_1);
+              _signupBloc.changeTelefone(snapshot.data.fone_1); */
 
               return Container(
                   padding: const EdgeInsets.symmetric(
@@ -233,10 +233,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                             if (_formKey.currentState
                                                 .validate()) {
                                               _signupBloc.updateUser();
-                                              Navigator.of(context).push(
+                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          BottomMenu()));
+                                                          UserColapsed()));
                                             }
                                           },
                                         ),

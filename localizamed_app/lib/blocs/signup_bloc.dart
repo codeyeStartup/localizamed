@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
-import 'package:localizamed_app/blocs/user_bloc.dart';
-import 'package:localizamed_app/classes/user_class.dart';
 import 'package:localizamed_app/validators/signup_validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -193,6 +190,7 @@ increment(); */
     var email = prefs.getString('email');
     String url = ConexaoAPI().api + 'usuarioUpdate/' + email;
     Map<String, String> headers = {"Accept": "application/json"};
+    
  
     try {
       http.Response response = await http.patch(url, headers: headers, body: {
@@ -211,11 +209,9 @@ increment(); */
         _updateController.add(UpdateState.SUCESSO);
       } else {
         print("deu errado");
-        print(_nomeController.value);
         _updateController.add(UpdateState.FALHA);
       }
     } catch (erro) {
-      print("robson");
       print(erro);
       return _updateController.add(UpdateState.CATCH_ERRO);
     }
