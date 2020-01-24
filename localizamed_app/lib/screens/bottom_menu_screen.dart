@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/blocs/user_bloc.dart';
 import 'package:localizamed_app/screens/clinica_painel.dart';
 import 'package:localizamed_app/screens/initial_screen.dart';
 import 'package:localizamed_app/screens/medico_painel.dart';
 import 'package:localizamed_app/screens/search_screen.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-//import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:localizamed_app/blocs/conexaoAPI.dart';
 
 class BottomMenu extends StatefulWidget {
   BottomMenu({Key key}) : super(key: key);
@@ -26,15 +27,25 @@ class _BottomMenuState extends State<BottomMenu>{
   static  List<Widget> _widgetOptions = <Widget>[
     InitialScreen(),
     SearchScreen(),
-    UserColapsed(),
     CardMedicoScreen(),
     ClinicaCardScreen(),
+    UserColapsed(),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void initState(){
+    userBloc.getUser();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -113,62 +124,25 @@ class _BottomMenuState extends State<BottomMenu>{
                ),
                GestureDetector(
                  child: AnimatedContainer(
-                     duration: Duration(milliseconds: 100),
-                   padding: EdgeInsets.all(10),
-                   margin: EdgeInsets.only(left: 10,right: 20),
-                   decoration: BoxDecoration(
-                       border: Border(
-                           top: BorderSide(
-                               width: _selectedIndex == 2 ? 2 : 0.1,
-                               color: _selectedIndex == 2 ? Colors.cyanAccent : Colors.white
-                           )
-                       )
-                   ),
-                   height: size.height,
-                   child:  Container(
-                     width: 40,
-                     height: 40,
-                     decoration: BoxDecoration(
-                         boxShadow: [
-                           BoxShadow(
-                               color: Colors.black54,
-                               offset: new Offset(3, 3),
-                               blurRadius: 5
-                           )
-                         ],
-                       borderRadius: BorderRadius.all(Radius.circular(200)),
-                       /* image: DecorationImage(
-                         fit: BoxFit.fill,
-                         image: AssetImage('images/Wesley.jpg')
-                       ) */
-                     ),
-                   )
-                 ),
-                 onTap: (){
-                   _onItemTapped(2);
-                 },
-               ),
-               GestureDetector(
-                 child: AnimatedContainer(
                    duration: Duration(milliseconds: 100),
                    padding: EdgeInsets.all(10),
                    margin: EdgeInsets.only(left: 10,right: 20),
                    decoration: BoxDecoration(
                        border: Border(
                            top: BorderSide(
-                               width: _selectedIndex == 3 ? 2 : 0.1,
-                               color: _selectedIndex == 3 ? Colors.red : Colors.white
+                               width: _selectedIndex == 2 ? 2 : 0.1,
+                               color: _selectedIndex == 2 ? Colors.red : Colors.white
                            )
                        )
                    ),
                    height: size.height,
                    child:  Icon(MdiIcons.medicalBag,
                        size: 30,
-                       color: _selectedIndex == 3 ? Colors.red : Colors.grey[500]
+                       color: _selectedIndex == 2 ? Colors.red : Colors.grey[500]
                    ),
                  ),
                  onTap: (){
-                   _onItemTapped(3);
+                   _onItemTapped(2);
                  },
                ),
                GestureDetector(
@@ -179,26 +153,56 @@ class _BottomMenuState extends State<BottomMenu>{
                    decoration: BoxDecoration(
                        border: Border(
                            top: BorderSide(
-                               width: _selectedIndex == 4 ? 2 : 0.1,
-                               color: _selectedIndex == 4 ? Colors.green : Colors.white
+                               width: _selectedIndex == 3 ? 2 : 0.1,
+                               color: _selectedIndex == 3 ? Colors.green : Colors.white
                            )
                        )
                    ),
                    height: size.height,
                    child:  Icon(FontAwesomeIcons.clinicMedical,
                        size: 24,
-                       color: _selectedIndex == 4 ? Colors.green : Colors.grey[500]
+                       color: _selectedIndex == 3 ? Colors.green : Colors.grey[500]
                    ),
                  ),
                  onTap: (){
-                   _onItemTapped(4);
+                   _onItemTapped(3);
                  },
                ),
+               GestureDetector(
+                 child: AnimatedContainer(
+                     duration: Duration(milliseconds: 100),
+                   padding: EdgeInsets.all(10),
+                   margin: EdgeInsets.only(left: 10,right: 20),
+                   decoration: BoxDecoration(
+                       border: Border(
+                           top: BorderSide(
+                               width: _selectedIndex == 4 ? 2 : 0.1,
+                               color: _selectedIndex == 4 ? Colors.cyanAccent : Colors.white
+                           )
+                       )
+                   ),
+                   height: size.height,
+                   child:  StreamBuilder(
+                     stream: userBloc.usuario,
+                     builder: (context, snapshot){
+                       return Container(
+                     decoration: new BoxDecoration(
+                     shape: BoxShape.circle,), 
+                     child: snapshot.data.caminhoFoto == null ? Image.asset('images/usuarioP.png',fit: BoxFit.fill,) :
+                     Image.network(ConexaoAPI().api +'imagensUsarios/' + snapshot.data.caminhoFoto)
+                   );
+                     },
+                   )
+                  ),
+                  onTap: (){
+                   _onItemTapped(4);
+                  },
+                 ),
              ],
            )
-         ),
-        )
-    );
+          ),
+         )
+        );
   }
 
 

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/components/initial_card.dart';
+import 'package:localizamed_app/screens/bottom_menu_screen.dart';
+import 'package:localizamed_app/screens/search_screen.dart';
 
 class InitialScreen extends StatefulWidget {
   @override
@@ -59,24 +61,21 @@ class _InitialScreenState extends State<InitialScreen> {
                                 color: Colors.black38,
                                 offset: Offset(1, 2))
                           ]),
-                      child: TextField(
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(4),
-                              hintStyle: TextStyle(fontSize: 14),
-                              hintText: 'Pesquisar',
-                              suffixIcon: Icon(
-                                FontAwesomeIcons.search,
-                                size: 18,
-                                color: isActive == true
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.black87,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent)),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent)))),
+                      child: FlatButton(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Pesquisar'),
+                            SizedBox(width: MediaQuery.of(context).size.width / 4,),
+                            Icon(Icons.search),
+                          ],
+                        ),
+                        onPressed: (){
+                          Navigator.of(context).push( MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SearchScreen())); },
+                      )
                     )
                   ],
                 )),

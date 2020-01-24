@@ -40,7 +40,6 @@ class _SignUpScreen4State extends State<SignUpScreen4>
     var size = mediaQuery.size;
 
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         body: StreamBuilder<SignupState>(
             stream: _signupBloc.outState,
             initialData: SignupState.IDLE,
@@ -66,7 +65,7 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                           alignment: Alignment.center,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context).primaryColor,
                             size: 30,
                           ),
                           onPressed: () {
@@ -87,7 +86,7 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                             Text(
                               'Agora crie uma senha. Só tenha cuidado para não esquecê-la!',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                                  TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -114,19 +113,17 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                                             : null,
                                         hintText: 'Sua senha',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'Senha',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                           fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -145,47 +142,6 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                                       ),
                                     );
                                   }),
-
-                              //campo de CONFIRMAR SENHA
-                              /* TextFormField(
-                                keyboardType: TextInputType.text,
-                                obscureText: invisible,
-                                decoration: InputDecoration(
-                                  hintText: 'Repita sua senha',
-                                  hintStyle: TextStyle(
-                                      color: Color.fromRGBO(255, 255, 255, 0.5),
-                                      fontSize: 16),
-                                  labelText: 'Confirmar senha',
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      invisible == true
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      size: 20.0,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        invisible = false;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                 validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Coloque um e-mail válido';
-                                  }
-                                  return null;
-                                }, 
-                              ), */
                             ],
                           ))),
 
@@ -196,14 +152,14 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                             return RaisedButton(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 100),
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
                                 ),
                                 child: Text(
                                   'PRÓXIMO',
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.white,
                                       fontSize: 22),
                                 ),
                                 onPressed: snapshot.hasData

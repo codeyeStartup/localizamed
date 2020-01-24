@@ -103,9 +103,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                       ),
                     ),
                     Positioned(
-                        top: expandedHeight / 1.5 - shrinkOffset,
+                        top: expandedHeight / 1.58 - shrinkOffset,
                         child: Container(
-                            width: size.height / 2.1,
+                            width: size.height / 2.5,
                             height: size.height / 5.8,
                             margin: EdgeInsets.only(left: 45, right: 45),
                             decoration: BoxDecoration(

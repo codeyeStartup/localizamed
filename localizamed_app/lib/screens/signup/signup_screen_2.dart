@@ -38,7 +38,6 @@ class _SignUpScreen2State extends State<SignUpScreen2>
     var size = mediaQuery.size;
 
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         body: StreamBuilder<SignupState>(
             stream: _signupBloc.outState,
             initialData: SignupState.IDLE,
@@ -64,7 +63,7 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                             alignment: Alignment.center,
                             icon: Icon(
                               Icons.arrow_back,
-                              color: Colors.white,
+                              color: Theme.of(context).primaryColor,
                               size: 30,
                             ),
                             onPressed: () {
@@ -84,7 +83,7 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                             Text(
                               'Olá, tudo bem? Eu gostaria de te conhecer melhor. Pode por favor me dizer seu Nome, sua Data de Nascimento e seu E-mail?',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                                  TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -109,19 +108,17 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                             : null,
                                         hintText: 'Exemplo: Ana Laura Pereira',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'Nome Completo',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black,)
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -143,18 +140,15 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                         counter: SizedBox.shrink(),
                                         labelText: 'Data de Nascimento',
                                         hintText: 'AAAA/MM/DD',
-                                        hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5)),
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -176,19 +170,17 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                             : null,
                                         hintText: 'você@gmail.com',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'E-mail',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -203,7 +195,7 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                             return RaisedButton(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 100),
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
                                 ),
@@ -212,7 +204,7 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                 child: Text(
                                   'PRÓXIMO',
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.white,
                                       fontSize: 22),
                                 ),
                                 onPressed: snapshot.hasData

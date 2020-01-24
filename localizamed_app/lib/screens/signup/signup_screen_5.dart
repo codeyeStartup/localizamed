@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:localizamed_app/screens/bottom_menu_screen.dart';
-import 'package:localizamed_app/screens/home_screen.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_4.dart';
 import 'package:localizamed_app/blocs/signup_bloc.dart';
 
@@ -88,7 +87,6 @@ class _SignUpScreen5State extends State<SignUpScreen5>
     var size = mediaQuery.size;
 
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         body: StreamBuilder<SignupState>(
             stream: _signupBloc.outState,
             initialData: SignupState.IDLE,
@@ -114,7 +112,7 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                           alignment: Alignment.center,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context).primaryColor,
                             size: 30,
                           ),
                           onPressed: () {
@@ -135,7 +133,7 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                             Text(
                               'Bom, esses dados são opcionais, mas seria legal se você me informasse isso também :)',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                                  TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -169,14 +167,14 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                             fontSize: 16),
                                         labelText: 'CPF',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                       
@@ -200,19 +198,17 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                         counter: SizedBox.shrink(),
                                         hintText: 'Sem pontuação',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'RG',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                           fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),                                      
                                     );
@@ -235,19 +231,17 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                         counter: SizedBox.shrink(),
                                         hintText: 'Seu numero',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'Telefone 2',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -259,21 +253,18 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                       RaisedButton(
                           padding: EdgeInsets.symmetric(
                               vertical: 15, horizontal: 100),
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),
                           ),
                           child: Text(
                             'FINALIZAR',
                             style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                                color: Colors.white,
                                 fontSize: 22),
                           ),
                           onPressed: () {
                             _signupBloc.signUp();
-
-                            /* Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignUpScreen5())); */
                           })
                     ]),
                   );

@@ -55,6 +55,21 @@ usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
     GetUser();
 });
 
+//rotas das imagens
+usuarioRouter.get('/imagensUsuario/:caminho_foto', (req, res, next)=>{
+    const img = req.params.caminho_foto;
+
+    fs.readFile('./images/'+img, function(erro, content){
+        if(erro){
+            res.status(400).json(erro);
+            return;
+        }
+
+        res.writeHead(200, { 'content-type' : 'image/png'});
+        res.end(content);
+    });
+});
+
 //função de INSERIR dados no banco
 usuarioRouter.post('/usuarios', (req, res, next)=>{
 

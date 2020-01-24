@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:localizamed_app/screens/home_screen.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_2.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_4.dart';
 import 'package:localizamed_app/blocs/signup_bloc.dart';
@@ -71,8 +70,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
     var size = mediaQuery.size;
 
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        body: StreamBuilder<SignupState>(
+            body: StreamBuilder<SignupState>(
             stream: _signupBloc.outState,
             initialData: SignupState.IDLE,
             builder: (context, snapshot) {
@@ -97,7 +95,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                           alignment: Alignment.center,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context).primaryColor,
                             size: 30,
                           ),
                           onPressed: () {
@@ -118,7 +116,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                             Text(
                               'Um belo nome você tem! Agora vou precisar saber o seu Estado, sua Cidade e seu Telefone:',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                                  TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -127,7 +125,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                           height: size.height / 2,
                           width: size.width / 1.3,
                           child: Form(
-                              child: ListView(
+                            child: ListView(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             children: <Widget>[
@@ -146,17 +144,16 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                             style: TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.black,
-                                                decorationColor: Colors.white),
+                                                decorationColor: Colors.black),
                                           )));
                                 }).toList(),
                                 isExpanded: true,
                                 hint: Text('Select'),
                                 disabledHint: Text('Select'),
                                 style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'BreeSerif'),
                                 iconSize: 35,
-                                iconEnabledColor: Colors.white,
+                                iconEnabledColor: Colors.black,
                                 onChanged: (String newValueSelected) {
                                   //your code to execute, when a menu item is selected from drop down
                                   setState(() {
@@ -185,19 +182,17 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                             : null,
                                         hintText: 'Exemplo Limoeiro',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'Cidade',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                            fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -223,19 +218,17 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                             : null,
                                         hintText: 'Seu número',
                                         hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'Telefone',
                                         labelStyle: TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                           fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Colors.white),
+                                              BorderSide(color: Theme.of(context).primaryColor),
                                         ),
                                       ),
                                     );
@@ -250,7 +243,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                             return RaisedButton(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 100),
-                                color: Colors.white,
+                                color: Theme.of(context).primaryColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
                                 ),
@@ -259,7 +252,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                 child: Text(
                                   'PRÓXIMO',
                                   style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.white,
                                       fontSize: 22),
                                 ),
                                 onPressed: snapshot.hasData
