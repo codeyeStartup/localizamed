@@ -22,6 +22,8 @@ clinicasRouter.get('/clinicas', (req, res, next) => {
 });
 
 
+
+
 /*ROTA DE TESTE - NÃO APAGAR ESSE BLOCO DE COMENTÁRIO!!! 
 clinicasRouter.get('/clinica2', async (req, res, next) => {
     try{
@@ -61,6 +63,21 @@ clinicasRouter.get('/clinica/:id', (req, res, next) => {
     }
 
     findClinicas();
+});
+
+//Eu quero queijo
+clinicasRouter.get('/clinicasAll', (req, res, next) => {
+    async function AllClinicas() {
+        Clinicas.find({}, (erro, dados) => {
+            if (erro) {
+                res.status(417).send({ message: "Nenhum registro recebido" });
+            }
+            res.status(200);
+            res.json(dados);
+        }).populate('medico.medicoId');
+    }
+
+    AllClinicas();
 });
 
 //função de INSERIR dados no banco

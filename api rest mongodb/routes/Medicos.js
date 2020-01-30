@@ -42,7 +42,7 @@ medicoRouter.get('/medico/:id', (req, res, next) => {
 medicoRouter.post('/medicos',  (req, res, next)=>{
 
 
-    /* var date = new Date();
+    var date = new Date();
 	time_stamp = date.getTime();
 
 
@@ -55,7 +55,7 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
 		if(err){
 			res.status(500).json({error: err});
 			return;
-		} */
+		} 
         
     async function salvaMedico(){
         const medicos = new Medicos({
@@ -66,7 +66,7 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
             cidade: req.body.cidade,
             sexo: req.body.sexo,
             temFoto: req.body.temFoto,
-            //caminho_foto: url_imagem
+            caminho_foto: url_imagem
             });
 
 
@@ -81,7 +81,7 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
     }
 
     salvaMedico();
-    //}); 
+    }); 
 });
 
 //rota das imagens
