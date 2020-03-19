@@ -30,20 +30,23 @@ class _SignUpScreen5State extends State<SignUpScreen5>
               context: context,
               builder: (context) => AlertDialog(
                     title: Text("Cadastrado com sucesso"),
-                    content: Text(
-                        "Você está pronto para usar o nosso aplicativo?"),
+                    content:
+                        Text("Você está pronto para usar o nosso aplicativo?"),
                     actions: <Widget>[
-                      FlatButton(child: Text("Estou Pronto!",
-                        style: TextStyle(
-                          fontSize: 22 
+                      FlatButton(
+                        child: Text(
+                          "Estou Pronto!",
+                          style: TextStyle(fontSize: 22),
                         ),
-                      ),
-                      onPressed: (){
-                        Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => BottomMenu()));
-                      },
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      BottomMenu()),
+                              (Route<dynamic> route) => false);
+                        },
                       )
-                    ],    
+                    ],
                   ));
           break;
         case SignupState.FALHA:
@@ -132,24 +135,21 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                           children: <Widget>[
                             Text(
                               'Bom, esses dados são opcionais, mas seria legal se você me informasse isso também :)',
-                              style:
-                                  TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
                       ),
                       Container(
-                          
                           height: size.height / 2,
                           width: size.width / 1.3,
                           child: Form(
-                                
                               child: ListView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.vertical,
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
                             children: <Widget>[
                               //campo de CPF
-                              StreamBuilder<String>(                                  
+                              StreamBuilder<String>(
                                   stream: _signupBloc.outCpf,
                                   initialData: 'a',
                                   builder: (context, snapshot) {
@@ -166,18 +166,17 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                                 255, 255, 255, 0.5),
                                             fontSize: 16),
                                         labelText: 'CPF',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
-                                      
                                     );
                                   }),
                               SizedBox(
@@ -197,20 +196,19 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                       decoration: InputDecoration(
                                         counter: SizedBox.shrink(),
                                         hintText: 'Sem pontuação',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'RG',
-                                        labelStyle: TextStyle(
-                                           fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
-                                      ),                                      
+                                      ),
                                     );
                                   }),
                               SizedBox(
@@ -230,18 +228,17 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                                       decoration: InputDecoration(
                                         counter: SizedBox.shrink(),
                                         hintText: 'Seu numero',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'Telefone 2',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -259,9 +256,7 @@ class _SignUpScreen5State extends State<SignUpScreen5>
                           ),
                           child: Text(
                             'FINALIZAR',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22),
+                            style: TextStyle(color: Colors.white, fontSize: 22),
                           ),
                           onPressed: () {
                             _signupBloc.signUp();

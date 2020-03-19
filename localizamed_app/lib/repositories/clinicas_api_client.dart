@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localizamed_app/blocs/conexaoAPI.dart';
 import 'package:localizamed_app/classes/clinica_class.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinicasApiProvider {
   Future<List<Clinicas>> getClinicas() async {

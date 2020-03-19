@@ -3,80 +3,67 @@ const Clinicas = require("../models/clinicas");
 
 const pesquisaRouter = express.Router();
 
-pesquisaRouter.post('/search_clinica', (req, res, next) => {
+pesquisaRouter.post('/search_clinica', async (req, res, next) => {
 
-    const search = req.body.search;
+	const search = req.body.search;
 
-    /* async function AllClinicas() {
-        Clinicas.find({
-            nome:{
-                $regex: new RegExp(search, "i")
-            }
-        }, (erro, dados) => {
-            if(erro){
-                res.status(417).send({ message: "Nothing"});
-            }
-            res.status(201);
-            res.json(dados);
-        });
-        
-    } */
+	Clinicas.aggregate([
+		/* { $unwind: "$medico" },
+		{ $unwind: "$exame_consulta" }, */
+		{
+			$lookup: {
+				from: "medicos",
+				localField: "medico.medicoId",
+				foreignField: "_id",
+				as: 'result'
+			}
+		},
+		//{ $unwind: '$result' },
+		{
+			$lookup: {
+				from: "exames_consultas",
+				localField: "exame_consulta.exame_consulta_id",
+				foreignField: "_id",
+				as: 'result2'
+			}
+		},
+		//{ $unwind: '$result2' }, 
+		{
+			$match: {
+				$or: [
+					{
+						'nome': { $regex: new RegExp(req.body.search, "i") }
+					},
+					{
+						'cidade': { $regex: new RegExp(req.body.search, "i") }
+					},
+					{
+						'result.nome': { $regex: new RegExp(req.body.search, "i") }
+					},
+					{
+						'result2.nome': { $regex: new RegExp(req.body.search, "i") }
+					},
 
-    async function AllClinicas() {
-        Clinicas.find({
-            $or: [
-                {
-                    nome: {
-                        $regex: new RegExp(search, "i")
-                    },
-                    cidade: {
-                        $regex: new RegExp(search, "i")
-                    }
-                }
-            ]
+				]
 
-        }, (erro, dados) => {
-            if (erro) {
-                res.status(417).send({ message: "Nothing" });
-            }
-            res.status(201);
-            res.json(dados);
-        });
 
-    }
-
-    AllClinicas();
+			}
+		},
+		{
+			$group: {
+				_id: {
+					nome: "$nome"
+				}
+			}
+		},
+	]).exec(function (err, data) {
+		if (err) {
+			console.log(err);
+		}
+		//console.log(data);
+		res.json(data);
+	});
 });
 
-pesquisaRouter.get('/search_clinica2/:search', (req, res, next) => {
-
-    const search = req.params.search;
-
-    async function AllClinicas() {
-        Clinicas.find({
-            nome: {
-                $regex: new RegExp(search, "i")
-            }
-        }, (erro, dados) => {
-            if (erro) {
-                res.status(417).send({ message: "Nothing" });
-            }
-            res.status(201);
-            res.json(dados);
-        });
-
-    }
-
-    AllClinicas();
-});
 
 module.exports = pesquisaRouter;
-
-/* var name = 'Peter';
-    db.User.find({name:{
-                         $regex: new RegExp(name, "ig")
-                     }
-                },function(err, doc) {
-                                     //Your code here...
-              });
- */

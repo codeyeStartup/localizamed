@@ -4,6 +4,7 @@ import 'package:localizamed_app/screens/bottom_menu_screen.dart';
 import 'package:localizamed_app/screens/usuario_screen.dart';
 import 'package:localizamed_app/blocs/user_bloc.dart';
 import 'package:localizamed_app/blocs/signup_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateScreen extends StatefulWidget {
   @override
@@ -82,11 +83,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 );
               }
 
-              //_signupBloc.changeNome(snapshot.data.nome);
-              /* _signupBloc.changeEmail(snapshot.data.email);
+              _signupBloc.changeNome(snapshot.data.nome);
+               _signupBloc.changeEmail(snapshot.data.email);
               _signupBloc.changeCidade(snapshot.data.cidade);
               _signupBloc.changeUf(snapshot.data.uf);
-              _signupBloc.changeTelefone(snapshot.data.fone_1); */
+              _signupBloc.changeTelefone(snapshot.data.fone_1);
 
               return Container(
                   padding: const EdgeInsets.symmetric(
@@ -111,6 +112,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               return 'Seu nome é muito curto!';
                             } else if (value.length > 100) {
                               return 'Seu nome é grande demais!';
+                            } else if (value.endsWith('  ') || value.startsWith('  ')){
+                              return 'Seu nome é inválido!';
                             }
                             return null;
                           },
@@ -229,14 +232,19 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                       actions: <Widget>[
                                         FlatButton(
                                           child: Text("Sim, eu quero"),
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            //int index = 3;
                                             if (_formKey.currentState
-                                                .validate()) {
+                                                .validate()){
                                               _signupBloc.updateUser();
+                                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                                              prefs.setInt('index', 2);
                                                Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          UserColapsed()));
+                                                          BottomMenu()));
+                                            } else {
+                                              Navigator.of(context).pop();
                                             }
                                           },
                                         ),

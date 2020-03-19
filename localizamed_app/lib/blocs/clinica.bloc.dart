@@ -39,4 +39,4 @@ class ClinicaBloc {
   }
 }
 
-final clinicaBloc = ClinicaBloc();
+  final clinicaBloc = ClinicaBloc();

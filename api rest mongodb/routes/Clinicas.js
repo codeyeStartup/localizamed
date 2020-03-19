@@ -6,6 +6,39 @@ const fs = require('fs');
 
 const clinicasRouter = express.Router();
 
+//rota de pesquisa das clinicas
+ /* clinicasRouter.post('/search_clinica', async (req, res, next) => {
+    const search = req.body.search;
+    Clinicas.aggregate([
+        { $unwind: "$medico" },
+        {
+            $lookup: {
+                from: "medicos",
+                localField: "medico.medicoId",
+                foreignField: "_id",
+                as: 'result'
+            }
+        },
+        {
+            $match: {
+                'result.nome': {$regex: new RegExp(search, "i")}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    nome: "$nome"
+                }​
+            },
+        }
+    ]).exec(function (err, data) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(data);
+    });
+});
+ */
 //função de RETORNAR TODAS as CLÍNICAS
 clinicasRouter.get('/clinicas', (req, res, next) => {
     async function AllClinicas() {
@@ -74,7 +107,7 @@ clinicasRouter.get('/clinicasAll', (req, res, next) => {
             }
             res.status(200);
             res.json(dados);
-        }).populate('medico.medicoId');
+        }).populate('medico.medicoId').populate('exame_consulta.exame_consulta_id');
     }
 
     AllClinicas();

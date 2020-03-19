@@ -1,15 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:localizamed_app/blocs/login_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/components/msg_sem_internet.dart';
-import 'package:localizamed_app/screens/bottom_menu_screen.dart';
-import 'package:localizamed_app/screens/home_screen.dart';
 import 'package:localizamed_app/screens/signup/signup_screen_home.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
-//import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-//import 'package:passwordfield/passwordfield.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -33,8 +26,9 @@ class LoginScreenState extends State<LoginScreen> {
     _loginBloc.outState.listen((state) {
       switch (state) {
         case LoginState.SUCESSO:
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MsgInt()));
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => MsgInt()),
+              (Route<dynamic> route) => false);
           break;
         case LoginState.FALHA:
           showDialog(
@@ -157,7 +151,8 @@ class LoginScreenState extends State<LoginScreen> {
                                       builder: (context, snapshot) {
                                         return TextFormField(
                                           onChanged: _loginBloc.changeEmail,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                           decoration: InputDecoration(
                                               errorText: snapshot.hasError
                                                   ? snapshot.error
@@ -166,13 +161,12 @@ class LoginScreenState extends State<LoginScreen> {
                                         );
                                       }),
 
-                                  //campo de SENHA    
+                                  //campo de SENHA
                                   StreamBuilder<String>(
                                       stream: _loginBloc.outSenha,
                                       builder: (context, snapshot) {
                                         return TextFormField(
-                                          onChanged:
-                                              _loginBloc.changePassword,
+                                          onChanged: _loginBloc.changePassword,
                                           obscureText: invisible,
                                           decoration: InputDecoration(
                                               errorText: snapshot.hasError
@@ -297,11 +291,10 @@ class LoginScreenState extends State<LoginScreen> {
                                           FlatButton(
                                             padding: EdgeInsets.all(0),
                                             onPressed: () {
-                                              Navigator.of(context)
-                                                  .push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SignUpHome()));
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SignUpHome()));
                                             },
                                             child: Text("Cadastre-se",
                                                 style: TextStyle(

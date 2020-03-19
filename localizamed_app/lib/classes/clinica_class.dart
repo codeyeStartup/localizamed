@@ -1,10 +1,34 @@
+class Clinicas3 {
+  final String id;
+  final String nome;
+  final String cidade;
+  final String caminhoFoto;
+
+  Clinicas3(
+      {this.id, this.nome, this.cidade, this.caminhoFoto});
+
+  factory Clinicas3.fromJson(Map<String, dynamic> json) {
+    return Clinicas3(
+      id: json['_id'] as String,
+      nome: json['nome'] as String,
+      cidade: json['cidade'] as String,
+      caminhoFoto: json['caminho_foto'] as String,
+      
+    );
+  }
+}
+
+
+
+//-----------------------------------------------------------------
 class Clinicas {
   final String id;
   final String nome;
   final String cidade;
   final String caminhoFoto;
 
-  Clinicas({this.id, this.nome, this.cidade, this.caminhoFoto});
+  Clinicas(
+      {this.id, this.nome, this.cidade, this.caminhoFoto});
 
   factory Clinicas.fromJson(Map<String, dynamic> json) {
     return Clinicas(
@@ -12,10 +36,12 @@ class Clinicas {
       nome: json['nome'] as String,
       cidade: json['cidade'] as String,
       caminhoFoto: json['caminho_foto'] as String,
+      
     );
   }
 }
 
+//----------------------------------------------------------
 class Clinicas2 {
   final String id;
   final String idMedico;
