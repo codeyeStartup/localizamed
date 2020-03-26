@@ -9,7 +9,7 @@ const medicoRouter = express.Router();
 //função de RETORNAR TODOS os médicos
 medicoRouter.get('/medicos', (req, res, next)=>{
     async function AllMedicos(){
-        Medicos.find({}, (erro, dados) => {
+        Medicos.find({}, {formacao: 0, crm: 0, createdAt: 0, updatedAt: 0, _id: 0}, (erro, dados) => {
             if(erro){
                 res.status(417).send({ message: "Nenhum registro recebido"});
             }
