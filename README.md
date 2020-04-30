@@ -5,6 +5,7 @@ Application developed in order to facilitate the location of medical services.
 ## Built With
 
 *[Flutter](https://flutter.dev/) - Frontend mobile framework
+
 *[NodeJS](https://nodejs.org/) - Backend API REST
 
 ## Authors
