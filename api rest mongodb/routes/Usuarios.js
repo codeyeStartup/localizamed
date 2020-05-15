@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs');
 const usuarioRouter = express.Router();
 const nodemailer = require('nodemailer');
 const smtpTrans = require('nodemailer-smtp-transport');
+const path = require('path');
+// require('dotenv/config');
+
 
 //função para enviar EMAIL DE RECUPERAÇÃO DE SENHA
 usuarioRouter.post('/send_mail', async (req, res, next) => {
@@ -22,13 +25,16 @@ usuarioRouter.post('/send_mail', async (req, res, next) => {
             tls: { rejectUnauthorized: false }
         }));
 
+        // const url = `${process.env.IP_ADDRESS_PORT}/update_pass_get/?email=${req.body.email}`;
+        const url = `192.168.0.103:8081/update_pass_get/?email=${req.body.email}`;
         const mailOptions = {
-            from: 'COLOCAR AQUI O EMAIL DO REMETENTE',
+            from: 'Localizamed <no-reply@localizamed.com.br>',
             to: req.body.email,
-            subject: 'Confirm Email',
+            subject: 'Recuperação de senha',
             html: `<html>
                 <body>
                     <h1> Cheguei aqui. Agora eu só preciso ser estilizado '-' </h1>
+                    <a href="${url}"> CLIQUE EM MIM</a>
                 </body>
                 
                 </html>`
@@ -37,13 +43,17 @@ usuarioRouter.post('/send_mail', async (req, res, next) => {
         transporter.sendMail(mailOptions, (erro, info) => {
             if (erro) console.log(erro)
             console.log(info)
-            return res.status(201).send({ message: 'Enviado'})
+            return res.status(201).send({ message: 'Enviado' })
         });
     } catch (error) {
         res.status(500)
     }
 }
 );
+
+usuarioRouter.get('/update_pass_get', async (req, res, next) => {
+    return res.sendFile(path.join(__dirname + '/../public/index.html'))
+});
 
 //função de RETORNAR TODOS os usuários
 usuarioRouter.get('/usuarios', (req, res, next) => {
@@ -214,6 +224,23 @@ usuarioRouter.patch('/usuarioUpdate/:email', (req, res, next) => {
     };
 
     atualizarUsuario();
+});
+
+usuarioRouter.put('/update_pass/:email', async (req, res, next) => {
+    try {
+        Usuarios.findOneAndUpdate(
+            { email: req.params.email },
+            { senha: bcrypt.hashSync(req.body.senha.trim(), 10) },
+            (erro) => {
+                if (erro) {
+                    res.status(417).send({ message: "Falha ao atualizar" });
+                    throw erro;
+                }
+                res.status(201).send("Atualizado com sucesso!");
+            });
+    } catch{
+        res.status(417).send("Entrei no catch de erro");
+    }
 });
 
 
