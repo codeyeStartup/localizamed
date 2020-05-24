@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
-import 'package:localizamed_app/app/pages/user_profile/tab_usuario.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:localizamed_app/app/pages/login/login_screen.dart';
 import 'package:localizamed_app/app/pages/user_profile/update_user_screen.dart';
@@ -64,7 +63,7 @@ class _UserProfileState extends State<UserProfile> {
                       height: 200,
                       child: Stack(
                         children: <Widget>[
-                          Positioned(
+                          /* Positioned(
                             left: 0,
                             top: 0,
                             child: Container(
@@ -75,30 +74,32 @@ class _UserProfileState extends State<UserProfile> {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height / 4,
                             ),
-                          ),
-                          /* Padding(
+                          ), */
+                          Padding(
                             padding: EdgeInsets.only(top: 0),
                             child: ClipPath(
                               clipper: MyClipper(),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [Theme.of(context).primaryColor, 
+                                      Color.fromARGB(255, 0, 191, 255)]),
                                 ),
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height / 4,
                               ),
-                            ), 
-                          ), */
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                          ),
+                          Stack(
+                            /* mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start, */
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left:
-                                        MediaQuery.of(context).size.width / 20,
-                                    top: MediaQuery.of(context).size.height /
-                                        30),
+                                    left: MediaQuery.of(context).size.width / 8,
+                                    top: 6),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -126,10 +127,10 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                               Padding(
                                   padding: EdgeInsets.only(
-                                      left:
-                                          MediaQuery.of(context).size.width / 8,
+                                      left: MediaQuery.of(context).size.width /
+                                          1.8,
                                       top: MediaQuery.of(context).size.height /
-                                          30),
+                                          20),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
@@ -155,8 +156,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 10,
-                          top: 20),
+                          left: MediaQuery.of(context).size.width / 10, top: 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -179,7 +179,7 @@ class _UserProfileState extends State<UserProfile> {
                           Card(
                               FontAwesomeIcons.addressCard,
                               "CPF:",
-                              snapshot.data.cpf == null
+                              snapshot.data.cpf == ''
                                   ? 'CPF não informado'
                                   : snapshot.data.cpf),
                           SizedBox(
@@ -188,7 +188,7 @@ class _UserProfileState extends State<UserProfile> {
                           Card(
                               FontAwesomeIcons.addressCard,
                               'RG:',
-                              snapshot.data.rg == null
+                              snapshot.data.rg == ''
                                   ? 'RG não informado'
                                   : snapshot.data.rg)
                         ],
@@ -235,9 +235,10 @@ class MyClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path p = Path();
-    p.lineTo(size.width, 0.0);
-    p.lineTo(size.width, size.height - 150);
-    p.lineTo(size.width / 4, size.height);
+    p.lineTo(size.width / 5.5, size.height - 100);
+    p.quadraticBezierTo(
+        size.width / 2.9, size.height, size.width / 2, size.height - 50);
+    p.lineTo(size.width, 0);
     p.close();
 
     return p;
