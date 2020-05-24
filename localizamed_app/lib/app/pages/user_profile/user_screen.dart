@@ -63,18 +63,6 @@ class _UserProfileState extends State<UserProfile> {
                       height: 200,
                       child: Stack(
                         children: <Widget>[
-                          /* Positioned(
-                            left: 0,
-                            top: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                shape: BoxShape.circle
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height / 4,
-                            ),
-                          ), */
                           Padding(
                             padding: EdgeInsets.only(top: 0),
                             child: ClipPath(
