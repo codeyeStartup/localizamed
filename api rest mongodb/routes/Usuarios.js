@@ -5,8 +5,6 @@ const usuarioRouter = express.Router();
 const nodemailer = require('nodemailer');
 const smtpTrans = require('nodemailer-smtp-transport');
 const path = require('path');
-// require('dotenv/config');
-
 
 //função para enviar EMAIL DE RECUPERAÇÃO DE SENHA
 usuarioRouter.post('/send_mail', async (req, res, next) => {
@@ -19,25 +17,49 @@ usuarioRouter.post('/send_mail', async (req, res, next) => {
         const transporter = nodemailer.createTransport(smtpTrans({
             service: 'gmail',
             auth: {
-                user: 'localizamedapp@gmail.com',
-                pass: 'startup2019'
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
             },
             tls: { rejectUnauthorized: false }
-        }));
+        }));        
 
         // const url = `${process.env.IP_ADDRESS_PORT}/update_pass_get/?email=${req.body.email}`;
-        const url = `192.168.0.103:8081/update_pass_get/?email=${req.body.email}`;
+        const url = `http://${process.env.IP_ADDRESS}/update_pass_get/?email=${req.body.email}`;
         const mailOptions = {
             from: 'Localizamed <no-reply@localizamed.com.br>',
             to: req.body.email,
             subject: 'Recuperação de senha',
             html: `<html>
-                <body>
-                    <h1> Cheguei aqui. Agora eu só preciso ser estilizado '-' </h1>
-                    <a href="${url}"> CLIQUE EM MIM</a>
-                </body>
-                
-                </html>`
+
+            <body style="
+                            align-content: center;
+                            font-family: 'Arial';
+                            ">
+                <div class="container" style="  
+                                background-color: white;
+                                padding: 20;
+                                text-align: center;
+                                font-size: 0.9em;
+                                text-decoration-color: black;
+                                ">
+                    <h3>Este é um e-mail de recuperação de senha</h3>
+                    <p>Clique no botão para recuperar sua conta</p>
+                    <a href="${url}"><button style="
+                                    background-color: #1B49F3;
+                                    color: white;
+                                    border: none;
+                                    font-size: 1.07em;
+                                    font-weight: bold;
+                                    border-radius: 0.4em;
+                                    margin-bottom: 20;
+                                    width: 180px;
+                                    height: 50px;">
+                            Atualizar Senha
+                        </button></a>
+                </div>
+            </body>
+            
+            </html>`
         }
 
         transporter.sendMail(mailOptions, (erro, info) => {
@@ -51,8 +73,31 @@ usuarioRouter.post('/send_mail', async (req, res, next) => {
 }
 );
 
+usuarioRouter.put('/update_pass/:email', async (req, res, next) => {
+    try {
+        Usuarios.findOneAndUpdate(
+            { email: req.params.email },
+            { senha: bcrypt.hashSync(req.body.senha.trim(), 10) },
+            (erro) => {
+                if (erro) {
+                    res.status(417).send({ message: "Falha ao atualizar" });
+                    throw erro;
+                }
+                console.log('fui atualizado')
+                res.status(201).send("Atualizado com sucesso!");
+            });
+    } catch{
+        res.status(417).send("Entrei no catch de erro");
+    }
+});
+
 usuarioRouter.get('/update_pass_get', async (req, res, next) => {
     return res.sendFile(path.join(__dirname + '/../public/index.html'))
+});
+
+
+usuarioRouter.post('/update_pass_get/update', async (req, res, next) => {
+    return res.sendFile(path.join(__dirname + '/../public/update_pass_confirm.html'))
 });
 
 //função de RETORNAR TODOS os usuários
@@ -226,42 +271,4 @@ usuarioRouter.patch('/usuarioUpdate/:email', (req, res, next) => {
     atualizarUsuario();
 });
 
-usuarioRouter.put('/update_pass/:email', async (req, res, next) => {
-    try {
-        Usuarios.findOneAndUpdate(
-            { email: req.params.email },
-            { senha: bcrypt.hashSync(req.body.senha.trim(), 10) },
-            (erro) => {
-                if (erro) {
-                    res.status(417).send({ message: "Falha ao atualizar" });
-                    throw erro;
-                }
-                res.status(201).send("Atualizado com sucesso!");
-            });
-    } catch{
-        res.status(417).send("Entrei no catch de erro");
-    }
-});
-
-
-//função de ATUALIZAR um usuário
-/*usuarioRouter.put('/usuarioUpdate/:id', (req, res, next)=>{
-
-    async function atualizarUsuario(){
-        try{
-            Usuarios.findByIdAndUpdate(req.params.id, req.body, function(erro) {
-                if (erro) {
-                    res.send(erro);
-                }
-                res.status(201).send("Atualizado com sucesso!");
-            });
-        } catch{
-            res.status(417).send("Algo deu errado");
-        }
-
-};
-
-atualizarUsuario();
-});
-*/
 module.exports = usuarioRouter;
