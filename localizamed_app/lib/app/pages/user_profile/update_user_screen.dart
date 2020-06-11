@@ -56,6 +56,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context)
@@ -157,7 +158,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             return null;
                           },
                         ),
-
+                        Text('Seu atual Estado:',style: TextStyle(
+                          fontSize: 18
+                        ),),
+                        Text(snapshot.data.uf),
                         //DATA
                         DropdownButton<String>(
                           items: _estados.map((String dropDownStringItem) {
@@ -191,14 +195,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           value: _estadosItemSelected,
                         ),
                         //ESTADO
-                        /* TextFormField(
-                          initialValue: snapshot.data.uf,
-                          onChanged: _signupBloc.changeUf,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.location_on),
-                            labelText: "Estado",
-                          ),
-                        ), */
 
                         //TELEFONE
                         TextFormField(

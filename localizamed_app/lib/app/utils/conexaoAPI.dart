@@ -1,3 +1,3 @@
 class ConexaoAPI {
-  String api = 'http://192.168.0.238:8081/';
+  String api = 'http://10.0.0.110:8081/';
 }
