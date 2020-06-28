@@ -1,10 +1,15 @@
 const express = require('express');
 const Usuarios = require("../models/usuarios");
+const usuarioController = require('../controllers/usuarioController');
 const bcrypt = require('bcryptjs');
 const usuarioRouter = express.Router();
 const nodemailer = require('nodemailer');
+const cloudinary = require('cloudinary').v2;
 const smtpTrans = require('nodemailer-smtp-transport');
 const path = require('path');
+const { models } = require('mongoose');
+const date1 = new Date();
+const dma = `${date1.getDate()}-${date1.getMonth()}-${date1.getFullYear()}`
 // require('dotenv/config');
 
 
@@ -105,7 +110,7 @@ usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
 });
 
 //rotas das imagens
-usuarioRouter.get('/imagensUsuario/:caminho_foto', (req, res, next) => {
+/* usuarioRouter.get('/imagensUsuario/:caminho_foto', (req, res, next) => {
     const img = req.params.caminho_foto;
 
     fs.readFile('./images/' + img, function (erro, content) {
@@ -117,6 +122,49 @@ usuarioRouter.get('/imagensUsuario/:caminho_foto', (req, res, next) => {
         res.writeHead(200, { 'content-type': 'image/png' });
         res.end(content);
     });
+}); */
+
+usuarioRouter.patch('/usuario_image/:id', async (req, res, next) => {
+    cloudinary.config({
+        cloud_name: 'dpt5othex',
+        api_key: '667378936985793',
+        api_secret: 'KfoumTK2x1NgwXX0_KLdIdVR-J8'
+    });
+
+   async function AtualizarFotoUsuario(){
+    try {
+        const { id } = req.params;
+        const date = new Date();
+        time_stamp = date.getTime();
+
+        //const uid = req.body.id;
+        const url_imagem = dma + '_' + time_stamp + '_' + req.files.caminho_foto.originalFilename;
+
+        let { url, secure_url } = await cloudinary.uploader.upload(req.files.caminho_foto.path, {
+            folder: `images/${id}/`,
+            public_id: url_imagem,
+            invalidate: true,
+            overwrite: true
+        });
+
+        const usuarioImg = Usuarios.findByIdAndUpdate({_id: req.params.id},{ caminho_foto : secure_url.trim()});
+
+        const ProfileUserImage = await usuarioImg;
+        if (ProfileUserImage.errors) {
+            
+            return res.status(400).json(ProfileUserImage);
+        }
+        console.log('enviado com sucesso');
+        return res.status(200).json(ProfileUserImage);
+
+
+    } catch (error) {
+        res.status(500).json(error);
+        return console.log(error);
+    }
+   }
+
+   return AtualizarFotoUsuario();
 });
 
 //função de INSERIR dados no banco
