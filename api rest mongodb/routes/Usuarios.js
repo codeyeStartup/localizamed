@@ -137,7 +137,7 @@ usuarioRouter.patch('/usuario_image/:id', async (req, res, next) => {
         const date = new Date();
         time_stamp = date.getTime();
 
-        //const uid = req.body.id;
+        
         const url_imagem = dma + '_' + time_stamp + '_' + req.files.caminho_foto.originalFilename;
 
         let { url, secure_url } = await cloudinary.uploader.upload(req.files.caminho_foto.path, {
