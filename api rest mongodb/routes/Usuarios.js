@@ -1,11 +1,14 @@
 const express = require('express');
-const Usuarios = require("../models/usuarios");
 const bcrypt = require('bcryptjs');
 const usuarioRouter = express.Router();
 const nodemailer = require('nodemailer');
 const cloudinary = require('cloudinary').v2;
 const smtpTrans = require('nodemailer-smtp-transport');
 const path = require('path');
+const jwt = require('jsonwebtoken')
+
+const Usuarios = require("../models/usuarios");
+const verifyJWT = require('../utils/verifyJWT');
 
 //Rota para enviar EMAIL DE RECUPERAÇÃO DE SENHA
 usuarioRouter.post('/send_mail', async (req, res, next) => {
@@ -101,7 +104,7 @@ usuarioRouter.post('/update_pass_get/update', async (req, res, next) => {
 });
 
 //Rota de RETORNAR TODOS os usuários
-usuarioRouter.get('/usuarios', (req, res, next) => {
+usuarioRouter.get('/usuarios', verifyJWT, (req, res, next) => {
     async function AllUsuarios() {
         Usuarios.find({}, (erro, dados) => {
             if (erro) {
@@ -116,7 +119,7 @@ usuarioRouter.get('/usuarios', (req, res, next) => {
 });
 
 //Rota para RETORNAR UM ÚNICO USUÁRIO PELO ID
-usuarioRouter.get('/usuario/:id', (req, res, next) => {
+usuarioRouter.get('/usuario/:id', verifyJWT, (req, res, next) => {
     async function findUsuario() {
         Usuarios.findById(req.params.id).then((usuario) => {
             res.status(200);
@@ -133,7 +136,7 @@ usuarioRouter.get('/usuario/:id', (req, res, next) => {
 });
 
 //Rota para RETORNAR USUÁRIO PELO RANGE
-usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
+usuarioRouter.get('/usuarioFindOne/:email', verifyJWT, (req, res, next) => {
     async function GetUser() {
         Usuarios.findOne({ email: req.params.email }).then((usuario) => {
             res.status(200);
@@ -246,7 +249,7 @@ usuarioRouter.post('/login', (req, res, next) => {
 
     async function Login() {
         try {
-            var user = await Usuarios.findOne({ email: req.body.email }).exec();
+            const user = await Usuarios.findOne({ email: req.body.email }).exec();
             if (!user) {
                 return res.status(400).send({ message: "Email inválido/inexistente" });
             }
@@ -254,8 +257,11 @@ usuarioRouter.post('/login', (req, res, next) => {
                 return res.status(400).send({ message: "Senha Incorreta" });
             }
 
-            //tudo ok
-            return res.status(201).send({ message: "Logado com sucesso!" });
+            const { _id, email } = user;
+            const token = jwt.sign({ _id }, process.env.JWT_PASS, { expiresIn: "365 days" })
+            const refreshToken = jwt.sign({ _id }, process.env.JWT_PASS, { expiresIn: "365 days" })
+
+            return res.status(201).json({ token, refreshToken, userData: { _id, email } })
         } catch (erro) {
             res.status(416).send({ message: "Algo de errado aconteceu" });
         }
