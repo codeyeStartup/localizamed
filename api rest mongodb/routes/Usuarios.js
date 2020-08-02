@@ -1,18 +1,16 @@
 const express = require('express');
-const Usuarios = require("../models/usuarios");
-const usuarioController = require('../controllers/usuarioController');
 const bcrypt = require('bcryptjs');
 const usuarioRouter = express.Router();
 const nodemailer = require('nodemailer');
 const cloudinary = require('cloudinary').v2;
 const smtpTrans = require('nodemailer-smtp-transport');
 const path = require('path');
-const date1 = new Date();
-const dma = `${date1.getDate()}-${date1.getMonth()}-${date1.getFullYear()}`
-// require('dotenv/config');
+const jwt = require('jsonwebtoken')
 
+const Usuarios = require("../models/usuarios");
+const verifyJWT = require('../utils/verifyJWT');
 
-//função para enviar EMAIL DE RECUPERAÇÃO DE SENHA
+//Rota para enviar EMAIL DE RECUPERAÇÃO DE SENHA
 usuarioRouter.post('/send_mail', async (req, res, next) => {
     try {
         const user = await Usuarios.findOne({ email: req.body.email }).exec();
@@ -27,9 +25,8 @@ usuarioRouter.post('/send_mail', async (req, res, next) => {
                 pass: process.env.PASSWORD
             },
             tls: { rejectUnauthorized: false }
-        }));        
+        }));
 
-        // const url = `${process.env.IP_ADDRESS_PORT}/update_pass_get/?email=${req.body.email}`;
         const url = `http://${process.env.IP_ADDRESS}/update_pass_get/?email=${req.body.email}`;
         const mailOptions = {
             from: 'Localizamed <no-reply@localizamed.com.br>',
@@ -106,8 +103,8 @@ usuarioRouter.post('/update_pass_get/update', async (req, res, next) => {
     return res.sendFile(path.join(__dirname + '/../public/update_pass_confirm.html'))
 });
 
-//função de RETORNAR TODOS os usuários
-usuarioRouter.get('/usuarios', (req, res, next) => {
+//Rota de RETORNAR TODOS os usuários
+usuarioRouter.get('/usuarios', verifyJWT, (req, res, next) => {
     async function AllUsuarios() {
         Usuarios.find({}, (erro, dados) => {
             if (erro) {
@@ -121,8 +118,8 @@ usuarioRouter.get('/usuarios', (req, res, next) => {
     AllUsuarios();
 });
 
-//função para RETORNAR UM ÚNICO USUÁRIO PELO ID
-usuarioRouter.get('/usuario/:id', (req, res, next) => {
+//Rota para RETORNAR UM ÚNICO USUÁRIO PELO ID
+usuarioRouter.get('/usuario/:id', verifyJWT, (req, res, next) => {
     async function findUsuario() {
         Usuarios.findById(req.params.id).then((usuario) => {
             res.status(200);
@@ -138,8 +135,8 @@ usuarioRouter.get('/usuario/:id', (req, res, next) => {
     findUsuario();
 });
 
-//função para RETORNAR USUÁRIO PELO RANGE
-usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
+//Rota para RETORNAR USUÁRIO PELO RANGE
+usuarioRouter.get('/usuarioFindOne/:email', verifyJWT, (req, res, next) => {
     async function GetUser() {
         Usuarios.findOne({ email: req.params.email }).then((usuario) => {
             res.status(200);
@@ -170,50 +167,45 @@ usuarioRouter.get('/usuarioFindOne/:email', (req, res, next) => {
     });
 }); */
 
+//Rota para ATUALIZAR FOTO DE PERFIL do usuario
 usuarioRouter.patch('/usuario_image/:id', async (req, res, next) => {
     cloudinary.config({
-        cloud_name: 'dpt5othex',
-        api_key: '667378936985793',
-        api_secret: 'KfoumTK2x1NgwXX0_KLdIdVR-J8'
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET
     });
 
-   async function AtualizarFotoUsuario(){
-    try {
-        const { id } = req.params;
-        const date = new Date();
-        time_stamp = date.getTime();
+    async function AtualizarFotoUsuario() {
+        try {
+            const { id } = req.params;
 
-        
-        const url_imagem = dma + '_' + time_stamp + '_' + req.files.caminho_foto.originalFilename;
+            const { url, secure_url } = await cloudinary.uploader.upload(req.files.caminho_foto.path, {
+                folder: `images/users/${id}/`,
+                public_id: id,
+                invalidate: true,
+                overwrite: true,
+                allowed_formats: ['jpg', 'png'],
+                height: 320,
+                width: 640,
+                crop: 'fit'
+            });
+            const usuarioImg = await Usuarios.findByIdAndUpdate({ _id: req.params.id }, { caminho_foto: secure_url.trim() });
 
-        let { url, secure_url } = await cloudinary.uploader.upload(req.files.caminho_foto.path, {
-            folder: `images/${id}/`,
-            public_id: url_imagem,
-            invalidate: true,
-            overwrite: true
-        });
+            if (usuarioImg.errors) {
+                return res.status(400).json(usuarioImg);
+            }
+            return res.status(200).send('Enviado com sucesso');
 
-        const usuarioImg = Usuarios.findByIdAndUpdate({_id: req.params.id},{ caminho_foto : secure_url.trim()});
-
-        const ProfileUserImage = await usuarioImg;
-        if (ProfileUserImage.errors) {
-            
-            return res.status(400).json(ProfileUserImage);
+        } catch (error) {
+            res.status(500).json(error);
+            return console.log(error);
         }
-        console.log('enviado com sucesso');
-        return res.status(200).json(ProfileUserImage);
-
-
-    } catch (error) {
-        res.status(500).json(error);
-        return console.log(error);
     }
-   }
 
-   return AtualizarFotoUsuario();
+    return AtualizarFotoUsuario();
 });
 
-//função de INSERIR dados no banco
+//Rota de INSERIR dados no banco
 usuarioRouter.post('/usuarios', (req, res, next) => {
 
     async function salvaUsuario() {
@@ -252,12 +244,12 @@ usuarioRouter.post('/usuarios', (req, res, next) => {
     salvaUsuario();
 });
 
-//função de LOGIN
+//Rota de LOGIN
 usuarioRouter.post('/login', (req, res, next) => {
 
     async function Login() {
         try {
-            var user = await Usuarios.findOne({ email: req.body.email }).exec();
+            const user = await Usuarios.findOne({ email: req.body.email }).exec();
             if (!user) {
                 return res.status(400).send({ message: "Email inválido/inexistente" });
             }
@@ -265,8 +257,11 @@ usuarioRouter.post('/login', (req, res, next) => {
                 return res.status(400).send({ message: "Senha Incorreta" });
             }
 
-            //tudo ok
-            return res.status(201).send({ message: "Logado com sucesso!" });
+            const { _id, email } = user;
+            const token = jwt.sign({ _id }, process.env.JWT_PASS, { expiresIn: "365 days" })
+            const refreshToken = jwt.sign({ _id }, process.env.JWT_PASS, { expiresIn: "365 days" })
+
+            return res.status(201).json({ token, refreshToken, userData: { _id, email } })
         } catch (erro) {
             res.status(416).send({ message: "Algo de errado aconteceu" });
         }
@@ -274,7 +269,7 @@ usuarioRouter.post('/login', (req, res, next) => {
     Login();
 });
 
-//função de DELETAR um usuário
+//Rota de DELETAR um usuário
 usuarioRouter.delete('/usuario/:id', (req, res, next) => {
 
     async function deletarUsuario() {
@@ -296,6 +291,7 @@ usuarioRouter.delete('/usuario/:id', (req, res, next) => {
 
 });
 
+//Rota de UPDATE do usuario
 usuarioRouter.patch('/usuarioUpdate/:email', (req, res, next) => {
 
     async function atualizarUsuario() {

@@ -60,14 +60,6 @@ const UserSchema = new Schema({
         type: String,
         maxlength: 100
     },
-    /* data_cadastro:{
-        type: Date,
-        default: Date.now
-    }, 
-    data_atualizacao:{
-        type: Date,
-        default: Date.now
-    }, */
     data_nascimento:{
         type: Date,
         //required: true        
