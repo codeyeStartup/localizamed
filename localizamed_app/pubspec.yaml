@@ -39,7 +39,8 @@ dependencies:
   url_launcher: ^5.2.7
   json_serializable: ^3.2.3 
   flutter_offline: ^0.3.0
-  floating_search_bar: ^0.2.0
+  image_picker: ^0.6.7+2
+  dio: ^3.0.9
 
 
 dev_dependencies:
@@ -55,11 +56,18 @@ flutter:
   fonts:
     - family: BreeSerif
       fonts:
-        - asset: fonts/BreeSerif-Regular.ttf           
-    - family: Montserrat
+        - asset: fonts/BreeSerif-Regular.ttf     
+    - family: Montserrat-Medium
+      fonts:
+        - asset: fonts/Montserrat-Medium.ttf     
+    - family: Montserrat-Bold
+      fonts:
+        - asset: fonts/Montserrat-Bold.ttf
+          weight: 300
+    - family: Montserrat-ExtraBold
       fonts:
         - asset: fonts/Montserrat-ExtraBold.ttf
-          weight: 800
+          weight: 500      
 
 
   # The following line ensures that the Material Icons font is

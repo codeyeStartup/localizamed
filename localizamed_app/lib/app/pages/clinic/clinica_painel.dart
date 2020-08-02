@@ -25,6 +25,8 @@ class _ClinState extends State<ClinicaCardScreen> {
                         Text("LocalizaMed",
                             style: TextStyle(
                               fontSize: size.width / 20,
+                              fontFamily: 'Montserrat-Bold',
+                              fontWeight: FontWeight.w900
                             )),
                         Image(
                           image: AssetImage('images/pin.png'),

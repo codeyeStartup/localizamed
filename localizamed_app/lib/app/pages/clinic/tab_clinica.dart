@@ -65,8 +65,8 @@ class _ClinCardState extends State<ClinCard> {
                       children: <Widget>[
                         //card da CLINICA
                         Container(
-                          height: 130.0,
-                          width: 410.0,
+                          height: MediaQuery.of(context).size.height / 6.5,
+                          width:  MediaQuery.of(context).size.height / 1.2,
                           margin: new EdgeInsets.only(left: 10.0, top: 20),
                           decoration: new BoxDecoration(
                               color: Colors.white,
@@ -74,18 +74,13 @@ class _ClinCardState extends State<ClinCard> {
                               borderRadius: new BorderRadius.circular(8.0),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.black54,
+                                  color: Colors.black26,
                                   blurRadius: 5.0,
                                   offset: new Offset(2.0, 5.0),
                                 )
                               ]),
                           child: Container(
-                            // padding: EdgeInsets.only(left: 0, top: 0),
                             padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.green, width: 3.0))),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -94,8 +89,9 @@ class _ClinCardState extends State<ClinCard> {
                                   child: IconButton(
                                     onPressed: () {},
                                     icon: Icon(
-                                      Icons.star_border,
+                                      Icons.star,
                                       size: 30,
+                                      color: Colors.grey,
                                     ),
                                   ),
                                 ),
@@ -106,11 +102,30 @@ class _ClinCardState extends State<ClinCard> {
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.right,
                                   ),
-                                  subtitle: Text(
-                                    snapshot.data[index].cidade,
-                                    style: TextStyle(fontSize: 16),
-                                    textAlign: TextAlign.right,
-                                  ),
+                                  subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 3, bottom: 4),
+                                      child: Text(
+                                        snapshot.data[index].cidade ==
+                                                null
+                                            ? 'Cidade não informada'
+                                            : snapshot
+                                                .data[index].cidade,
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(top: 6),
+                                      color: Colors.green,
+                                      width:
+                                          MediaQuery.of(context).size.width / 8,
+                                      height: 2,
+                                    )
+                                  ],
+                                )
                                 ),
                               ],
                             ),
@@ -119,11 +134,11 @@ class _ClinCardState extends State<ClinCard> {
                         //IMAGEM
                         Container(
                           margin: EdgeInsets.only(
-                            left: 15,
+                            left: MediaQuery.of(context).size.width / 14
                           ),
                           child: Container(
-                            height: 120,
-                            width: 120,
+                            height: MediaQuery.of(context).size.height / 6.5,
+                            width:  MediaQuery.of(context).size.width / 3,
                             margin: EdgeInsets.only(
                               bottom: 0,
                             ),

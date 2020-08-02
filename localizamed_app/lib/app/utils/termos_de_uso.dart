@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
-class Termos extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
+terms(BuildContext context){
+ AlertDialog showTerms = AlertDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
         Text('Termos e Condições de uso', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18),),
-        SizedBox(width: 2.4,),
-        IconButton(
-          icon: Icon(Icons.close),
-          onPressed: (){
+        SizedBox(width: 10,),
+        GestureDetector(
+          child: Icon(Icons.close),
+          onTap: (){
             Navigator.of(context).pop();
           },
         )
       ],),
       content: Container(
-        height: 500,
-        width: 500,
+        height: MediaQuery.of(context).size.height / 2,
+        width: MediaQuery.of(context).size.height / 2,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -62,5 +60,9 @@ class Termos extends StatelessWidget {
         ),
       ),
     );
-  }
+  showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return showTerms;
+        });
 }

@@ -20,7 +20,6 @@ class _InitialScreenState extends State<InitialScreen> {
         appBar: AppBar(
           flexibleSpace: SafeArea(
             child: Container(
-                height: MediaQuery.of(context).size.height,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,43 +39,48 @@ class _InitialScreenState extends State<InitialScreen> {
                               'Explore',
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: 'Montserrat'),
+                                  fontFamily: 'Montserrat-ExtraBold'),
                             ),
                           ],
                         )),
                     Container(
-                      margin: EdgeInsets.only(
-                          left: 6,
-                          right: 6,
-                          top: MediaQuery.of(context).size.height / 30),
-                      padding: EdgeInsets.only(left: 10),
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.height / 16,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 5,
-                                color: Colors.black38,
-                                offset: Offset(1, 2))
-                          ]),
-                      child: FlatButton(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text('Pesquisar'),
-                            SizedBox(width: MediaQuery.of(context).size.width / 4,),
-                            Icon(Icons.search),
-                          ],
-                        ),
-                        onPressed: (){
-                          Navigator.of(context).push( MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SearchScreen())); },
-                      )
-                    )
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 40),
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        height: MediaQuery.of(context).size.height / 16,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5,
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2))
+                            ]),
+                        child: FlatButton(
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width / 20
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Pesquisar', style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'Montserrat-Bold',
+                                fontSize: 12
+                              ),),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 3.4,
+                              ),
+                              Icon(FontAwesomeIcons.search, size: 16,),
+                            ],
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SearchScreen()));
+                          },
+                        ))
                   ],
                 )),
           ),
@@ -91,8 +95,8 @@ class _InitialScreenState extends State<InitialScreen> {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width / 8,
-                        top: MediaQuery.of(context).size.height / 10),
+                        left: MediaQuery.of(context).size.width / 9,
+                        top: MediaQuery.of(context).size.height / 8),
                     padding: EdgeInsets.only(left: 4),
                     decoration: BoxDecoration(
                         border: Border(
@@ -101,12 +105,12 @@ class _InitialScreenState extends State<InitialScreen> {
                                 color: Theme.of(context).primaryColor))),
                     child: Text(
                       'Ultimas Clínicas',
-                      style: TextStyle(fontSize: 26, fontFamily: 'Montserrat'),
+                      style: TextStyle(fontSize: 26, fontFamily: 'Montserrat-ExtraBold'),
                     ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 30,
-                  ),                  
+                  ),
                   InitialCard()
                 ],
               ),

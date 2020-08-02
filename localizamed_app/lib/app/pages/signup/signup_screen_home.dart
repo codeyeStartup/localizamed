@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_2.dart';
@@ -52,9 +51,10 @@ class _SignUpHomeState extends State<SignUpHome> {
                     ],
                   )
               ),
-              SizedBox(height: size.height / 2),
+              SizedBox(height: size.height / 1.8),
               Container(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text('Faça seu cadastro em instantes',
                       style: TextStyle(
@@ -90,13 +90,13 @@ class _SignUpHomeState extends State<SignUpHome> {
                             FlatButton(
                              child: Text('Termos de Uso e Política de Privacidade', style: TextStyle(decoration: TextDecoration.underline,fontSize: 16)),
                                onPressed: (){
-                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Termos()));                           
+                               terms(context);                           
                              },
                              ),
                          ],
                        )
                      ),
-                    SizedBox(height: size.height / 15,),
+                    SizedBox(height: size.height / 20,),
                     checkVal == true ? RaisedButton(
                       padding: EdgeInsets.symmetric(vertical: size.height / 40,horizontal: size.width / 5),
                       shape: RoundedRectangleBorder(

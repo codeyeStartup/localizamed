@@ -20,8 +20,8 @@ Future<void> main() async {
     title: 'LocalizaMed',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-            primaryColor: Color.fromARGB(255, 29, 26, 255) ,//pode alterar para a cor do aplicativo
-            fontFamily: 'BreeSerif'
+            primaryColor: Color.fromARGB(255, 23, 55, 254) ,//pode alterar para a cor do aplicativo
+            fontFamily: 'Montserrat-Medium'
         ),
     home: email == null ? OnboardPage() : SplashScreen()));
 }

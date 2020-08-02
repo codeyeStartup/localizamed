@@ -45,7 +45,7 @@ class MsgInt extends StatelessWidget {
                 ],
               );
             },
-            child: SplashScreen(),
+            child: BottomMenu(),
           );
         },
         ),

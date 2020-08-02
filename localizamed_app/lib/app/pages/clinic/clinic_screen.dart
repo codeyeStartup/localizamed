@@ -20,34 +20,39 @@ class _clinicScreenState extends State<ClinicScreen> {
     var mediaQuery = MediaQuery.of(context);
     var size = mediaQuery.size;
 
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          CustomScrollView(
-            //controller: controller,
-            slivers: <Widget>[
-              SliverPersistentHeader(
-                delegate: MySliverAppBar(
-                  expandedHeight: appBarHeight,
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Scaffold(
+          body: Stack(
+            children: <Widget>[
+              CustomScrollView(
+                //controller: controller,
+                slivers: <Widget>[
+                  SliverPersistentHeader(
+                    delegate: MySliverAppBar(
+                      expandedHeight: appBarHeight,
+                    ),
+                  ),
+                  SliverList(
+                      delegate:
+                          SliverChildListDelegate(<Widget>[ClinicPageView()]))
+                ],
               ),
-              SliverList(
-                  delegate: SliverChildListDelegate(<Widget>[ClinicPageView()]))
             ],
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.arrow_back,
-          size: 30,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(
+              Icons.arrow_back,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -92,7 +97,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                               image: NetworkImage(ConexaoAPI().api +
                                   'imagensClinica/' +
                                   snapshot.data.caminhoFoto),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -103,11 +108,11 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                       ),
                     ),
                     Positioned(
-                        top: expandedHeight / 1.58 - shrinkOffset,
+                        top: expandedHeight / 1.64 - shrinkOffset,
                         child: Container(
                             width: size.height / 2.5,
                             height: size.height / 5.8,
-                            margin: EdgeInsets.only(left: 45, right: 45),
+                            margin: EdgeInsets.only(left: size.width / 12, right: size.width / 8),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:

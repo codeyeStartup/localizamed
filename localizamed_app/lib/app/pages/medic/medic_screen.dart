@@ -22,10 +22,13 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                   Container(
                     padding: EdgeInsets.only(left: size.width/ 2.9, top: size.height/ 60),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text("LocalizaMed",
                             style: TextStyle(
                               fontSize: size.width / 20,
+                              fontFamily: 'Montserrat-Bold',
+                              fontWeight: FontWeight.w900
                             )),
                         Image(
                           image: AssetImage('images/pinred.png'),
