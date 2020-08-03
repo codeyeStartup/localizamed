@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/validators/signup_validator.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //estados do cadastro
 enum SignupState { IDLE, CARREGANDO, SUCESSO, FALHA, CATCH_ERRO }
-enum UpdateState { IDLE, SUCESSO, FALHA, CATCH_ERRO}
+enum UpdateState { IDLE, SUCESSO, FALHA, CATCH_ERRO }
 
 class SingletonBloc with SignupValidator {
   static SingletonBloc _signupBloc;
@@ -32,7 +33,6 @@ class SingletonBloc with SignupValidator {
   BehaviorSubject<SignupState> _stateController;
   BehaviorSubject<UpdateState> _updateController;
   BehaviorSubject<String> _ufUpdateController;
-  
 
   //Streams
   Stream<String> get outNome => _nomeController.stream.transform(validaNome);
@@ -185,26 +185,38 @@ increment(); */
 
   //Função de ATUALIZAR usuário
   Future<void> updateUser() async {
+    Future<String> getUserEmail() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      Map tokens = json.decode(preferences.get("tokens"));
+      final Map email = tokens["userData"];
+
+      return email['email'].toString();
+    }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
-    String url = ConexaoAPI().api + 'usuarioUpdate/' + email;
-    Map<String, String> headers = {"Accept": "application/json"};
-    
- 
+    var email = getUserEmail();
+    var token = prefs.getString('tokenjwt');
+    String url = ConexaoAPI().api + 'usuarioUpdate/$email';
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      "x-access-token": token
+    };
+
     try {
       http.Response response = await http.patch(url, headers: headers, body: {
         "nome": _nomeController.value,
-        "email": _emailController.value,  
+        "email": _emailController.value,
         "cidade": _cidadeController.value,
         "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
-        "fone_1": _telefoneController.value
+        "fone_1": _telefoneController.value,
+        "cpf": _cpfController.value,
+        "rg": _cpfController.value
       });
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('email', _emailController.value);
+      prefs.setString('email', _emailController.value);
 
-      if(response.statusCode == 201){
+      if (response.statusCode == 201) {
         print("Atualizado com Sucesso!");
         _updateController.add(UpdateState.SUCESSO);
       } else {
@@ -228,7 +240,7 @@ increment(); */
     _senhaController.close();
     _cpfController.close();
     _rgController.close();
-    _extraTelefoneController.close();    
+    _extraTelefoneController.close();
     _stateController.close();
     _updateController.close();
   }

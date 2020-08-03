@@ -22,7 +22,7 @@ class Usuario {
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
     return Usuario(
-      id: json['_id'] as String,
+      id: json['_id'] as Object,
       nome: json['nome'] as String,
       cidade: json['cidade'] as String,
       cpf: json['cpf'] as String,

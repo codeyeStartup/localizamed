@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:localizamed_app/app/pages/login/login_screen.dart';
@@ -12,6 +13,15 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  Future<Usuario> userData;
+  var userBloc = UserBloc();
+
+  @override
+  void initState(){
+    super.initState();
+    userData = userBloc.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +57,8 @@ class _UserProfileState extends State<UserProfile> {
           },
           child: Icon(Icons.exit_to_app),
         ),
-        body: StreamBuilder(
-            stream: userBloc.usuario,
+        body: FutureBuilder(
+            future: userData,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -65,29 +75,14 @@ class _UserProfileState extends State<UserProfile> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(top: 0),
-                            child: ClipPath(
-                              clipper: MyClipper(),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [Theme.of(context).primaryColor, 
-                                      Color.fromARGB(255, 0, 191, 255)]),
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height / 4,
-                              ),
-                            ),
+                            child: Fundo(600.0,200.0,Theme.of(context).primaryColor)
                           ),
                           Stack(
-                            /* mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start, */
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: MediaQuery.of(context).size.width / 8,
-                                    top: 6),
+                                    left: MediaQuery.of(context).size.width / 10,
+                                    top: 30),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -118,7 +113,7 @@ class _UserProfileState extends State<UserProfile> {
                                       left: MediaQuery.of(context).size.width /
                                           1.8,
                                       top: MediaQuery.of(context).size.height /
-                                          20),
+                                          14),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
@@ -144,13 +139,13 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 10, top: 0),
+                          left: MediaQuery.of(context).size.width / 10, top: 40),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             'Dados',
-                            style: TextStyle(fontSize: 22),
+                            style: TextStyle(fontSize: 22,fontFamily: 'Montserrat-Bold'),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
@@ -217,6 +212,27 @@ Widget Card(@required IconData icons, @required String textOne,
       ],
     ),
   );
+  
+}
+
+Widget Fundo(double x,double y, Color color){
+  return Transform(
+            transform: Matrix4(0.87462, -0.48481, 0.0, 0.0, 0.48481, 0.87462,
+                0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -30, -5.83, 0.0, 0.7),
+            child: Container(
+              width: x ,
+              height: y ,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(39.0),
+                gradient: LinearGradient(
+                  begin: Alignment(-0.48,-0.17),
+                  end: Alignment(-0.94,0.93),
+                  colors: [color, const Color(0xff0075fb)],
+                  stops: [0.0, 1.0],
+                ),
+              ),
+            ),
+          );
 }
 
 class MyClipper extends CustomClipper<Path> {

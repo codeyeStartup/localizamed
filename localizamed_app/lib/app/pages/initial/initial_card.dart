@@ -6,20 +6,19 @@ import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialCard extends StatefulWidget {
-
   @override
   _InitialCardState createState() => _InitialCardState();
 }
 
 class _InitialCardState extends State<InitialCard> {
   @override
-  void initState(){
+  void initState() {
     clinicaBloc.getUltimasClinicas();
     super.initState();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
@@ -39,12 +38,7 @@ class _InitialCardState extends State<InitialCard> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
               ));
             } else {
-              return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    width: 30,
-                  );
-                },
+              return ListView.builder(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
@@ -61,8 +55,8 @@ class _InitialCardState extends State<InitialCard> {
                     child: Container(
                         margin: EdgeInsets.only(
                           bottom: MediaQuery.of(context).size.height / 60,
+                          left: MediaQuery.of(context).size.width / 16,
                         ),
-                        //height 1.9
                         width: MediaQuery.of(context).size.width / 1.3,
                         height: MediaQuery.of(context).size.height / 1.9,
                         decoration: BoxDecoration(
@@ -72,11 +66,11 @@ class _InitialCardState extends State<InitialCard> {
                                   snapshot.data.clinicas[index].caminhoFoto),
                               fit: BoxFit.fill,
                             ),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black38,
-                                offset: new Offset(4.0, 4.0),
+                                color: Colors.black26,
+                                offset: new Offset(2.0, 2.0),
                                 blurRadius: 5,
                               )
                             ]),
@@ -88,11 +82,12 @@ class _InitialCardState extends State<InitialCard> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(300),
-                                      bottomLeft: Radius.circular(12),
-                                      bottomRight: Radius.circular(12)),
+                                      bottomLeft: Radius.circular(40),
+                                      bottomRight: Radius.circular(40)),
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
-                                    height: 250,
+                                    height: MediaQuery.of(context).size.height /
+                                        3.6,
                                     color: Theme.of(context).primaryColor,
                                   ),
                                 )),
@@ -102,14 +97,13 @@ class _InitialCardState extends State<InitialCard> {
                                 alignment: Alignment.bottomCenter,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(500),
-                                      bottomLeft: Radius.circular(12),
-                                      bottomRight: Radius.circular(12)),
+                                      topLeft: Radius.circular(800),
+                                      bottomLeft: Radius.circular(40),
+                                      bottomRight: Radius.circular(40)),
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.height /
-                                        3.4,
-                                    //3.4
+                                        3.8,
                                     color: Colors.white,
                                   ),
                                 )),
@@ -117,47 +111,61 @@ class _InitialCardState extends State<InitialCard> {
                             //NOME da clinica
                             Padding(
                               padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height / 3.3,
-                                left: snapshot
-                                            .data.clinicas[index].nome.length <=
-                                        8
-                                    ? MediaQuery.of(context).size.width / 2.2
-                                    : MediaQuery.of(context).size.width / 3.6,
-                              ),
-                              child: Text(
-                                snapshot.data.clinicas[index].nome,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Breeserif',
-                                    fontSize: 25),
-                              ),
-                            ),
+                                  top:
+                                      MediaQuery.of(context).size.height / 3.2),
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: snapshot.data.clinicas[index].nome
+                                                  .length <=
+                                              8
+                                          ? MediaQuery.of(context).size.width /
+                                              1.9
+                                          : MediaQuery.of(context).size.width /
+                                              3.9,
+                                    ),
+                                    child: Text(
+                                      snapshot.data.clinicas[index].nome,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Montserrat-Bold',
+                                          fontSize: 24),
+                                    ),
+                                  ),
 
-                            //CIDADE
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height / 2.8,
-                                  left: snapshot.data.clinicas[index].nome
-                                              .length <=
-                                          8
-                                      ? MediaQuery.of(context).size.width / 2.2
-                                      : MediaQuery.of(context).size.width /
-                                          3.6),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.green, width: 2))),
-                                  child: Text(
-                                    snapshot.data.clinicas[index].cidade,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Breeserif',
-                                        fontSize: 18),
-                                  )),
-                            ),
+                                  //CIDADE
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: snapshot.data.clinicas[index]
+                                                    .cidade.length >=
+                                                8
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                1.9
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                1.6),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.green,
+                                                    width: 2))),
+                                        child: Text(
+                                          snapshot.data.clinicas[index].cidade,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         )),
                   );

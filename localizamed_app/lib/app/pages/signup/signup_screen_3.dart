@@ -150,8 +150,6 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                 isExpanded: true,
                                 hint: Text('Select'),
                                 disabledHint: Text('Select'),
-                                style: TextStyle(
-                                    fontFamily: 'BreeSerif'),
                                 iconSize: 35,
                                 iconEnabledColor: Colors.black,
                                 onChanged: (String newValueSelected) {

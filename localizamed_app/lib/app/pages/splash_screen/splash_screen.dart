@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:localizamed_app/app/pages/home/home_page.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,9 +12,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    /* SystemChrome.setEnabledSystemUIOverlays([]); */
     Future.delayed(Duration(seconds: 4)).then((_){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomMenu()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MsgInt()));
     });
   }
 

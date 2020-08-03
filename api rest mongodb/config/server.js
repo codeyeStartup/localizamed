@@ -26,7 +26,8 @@ app.use(function(req, res, next){
 mongoose.connect('mongodb+srv://localizamed:startup2019@cluster0-b3dwf.mongodb.net/db_localizamed?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false      
+	useFindAndModify: false, 
+	useCreateIndex: true      
 }, () => {   
     console.log("banco conectado");
 }); 

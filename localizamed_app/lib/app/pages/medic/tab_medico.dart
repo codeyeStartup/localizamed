@@ -3,7 +3,6 @@ import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/pages/medic/medicos_bloc.dart';
 
 class MedCard extends StatefulWidget {
-
   @override
   _MedCardState createState() => _MedCardState();
 }
@@ -13,32 +12,30 @@ class _MedCardState extends State<MedCard> {
   //MedicosBloc medicosBloc;
 
   @override
-  void initState(){
+  void initState() {
     //medicosBloc = new MedicosBloc();
     medicoBloc.getMedicos();
     super.initState();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     //medicoBloc.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    //medicoBloc.getMedicos();    
+    //medicoBloc.getMedicos();
     return new Container(
         margin: const EdgeInsets.symmetric(
-          vertical: 16.0,
-          horizontal: 24.0,
+          vertical: 18.0,
+          horizontal: 26.0,
         ),
         child: StreamBuilder(
             stream: medicoBloc.medico,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                
                 return Center(
                     child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
@@ -47,8 +44,7 @@ class _MedCardState extends State<MedCard> {
                 return ListView.separated(
                   separatorBuilder: (context, index) {
                     return SizedBox(
-                      height: 15,
-                    );
+                        height: MediaQuery.of(context).size.height / 30);
                   },
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
@@ -58,8 +54,8 @@ class _MedCardState extends State<MedCard> {
                     return Stack(
                       children: <Widget>[
                         Container(
-                          height: 124.0,
-                          width: 300.0,
+                          height: MediaQuery.of(context).size.height / 6.5,
+                          width: MediaQuery.of(context).size.width / 1.3,
                           margin: new EdgeInsets.only(left: 46.0),
                           decoration: new BoxDecoration(
                               color: Colors.white,
@@ -67,36 +63,56 @@ class _MedCardState extends State<MedCard> {
                               borderRadius: new BorderRadius.circular(8.0),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.black54,
+                                  color: Colors.black26,
                                   blurRadius: 5.0,
                                   offset: new Offset(2.0, 5.0),
                                 )
                               ]),
                           child: Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 22),
                             padding: EdgeInsets.only(left: 50),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.redAccent, width: 3))),
                             child: ListTile(
-                              title: Text(
-                                snapshot.data[index].nome,
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              subtitle: Text(
-                                snapshot.data[index].especialidade,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
+                                title: Text(
+                                  snapshot.data[index].nome,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Montserrat-Bold',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 3, bottom: 4),
+                                      child: Text(
+                                        snapshot.data[index].especialidade ==
+                                                null
+                                            ? 'Especialiade não informada'
+                                            : snapshot
+                                                .data[index].especialidade,
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(top: 6),
+                                      color: Colors.redAccent,
+                                      width:
+                                          MediaQuery.of(context).size.width / 8,
+                                      height: 2,
+                                    )
+                                  ],
+                                )),
                           ),
                         ),
                         Container(
-                          margin: new EdgeInsets.symmetric(vertical: 16.0),
+                          margin: new EdgeInsets.symmetric(vertical: 18),
                           alignment: FractionalOffset.centerLeft,
                           child: new Container(
-                            height: 95,
-                            width: 95,
+                            height: MediaQuery.of(context).size.height / 9,
+                            width: MediaQuery.of(context).size.width / 4,
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(270)),

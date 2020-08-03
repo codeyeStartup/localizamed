@@ -47,6 +47,21 @@ class LoginScreenState extends State<LoginScreen> {
     invisible = true;
   }
 
+  showAlert(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      title: Text('Login pelo Facebook'),
+      content: Container(
+        child: Text('Estamos trabalhando para resolver este problema'),
+      ),
+    );
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return alert;
+        });
+  }
+
   @override
   void dispose() {
     _loginBloc.dispose();
@@ -57,6 +72,15 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var size = mediaQuery.size;
+
+    final FocusNode _email = FocusNode();
+    final FocusNode _password = FocusNode();
+
+    _fieldFocusChange(
+        BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+      currentFocus.unfocus();
+      FocusScope.of(context).requestFocus(nextFocus);
+    }
 
     return Scaffold(
         body: StreamBuilder<LoginState>(
@@ -144,169 +168,192 @@ class LoginScreenState extends State<LoginScreen> {
                                   left: size.width / 12,
                                   right: size.width / 20,
                                   top: 0),
-                              child: Column(
-                                children: <Widget>[
-                                  StreamBuilder<String>(
-                                      stream: _loginBloc.outEmail,
-                                      builder: (context, snapshot) {
-                                        return TextFormField(
-                                          onChanged: _loginBloc.changeEmail,
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                          decoration: InputDecoration(
-                                              errorText: snapshot.hasError
-                                                  ? snapshot.error
-                                                  : null,
-                                              labelText: "E-mail"),
-                                        );
-                                      }),
-
-                                  //campo de SENHA
-                                  StreamBuilder<String>(
-                                      stream: _loginBloc.outSenha,
-                                      builder: (context, snapshot) {
-                                        return TextFormField(
-                                          onChanged: _loginBloc.changePassword,
-                                          obscureText: invisible,
-                                          decoration: InputDecoration(
-                                              errorText: snapshot.hasError
-                                                  ? snapshot.error
-                                                  : null,
-                                              labelText: 'Senha',
-                                              suffixIcon: IconButton(
-                                                icon: Icon(
-                                                  invisible
-                                                      ? Icons.visibility_off
-                                                      : Icons.visibility,
-                                                  size: 20.0,
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    invisible = !invisible;
-                                                  });
-                                                },
-                                              )),
-                                        );
-                                      }),
-
-                                  //botão de ESQUECER A SENHA
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: FlatButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Esqueceu a senha?",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontSize: size.width / 25),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: size.height / 50,
-                                  ),
-                                  //botão de LOGIN
-                                  StreamBuilder<bool>(
-                                      stream: _loginBloc.outSubmitValid,
-                                      builder: (context, snapshot) {
-                                        return RaisedButton(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: size.height / 55,
-                                                horizontal: size.width / 3.29),
-                                            color: Color.fromARGB(
-                                                255, 23, 29, 255),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(23)),
-                                            onPressed: snapshot.hasData
-                                                ? _loginBloc.login
-                                                : null,
-                                            disabledColor: Colors.blue[300],
-                                            child: Text("Login",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: size.width / 25,
-                                                    fontWeight:
-                                                        FontWeight.bold)));
-                                      }),
-
-                                  SizedBox(
-                                    height: size.height / 50,
-                                  ),
-                                  //botão de LOGAR PELO FACEBOOK
-                                  Container(
-                                    width: size.width / 1.4,
-                                    child: RaisedButton(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: size.height / 55,
-                                          horizontal: size.width / 8.4),
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(23),
-                                          side: BorderSide(
-                                              color: Colors.black, width: 2)),
-                                      onPressed: () {},
-                                      child: Row(
-                                        children: <Widget>[
-                                          Image(
-                                            image: AssetImage(
-                                                'images/facebook_logo1.png'),
-                                            width: 15,
-                                            height: 15,
-                                          ),
-                                          Text(
-                                            "Logar pelo Facebook",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: size.width / 28,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  SizedBox(
-                                    height: size.height / 20,
-                                  ),
-                                  //Botão de se CADASTRAR
-                                  Container(
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            "Não tem uma conta?",
-                                            style: TextStyle(
-                                                fontSize: size.width / 25),
-                                          ),
-                                          SizedBox(
-                                            width: 1,
-                                          ),
-                                          FlatButton(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SignUpHome()));
+                              child: Form(
+                                autovalidate: false,
+                                child: Column(
+                                  children: <Widget>[
+                                    StreamBuilder<String>(
+                                        stream: _loginBloc.outEmail,
+                                        builder: (context, snapshot) {
+                                          return TextFormField(
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            onChanged: _loginBloc.changeEmail,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            decoration: InputDecoration(
+                                                errorText: snapshot.hasError
+                                                    ? snapshot.error
+                                                    : null,
+                                                labelText: "E-mail"),
+                                            onFieldSubmitted: (term) {
+                                              _fieldFocusChange(
+                                                  context, _email, _password);
                                             },
-                                            child: Text("Cadastre-se",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontSize: size.width / 25)),
-                                          )
-                                        ],
+                                          );
+                                        }),
+
+                                    //campo de SENHA
+                                    StreamBuilder<String>(
+                                        stream: _loginBloc.outSenha,
+                                        builder: (context, snapshot) {
+                                          return TextFormField(
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            focusNode: _password,
+                                            onChanged:
+                                                _loginBloc.changePassword,
+                                            obscureText: invisible,
+                                            onFieldSubmitted: (term) {
+                                              _password.unfocus();
+                                            },
+                                            decoration: InputDecoration(
+                                                errorText: snapshot.hasError
+                                                    ? snapshot.error
+                                                    : null,
+                                                labelText: 'Senha',
+                                                suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    invisible
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility,
+                                                    size: 20.0,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      invisible = !invisible;
+                                                    });
+                                                  },
+                                                )),
+                                          );
+                                        }),
+
+                                    //botão de ESQUECER A SENHA
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: FlatButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          "Esqueceu a senha?",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: size.width / 25),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: size.height / 50,
+                                    ),
+                                    //botão de LOGIN
+                                    StreamBuilder<bool>(
+                                        stream: _loginBloc.outSubmitValid,
+                                        builder: (context, snapshot) {
+                                          return RaisedButton(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: size.height / 55,
+                                                  horizontal:
+                                                      size.width / 3.29),
+                                              color: Color.fromARGB(
+                                                  255, 23, 29, 255),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          23)),
+                                              onPressed: snapshot.hasData
+                                                  ? _loginBloc.login
+                                                  : null,
+                                              disabledColor: Colors.blue[300],
+                                              child: Text("Login",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: size.width / 25,
+                                                      fontWeight:
+                                                          FontWeight.bold)));
+                                        }),
+
+                                    SizedBox(
+                                      height: size.height / 50,
+                                    ),
+                                    //botão de LOGAR PELO FACEBOOK
+                                    Container(
+                                      width: size.width / 1.4,
+                                      child: RaisedButton(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: size.height / 55,
+                                            horizontal: size.width / 8.4),
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(23),
+                                            side: BorderSide(
+                                                color: Colors.black, width: 2)),
+                                        onPressed: () {
+                                          showAlert(context);
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Image(
+                                              image: AssetImage(
+                                                  'images/facebook_logo1.png'),
+                                              width: 15,
+                                              height: 15,
+                                            ),
+                                            Text(
+                                              "Logar pelo Facebook",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: size.width / 28,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      height: size.height / 20,
+                                    ),
+                                    //Botão de se CADASTRAR
+                                    Container(
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              "Não tem uma conta?",
+                                              style: TextStyle(
+                                                  fontSize: size.width / 25),
+                                            ),
+                                            SizedBox(
+                                              width: 1,
+                                            ),
+                                            FlatButton(
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SignUpHome()));
+                                              },
+                                              child: Text("Cadastre-se",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontSize:
+                                                          size.width / 25)),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               )),
                         ],
                       ),
