@@ -52,7 +52,9 @@ pesquisaRouter.post('/search_clinica', async (req, res, next) => {
 		{
 			$group: {
 				_id: {
-					nome: "$nome"
+					nome: "$nome", 
+					id: "$_id", 
+					cidade: "$cidade"
 				}
 			}
 		},
