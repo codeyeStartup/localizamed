@@ -1,4 +1,4 @@
-
+/* /* 
 class Clinicas {
   String id;
   String nome;
@@ -15,10 +15,10 @@ class Clinicas {
   String fone_1;
   String fone_2;
   String caminhoFoto;
-  MedicoId medicosClin;
-  ExameConsultaId examConsultaClin;
-  /* final MedicoClin medicosClin;
-  final ExamesConsultaClin examConsultaClin; */
+  /* MedicoId medicosClin;
+  ExameConsultaId examConsultaClin; */
+  final MedicosClin medicosClin;
+  final ExamesConsultaClin examConsultaClin;
   String teste;
 
   Clinicas(
@@ -44,9 +44,9 @@ class Clinicas {
 
   Clinicas.fromJson(Map<String, dynamic> json) {
       id = json['_id'] as String;
-      medicosClin = MedicoId.fromJson(json['medico']);
-      examConsultaClin = ExameConsultaId.fromJson(json['exame_consulta']);
-    /* if (json['medico'] != null) {
+      /* medicosClin = MedicoId.fromJson(json['medico']);
+      examConsultaClin = ExameConsultaId.fromJson(json['exame_consulta']); */
+    if (json['medico'] != null) {
       medicosClin = new List<MedicosClin>();
       json['medico'].forEach((v) {
         medicosClin.add(new MedicosClin.fromJson(v));
@@ -57,7 +57,7 @@ class Clinicas {
       json['exame_consulta'].forEach((v) {
         examConsultaClin.add(new ExamesConsultaClin.fromJson(v));
       });
-    } */
+    }
       teste = json['especialidade'] as String;
       nome = json['nome'] as String;
       razaoSocial = json['razao_social'] as String;
@@ -93,13 +93,13 @@ class Clinicas {
     data['caminho_foto'] = this.caminhoFoto;
     data['medico'] = this.medicosClin;
     data['exames_consulta'] = this.examConsultaClin;
-    /* if (this.medicosClin != null) {
+    if (this.medicosClin != null) {
       data['medico'] = this.medicosClin.map((v) => v.toJson()).toList();
     }
     if (this.examConsultaClin != null) {
       data['exame_consulta'] =
           this.examConsultaClin.map((v) => v.toJson()).toList();
-    } */
+    }
     return data;
   }
 }
@@ -204,9 +204,9 @@ class ExameConsultaId {
 
     return data;
   }
-}
+} */
 
-/* class Clinicas {
+class Clinicas {
   final String id;
   final String idMedico;
   final String nome;
@@ -330,4 +330,45 @@ class ExameConsultaId {
   factory ExameConsultaId.fromJson(Map<String, dynamic> json) {
     return ExameConsultaId(exame: json['nome']);
   }
-} */
+}
+
+ */
+class Search_model {
+  Id iId;
+
+  Search_model({this.iId});
+
+  Search_model.fromJson(Map<String, dynamic> json) {
+    iId = json['_id'] != null ? new Id.fromJson(json['_id']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.iId != null) {
+      data['_id'] = this.iId.toJson();
+    }
+    return data;
+  }
+}
+
+class Id {
+  String nome;
+  String id;
+  String cidade;
+
+  Id({this.nome, this.id, this.cidade});
+
+  Id.fromJson(Map<String, dynamic> json) {
+    nome = json['nome'];
+    id = json['id'];
+    cidade = json['cidade'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['nome'] = this.nome;
+    data['id'] = this.id;
+    data['cidade'] = this.cidade;
+    return data;
+  }
+}
