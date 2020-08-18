@@ -12,7 +12,6 @@ Future<void> main() async {
   Map token = json.decode(prefs.get('tokens'));
   final Map email = token["userData"];
 
-  print(email);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.white,
     statusBarColor: Colors.grey[400],
