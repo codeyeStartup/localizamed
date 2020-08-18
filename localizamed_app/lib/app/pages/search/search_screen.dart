@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
-import 'package:localizamed_app/app/pages/search/clinica_modelTest.dart';
+import 'package:localizamed_app/app/models/search_model.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'dart:async';
@@ -14,41 +14,15 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Search_model> _list = [];
-  String _url = ConexaoAPI().api + 'search_clinica';
+  List<Search_model> _list = List<Search_model>();
 
-  var loading = false;
-
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   TextEditingController _controller = TextEditingController();
 
   bool _showClearButton = false;
-
-  StreamController _streamController;
+  var loading = false;
 
   Timer _debounce;
-
-  _search() async {
-    if (_controller.text == null || _controller.text.length == 0) {
-      loading = false;
-      return;
-    } else {
-      loading = true;
-      Response response = await post(_url, body: {
-        'search': _controller.text.trim()
-      }, headers: {
-        /* 'search': _controller.text.trim(), */
-        'Accept': 'application/json',
-      });
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body).cast<Map<String, dynamic>>();
-        print(data);
-        setState(() {
-            loading = false;
-        });
-        return data.map<Search_model>((json) => Search_model.fromJson(json)).toList();
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -80,34 +54,33 @@ class _SearchScreenState extends State<SearchScreen> {
                           blurRadius: 4)
                     ]),
                 child: Center(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(15.0),
-                      hintText: 'Pesquisar',
-                      suffixIcon: _getButton(),
-                      hintStyle: TextStyle(fontSize: 15),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                    ),
-                    controller: _controller,
-                    onChanged: (String text) {
-                      if (_debounce?.isActive ?? false) _debounce.cancel();
-                      _debounce = Timer(const Duration(milliseconds: 1000), () {
-                        _search();
-                      });
-                    },
+                    child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(15.0),
+                    hintText: 'Pesquisar',
+                    suffixIcon: _getButton(),
+                    hintStyle: TextStyle(fontSize: 15),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
-                ),
+                  controller: _controller,
+                  onSubmitted: (e) {
+                    _search();
+                  },
+                  onChanged: (a) {
+                    _list.clear();
+                  },
+                )),
               ),
               preferredSize: Size.fromHeight(48.0)),
         ),
         body: SafeArea(
             child: Column(
           children: <Widget>[
-            loading || _list.isEmpty || _controller.text.isEmpty
+            loading || _list == null || _controller.text.isEmpty
                 ? Expanded(
                     child: Center(
                     child: Text(
@@ -117,50 +90,30 @@ class _SearchScreenState extends State<SearchScreen> {
                   ))
                 : Expanded(
                     child: ListView.builder(
-                        padding: EdgeInsets.all(10),
-                        itemCount: _list?.length?? 0,
-                        itemBuilder: (BuildContext context, int index) {
+                        itemCount: _list?.length ?? 0,
+                        itemBuilder: (context, index) {
                           var i = _list[index];
+                          if (index.hashCode == null) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
                           return GestureDetector(
                             onTap: () async {
                               SharedPreferences prefId =
                                   await SharedPreferences.getInstance();
-                              prefId.setString("_id", i.iId.id);
+                              prefId.setString("id", i.iId.id);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ClinicScreen()));
                             },
                             child: Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      i.iId.nome,
-                                      //'',
-                                      style: TextStyle(
-                                          fontSize: 16.0, color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      i.iId.cidade,
-                                      //'',
-                                      style: TextStyle(
-                                          fontSize: 16.0, color: Colors.grey),
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                margin: EdgeInsets.all(10),
+                                child: ListTile(
+                                  title: Text(i.iId.nome),
+                                  subtitle: Text(i.iId.cidade),
+                                )),
                           );
-                        }),
-                  )
+                        }))
           ],
         )));
   }
@@ -184,7 +137,36 @@ class _SearchScreenState extends State<SearchScreen> {
               color: Colors.white,
             )),
         onPressed: () {
+          _list.clear();
           _controller.clear();
         });
+  }
+
+  _search() async {
+    if (_controller.text == null || _controller.text.length == 0) {
+      setState(() {
+        _list.clear();
+      });
+      loading = false;
+      return null;
+    } else {
+      loading = true;
+      String _url = ConexaoAPI().api + 'search_clinica';
+      Response response = await post(_url, body: {
+        'search': _controller.text.trim()
+      }, headers: {
+        'Accept': 'application/json',
+      });
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          loading = false;
+        });
+        return data.forEach((e) {
+          _list.add(Search_model.fromJson(e));
+        });
+      }
+    }
   }
 }
