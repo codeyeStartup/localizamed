@@ -1,10 +1,11 @@
 const express = require('express');
-const Medicos = require("../models/medicos");
 const fs = require('fs');
-const multiparty = require('connect-multiparty');
+const cloudinary = require("cloudinary").v2;
+
+const Medicos = require("../models/medicos");
+const { cloud } = require("../utils/consts");
 
 const medicoRouter = express.Router();
-
 
 //função de RETORNAR TODOS os médicos
 medicoRouter.get('/medicos', (req, res, next)=>{
@@ -85,19 +86,19 @@ medicoRouter.post('/medicos',  (req, res, next)=>{
 });
 
 //rota das imagens
-medicoRouter.get('/imagens/:caminho_foto', (req, res, next)=>{
-    const img = req.params.caminho_foto;
+// medicoRouter.get('/imagens/:caminho_foto', (req, res, next)=>{
+//     const img = req.params.caminho_foto;
 
-    fs.readFile('./images/'+img, function(erro, content){
-        if(erro){
-            res.status(400).json(erro);
-            return;
-        }
+//     fs.readFile('./images/'+img, function(erro, content){
+//         if(erro){
+//             res.status(400).json(erro);
+//             return;
+//         }
 
-        res.writeHead(200, { 'content-type' : 'image/png'});
-        res.end(content);
-    });
-});
+//         res.writeHead(200, { 'content-type' : 'image/png'});
+//         res.end(content);
+//     });
+// });
 
 //função de DELETAR um médico
 medicoRouter.delete('/medico/:id', (req, res, next)=>{
@@ -141,7 +142,38 @@ medicoRouter.put('/medico/:id', (req, res, next)=>{
 atualizarMedicos();
 });
 
-//ATUALIZAR médico
+//funcao de atualizar foto do medico
+medicoRouter.put("/medico_image/:id", (req, res) => {
+    cloudinary.config(cloud);
+  
+    const { id } = req.params;
+  
+    Medicos.findById(id)
+      .then(async (medico) => {
+        const { secure_url } = await cloudinary.uploader.upload(
+          req.files.caminho_foto.path,
+          {
+            folder: `images/medicos/${id}/`,
+            public_id: id,
+            invalidate: true,
+            overwrite: true,
+            allowed_formats: ["jpg", "png"],
+            height: 320,
+            width: 640,
+            crop: "fit",
+          }
+        );
+        const medicoImg = await Medicos.findByIdAndUpdate(
+          { _id: req.params.id },
+          { caminho_foto: secure_url.trim() }
+        );
+  
+        return res.status(200).send("Enviado com sucesso");
+      })
+      .catch((err) => {
+        return res.status(404).json(err.message);
+      });
+  });
 
 
 module.exports = medicoRouter;
