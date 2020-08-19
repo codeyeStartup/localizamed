@@ -182,7 +182,7 @@ Widget page_two(BuildContext context) {
                 height: 20,
               ),
               Text(
-                  "Sim, nós trazemos os melhores \nmédicos para tratar da sua saúde",
+                  "Nós trazemos os melhores \nmédicos para tratar da sua saúde",
                   style: TextStyle(fontSize: 18, color: Colors.black54))
             ],
           ),

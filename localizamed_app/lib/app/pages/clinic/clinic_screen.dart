@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:localizamed_app/app/models/clinica_model.dart';
+import 'package:localizamed_app/app/models/search_model.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_page_view.dart';
@@ -8,15 +10,18 @@ import 'dart:core';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ClinicScreen extends StatefulWidget {
+
   @override
   _clinicScreenState createState() => _clinicScreenState();
 }
 
 class _clinicScreenState extends State<ClinicScreen> {
+
   double appBarHeight = 400;
 
   @override
   Widget build(BuildContext context) {
+    
     var mediaQuery = MediaQuery.of(context);
     var size = mediaQuery.size;
 
@@ -39,17 +44,6 @@ class _clinicScreenState extends State<ClinicScreen> {
                 ],
               ),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(
-              Icons.arrow_back,
-              size: 30,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
           ),
         );
       },
@@ -112,7 +106,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                         child: Container(
                             width: size.height / 2.5,
                             height: size.height / 5.8,
-                            margin: EdgeInsets.only(left: size.width / 12, right: size.width / 8),
+                            margin: EdgeInsets.only(
+                                left: size.width / 12, right: size.width / 8),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
@@ -120,7 +115,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                                 boxShadow: [
                                   BoxShadow(
                                       blurRadius: 5,
-                                      color: Colors.black38,
+                                      color: Colors.black26,
                                       offset: Offset(1, 2))
                                 ]),
                             child: Column(
@@ -160,6 +155,30 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                                 ),
                               ],
                             ))),
+                    Positioned(
+                      top: expandedHeight / 10 - shrinkOffset,
+                      left: 20,
+                      child: GestureDetector(
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    offset: Offset(2, 5),
+                                    blurRadius: 5)
+                              ]),
+                          child: Icon(Icons.arrow_back),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
