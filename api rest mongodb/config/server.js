@@ -1,36 +1,39 @@
-require('dotenv').config();
-const app = require('express')();
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); 
-var mongodb = require('mongodb');
-const fs = require('fs');
-const multiparty = require('connect-multiparty');
+require("dotenv").config();
+const app = require("express")();
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+var mongodb = require("mongodb");
+const fs = require("fs");
+const multiparty = require("connect-multiparty");
 
 //body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multiparty());
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader("Access-Control-Allow-Credentials", true);
 
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-	res.setHeader("Access-Control-Allow-Headers", "content-type");
-	res.setHeader("Access-Control-Allow-Credentials", true);
-
-	next();
+  next();
 });
 
 //conexão com o banco
-mongoose.connect('mongodb+srv://localizamed:startup2019@cluster0-b3dwf.mongodb.net/db_localizamed?retryWrites=true&w=majority', {
+mongoose.connect(
+  process.env.STR_CONNECT,
+  {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-	useFindAndModify: false, 
-	useCreateIndex: true      
-}, () => {   
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+  () => {
     console.log("banco conectado");
-}); 
+  }
+);
 
 //-->ENDPOINTS
 const usuariosRouter = require("../routes/Usuarios");
@@ -44,9 +47,8 @@ const medicoEspecialidadesRouter = require("../routes/MedicosEspecialidades");
 const planoSaude_with_ClinMedExameRouter = require("../routes/PlanoSaude_with_ClinMedExam");
 const pesquisaRouter = require("../routes/Pesquisa");
 
-
 app.use(usuariosRouter);
-app.use(clinicaRouter); 
+app.use(clinicaRouter);
 app.use(medicoRouter);
 app.use(exames_consultasRouter);
 app.use(planos_de_saudeRouter);
