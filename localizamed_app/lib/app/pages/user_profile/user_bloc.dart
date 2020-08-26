@@ -16,7 +16,8 @@ class UserBloc {
   void changeImage(File file) {
     _imageUser.add(file);
   }
-
+  
+  //User data 
   Future<Usuario> getUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,6 +47,16 @@ class UserBloc {
     return uid['_id'].toString();
   }
 
+  //Get user Email
+  Future<String> getUserEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    Map tokens = json.decode(preferences.get("tokens"));
+    final Map email = tokens["userData"];
+
+    return email['email'].toString();
+  }
+  
+  //Send user profile image 
   Future<Map<String, dynamic>> changeUserImage(io.File imagemPerfil) async {
     return await updateImageUser(imagemPerfil);
   }
@@ -87,5 +98,3 @@ class UserBloc {
     _imageUser.close();
   }
 }
-
-/* final userBloc = UserBloc(); */

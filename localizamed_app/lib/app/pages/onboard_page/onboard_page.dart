@@ -37,82 +37,85 @@ class _OnboardPageState extends State<OnboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    var size = mediaQuery.size;
-
-    return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
-            child: Container(
-              height: size.height,
-              width: size.width,
-              color: Colors.transparent,
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Column(
-                  children: <Widget>[
-                    Container(
-                      height: size.height / 1.2,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(top: 100.0),
-                            height: size.height / 1.2,
-                            alignment: Alignment.center,
-                            child: PageView(
-                              physics: ClampingScrollPhysics(),
-                              controller: _pageController,
-                              onPageChanged: (int page) {
-                                setState(() {
-                                  _currentPage = page;
-                                });
-                              },
-                              children: <Widget>[
-                                page_one(context),
-                                page_two(context),
-                                page_three(context)
-                              ],
+    return LayoutBuilder(builder: (context, constrains) {
+      var mediaQuery = MediaQuery.of(context);
+      var size = mediaQuery.size;
+      return Scaffold(
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.light,
+              child: Container(
+                height: size.height,
+                width: size.width,
+                color: Colors.transparent,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Column(
+                    children: <Widget>[
+                      Container(
+                        height: size.height / 1.2,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(top: 100.0),
+                              height: size.height / 1.2,
+                              alignment: Alignment.center,
+                              child: PageView(
+                                physics: ClampingScrollPhysics(),
+                                controller: _pageController,
+                                onPageChanged: (int page) {
+                                  setState(() {
+                                    _currentPage = page;
+                                  });
+                                },
+                                children: <Widget>[
+                                  page_one(context),
+                                  page_two(context),
+                                  page_three(context)
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    _currentPage != _numPages - 1
-                        ? Expanded(
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                    left:
-                                        MediaQuery.of(context).size.width / 10,
-                                    top: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Row(children: _buildPageIndicator()),
-                                    SizedBox(
-                                      width: size.width / 1.9,
-                                    ),
-                                    FloatingActionButton(
-                                        backgroundColor: Colors.black87,
-                                        onPressed: () {
-                                          _pageController.nextPage(
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            curve: Curves.ease,
-                                          );
-                                        },
-                                        child: Icon(
-                                          Icons.arrow_forward,
-                                          color: Colors.white,
-                                        )),
-                                  ],
-                                )),
-                          )
-                        : Text(''),
-                  ],
-                );
-              }),
-            )),
-        bottomSheet:
-            _currentPage == _numPages - 1 ? animatedButton(context) : Text(""));
+                      _currentPage != _numPages - 1
+                          ? Expanded(
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width /
+                                          10,
+                                      top: 10),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Row(children: _buildPageIndicator()),
+                                      SizedBox(
+                                        width: size.width / 1.9,
+                                      ),
+                                      FloatingActionButton(
+                                          backgroundColor: Colors.black87,
+                                          onPressed: () {
+                                            _pageController.nextPage(
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              curve: Curves.ease,
+                                            );
+                                          },
+                                          child: Icon(
+                                            Icons.arrow_forward,
+                                            color: Colors.white,
+                                          )),
+                                    ],
+                                  )),
+                            )
+                          : Text(''),
+                    ],
+                  );
+                }),
+              )),
+          bottomSheet: _currentPage == _numPages - 1
+              ? animatedButton(context)
+              : Text(""));
+    });
   }
 }
 
@@ -227,35 +230,32 @@ Widget page_three(BuildContext context) {
   ));
 }
 
-Widget animatedButton(BuildContext context){
+Widget animatedButton(BuildContext context) {
   return AnimatedContainer(
-        duration: Duration(milliseconds: 150),
-        height: MediaQuery.of(context).size.height / 8,
-        curve: Curves.bounceIn,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.transparent,
-        child: Padding(
-          padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 8, 
+      duration: Duration(milliseconds: 150),
+      height: MediaQuery.of(context).size.height / 8,
+      curve: Curves.bounceIn,
+      width: MediaQuery.of(context).size.width,
+      color: Colors.transparent,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: MediaQuery.of(context).size.width / 8,
           right: MediaQuery.of(context).size.width / 8,
           bottom: 40,
+        ),
+        child: RaisedButton(
+          color: Theme.of(context).primaryColor,
+          padding: EdgeInsets.all(10.0),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+          },
+          child: Text(
+            "INICIAR",
+            style: TextStyle(fontSize: 18, color: Colors.white),
           ),
-          child: RaisedButton(
-            color: Theme.of(context).primaryColor,
-            padding: EdgeInsets.all(10.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40)
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context)=>LoginScreen())
-              );
-            },
-            child: Text(
-              "INICIAR",
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white),
-            ),
-          ),
-        ));
+        ),
+      ));
 }

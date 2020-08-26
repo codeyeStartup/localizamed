@@ -49,7 +49,7 @@ class _UserProfileState extends State<UserProfile> {
           backgroundColor: Colors.red,
           onPressed: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.remove('email');
+            prefs?.clear();
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

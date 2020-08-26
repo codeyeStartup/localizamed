@@ -61,9 +61,10 @@ class _InitialCardState extends State<InitialCard> {
                         height: MediaQuery.of(context).size.height / 1.9,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(ConexaoAPI().api +
-                                  'imagensClinica/' +
-                                  snapshot.data.clinicas[index].caminhoFoto),
+                              image: snapshot.data.clinicas[index].caminhoFoto == null
+                                  ? AssetImage('images/LocalizaMed_T1.png')
+                                  : NetworkImage(snapshot
+                                      .data.clinicas[index].caminhoFoto),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.circular(20),

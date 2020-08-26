@@ -58,6 +58,7 @@ class _BottomMenuState extends State<BottomMenu> {
     var size = mediaQuery.size;
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
         body: Container(
           color: Colors.white,
           child: Center(

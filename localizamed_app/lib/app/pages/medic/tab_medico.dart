@@ -124,9 +124,7 @@ class _MedCardState extends State<MedCard> {
                                               "images/homem_medico.png")
                                           : AssetImage(
                                               "images/mulher_medico.png")
-                                      : NetworkImage(ConexaoAPI().api +
-                                          'imagens/' +
-                                          snapshot.data[index].caminhoFoto),
+                                      : NetworkImage(snapshot.data[index].caminhoFoto),
                                 )),
                           ),
                         ),

@@ -68,7 +68,8 @@ class LoginBloc extends BlocBase with LoginValidators {
       if (response.statusCode == 201) {
         var token = Token.fromJson(mapResponse);
         prefs.setString('tokenjwt', mapResponse['token']);
-
+        await saveUserAuthentication(mapResponse);
+        
         _stateController.add(LoginState.SUCESSO);
       } else {
         _stateController.add(LoginState.FALHA);

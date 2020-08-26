@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:localizamed_app/app/pages/login/login_bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/validators/signup_validator.dart';
 import 'package:rxdart/rxdart.dart';
@@ -202,21 +203,25 @@ increment(); */
       "x-access-token": token
     };
 
-    try {
-      http.Response response = await http.patch(url, headers: headers, body: {
-        "nome": _nomeController.value,
+    Map payload = {
+      "nome": _nomeController.value,
         "email": _emailController.value,
         "cidade": _cidadeController.value,
         "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
         "fone_1": _telefoneController.value,
         "cpf": _cpfController.value,
         "rg": _cpfController.value
-      });
+    };
+
+    try {
+      http.Response response = await http.patch(url, headers: headers, body: payload);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('email', _emailController.value);
 
       if (response.statusCode == 201) {
+        await LoginBloc().saveUserAuthentication(jsonDecode(response.body));
+
         print("Atualizado com Sucesso!");
         _updateController.add(UpdateState.SUCESSO);
       } else {

@@ -10,18 +10,15 @@ import 'dart:core';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ClinicScreen extends StatefulWidget {
-
   @override
   _clinicScreenState createState() => _clinicScreenState();
 }
 
 class _clinicScreenState extends State<ClinicScreen> {
-
   double appBarHeight = 400;
 
   @override
   Widget build(BuildContext context) {
-    
     var mediaQuery = MediaQuery.of(context);
     var size = mediaQuery.size;
 
@@ -88,9 +85,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                                 bottomLeft: Radius.circular(30),
                                 bottomRight: Radius.circular(30)),
                             image: DecorationImage(
-                              image: NetworkImage(ConexaoAPI().api +
-                                  'imagensClinica/' +
-                                  snapshot.data.caminhoFoto),
+                              image: NetworkImage(snapshot.data.caminhoFoto),
                               fit: BoxFit.cover,
                             ),
                             boxShadow: [

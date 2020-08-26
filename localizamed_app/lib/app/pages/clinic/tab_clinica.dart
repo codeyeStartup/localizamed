@@ -6,26 +6,24 @@ import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinCard extends StatefulWidget {
-
   @override
   _ClinCardState createState() => _ClinCardState();
 }
 
 class _ClinCardState extends State<ClinCard> {
-
   @override
-  void initState(){
+  void initState() {
     clinicaBloc.getListClinicas();
     super.initState();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
-  
+
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width * 0.0;
 
     return new Container(
@@ -66,7 +64,7 @@ class _ClinCardState extends State<ClinCard> {
                         //card da CLINICA
                         Container(
                           height: MediaQuery.of(context).size.height / 6.5,
-                          width:  MediaQuery.of(context).size.height / 1.2,
+                          width: MediaQuery.of(context).size.height / 1.2,
                           margin: new EdgeInsets.only(left: 10.0, top: 20),
                           decoration: new BoxDecoration(
                               color: Colors.white,
@@ -96,37 +94,37 @@ class _ClinCardState extends State<ClinCard> {
                                   ),
                                 ),
                                 ListTile(
-                                  title: Text(
-                                    snapshot.data[index].nome,
-                                    style: TextStyle(fontSize: 20),
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.right,
-                                  ),
-                                  subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 3, bottom: 4),
-                                      child: Text(
-                                        snapshot.data[index].cidade ==
-                                                null
-                                            ? 'Cidade não informada'
-                                            : snapshot
-                                                .data[index].cidade,
-                                        style: TextStyle(fontSize: 14),
-                                      ),
+                                    title: Text(
+                                      snapshot.data[index].nome,
+                                      style: TextStyle(fontSize: 20),
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.right,
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(top: 6),
-                                      color: Colors.green,
-                                      width:
-                                          MediaQuery.of(context).size.width / 8,
-                                      height: 2,
-                                    )
-                                  ],
-                                )
-                                ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 3, bottom: 4),
+                                          child: Text(
+                                            snapshot.data[index].cidade == null
+                                                ? 'Cidade não informada'
+                                                : snapshot.data[index].cidade,
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(top: 6),
+                                          color: Colors.green,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              8,
+                                          height: 2,
+                                        )
+                                      ],
+                                    )),
                               ],
                             ),
                           ),
@@ -134,11 +132,10 @@ class _ClinCardState extends State<ClinCard> {
                         //IMAGEM
                         Container(
                           margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width / 14
-                          ),
+                              left: MediaQuery.of(context).size.width / 14),
                           child: Container(
                             height: MediaQuery.of(context).size.height / 6.5,
-                            width:  MediaQuery.of(context).size.width / 3,
+                            width: MediaQuery.of(context).size.width / 3,
                             margin: EdgeInsets.only(
                               bottom: 0,
                             ),
@@ -146,8 +143,9 @@ class _ClinCardState extends State<ClinCard> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(270)),
                                 image: DecorationImage(
-                                  image: NetworkImage(ConexaoAPI().api +
-                                      'imagensClinica/' +
+                                  image: snapshot.data[index].caminhoFoto == null ? 
+                                    AssetImage('images/LocalizaMed_T1.png')
+                                    : NetworkImage(
                                       snapshot.data[index].caminhoFoto),
                                   fit: BoxFit.fill,
                                 )),
