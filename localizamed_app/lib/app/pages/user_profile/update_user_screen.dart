@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:localizamed_app/app/pages/home/home_page.dart';
 import 'dart:io';
 import 'dart:io' as io;
 import 'package:image_picker/image_picker.dart';

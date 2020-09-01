@@ -10,9 +10,10 @@ class UserApiProvider{
 
  Future<Usuario> getUsuario() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('tokenjwt');
   var email = prefs.getString('email');
   final response = await http.get(Uri.encodeFull(ConexaoAPI().api + 'usuarioFindOne/' + email),      
-      headers: {"Accept": "application/json"});
+      headers: {"Accept": "application/json", "x-access-token" : token});
       //print(response.body);      
 
   if (response.statusCode == 200) {

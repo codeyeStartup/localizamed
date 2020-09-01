@@ -51,6 +51,20 @@ class _MedCardState extends State<MedCard> {
                   itemCount: snapshot?.data?.length ?? 0,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    String image;
+                    String _setImage() {
+                      if (snapshot.data[index].temFoto == '0' &&
+                          snapshot.data[index].sexo == 'M') {
+                        image = 'images/homem_medico.png';
+                      } else if (snapshot.data[index].temFoto == '0' /*|| snapshot.data[index].temFoto == '1' */&&
+                          snapshot.data[index].sexo != 'M') {
+                        image = 'images/mulher_medico.png';
+                      } else {
+                        image = 'images/placeholder.png';
+                      }
+                      return image;
+                    }
+
                     return Stack(
                       children: <Widget>[
                         Container(
@@ -114,17 +128,16 @@ class _MedCardState extends State<MedCard> {
                             height: MediaQuery.of(context).size.height / 9,
                             width: MediaQuery.of(context).size.width / 4,
                             decoration: BoxDecoration(
+                              color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(270)),
                                 image: DecorationImage(
                                   fit: BoxFit.fill,
-                                  image: snapshot.data[index].temFoto == '0'
-                                      ? snapshot.data[index].sexo == 'M'
-                                          ? AssetImage(
-                                              "images/homem_medico.png")
-                                          : AssetImage(
-                                              "images/mulher_medico.png")
-                                      : NetworkImage(snapshot.data[index].caminhoFoto),
+                                  image:
+                                      snapshot.data[index].caminhoFoto == null
+                                          ? AssetImage(_setImage())
+                                          : NetworkImage(
+                                              snapshot.data[index].caminhoFoto),
                                 )),
                           ),
                         ),

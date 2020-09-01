@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -152,12 +152,12 @@ class _SearchScreenState extends State<SearchScreen> {
       return null;
     } else {
       loading = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('tokenjwt');
       String _url = ConexaoAPI().api + 'search_clinica';
-      Response response = await post(_url, body: {
-        'search': _controller.text.trim()
-      }, headers: {
-        'Accept': 'application/json',
-      });
+      Response response = await post(_url,
+          body: {'search': _controller.text.trim()},
+          headers: {'Accept': 'application/json', "x-access-token": token});
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);

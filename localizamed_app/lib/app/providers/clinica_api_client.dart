@@ -7,11 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinicaApiProvider {
   Future<Clinicas2> getClinicaById() async {
-    SharedPreferences prefId = await SharedPreferences.getInstance();
-    var id = prefId.getString('id');
+    SharedPreferences prefs= await SharedPreferences.getInstance();
+    var id = prefs.getString('id');
+    var token = prefs.getString('tokenjwt');
 
     final response = await http.get(ConexaoAPI().api + 'clinica/' + id,
-        headers: {"Accept": "application/json"});
+        headers: {"Accept": "application/json", "x-access-token" : token});
 
     if (response.statusCode == 200) {
       //print(response.body);

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:localizamed_app/app/pages/login/login_bloc.dart';
+import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/validators/signup_validator.dart';
 import 'package:rxdart/rxdart.dart';
@@ -186,16 +187,9 @@ increment(); */
 
   //Função de ATUALIZAR usuário
   Future<void> updateUser() async {
-    Future<String> getUserEmail() async {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      Map tokens = json.decode(preferences.get("tokens"));
-      final Map email = tokens["userData"];
-
-      return email['email'].toString();
-    }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = getUserEmail();
+    var email = await UserBloc().getUserEmail();
     var token = prefs.getString('tokenjwt');
     String url = ConexaoAPI().api + 'usuarioUpdate/$email';
     Map<String, String> headers = {
@@ -205,23 +199,22 @@ increment(); */
 
     Map payload = {
       "nome": _nomeController.value,
-        "email": _emailController.value,
-        "cidade": _cidadeController.value,
-        "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
-        "fone_1": _telefoneController.value,
-        "cpf": _cpfController.value,
-        "rg": _cpfController.value
+      "email": _emailController.value,
+      "cidade": _cidadeController.value,
+      "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
+      "fone_1": _telefoneController.value,
+      "cpf": _cpfController.value,
+      "rg": _cpfController.value
     };
 
     try {
-      http.Response response = await http.patch(url, headers: headers, body: payload);
+      http.Response response = await http.put(url, headers: headers, body: payload);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', _emailController.value);
-
+      /*SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', _emailController.value);*/
       if (response.statusCode == 201) {
         await LoginBloc().saveUserAuthentication(jsonDecode(response.body));
-
+       
         print("Atualizado com Sucesso!");
         _updateController.add(UpdateState.SUCESSO);
       } else {

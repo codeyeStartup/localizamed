@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialCard extends StatefulWidget {
@@ -49,8 +50,7 @@ class _InitialCardState extends State<InitialCard> {
                       SharedPreferences prefId =
                           await SharedPreferences.getInstance();
                       prefId.setString('id', snapshot.data.clinicas[index].sId);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ClinicScreen()));
+                      Navigator.push(context, SlideTopRoute(page: ClinicScreen()));
                     },
                     child: Container(
                         margin: EdgeInsets.only(
@@ -60,12 +60,13 @@ class _InitialCardState extends State<InitialCard> {
                         width: MediaQuery.of(context).size.width / 1.3,
                         height: MediaQuery.of(context).size.height / 1.9,
                         decoration: BoxDecoration(
+                          color: Colors.white,
                             image: DecorationImage(
                               image: snapshot.data.clinicas[index].caminhoFoto == null
                                   ? AssetImage('images/LocalizaMed_T1.png')
                                   : NetworkImage(snapshot
                                       .data.clinicas[index].caminhoFoto),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [

@@ -3,6 +3,7 @@ import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:localizamed_app/app/models/clinica_model.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinCard extends StatefulWidget {
@@ -56,8 +57,7 @@ class _ClinCardState extends State<ClinCard> {
                       SharedPreferences prefId =
                           await SharedPreferences.getInstance();
                       prefId.setString('id', snapshot.data[index].id);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ClinicScreen()));
+                      Navigator.push(context, SlideTopRoute(page: ClinicScreen()));
                     },
                     child: Stack(
                       children: <Widget>[
@@ -140,6 +140,7 @@ class _ClinCardState extends State<ClinCard> {
                               bottom: 0,
                             ),
                             decoration: BoxDecoration(
+                              color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(270)),
                                 image: DecorationImage(

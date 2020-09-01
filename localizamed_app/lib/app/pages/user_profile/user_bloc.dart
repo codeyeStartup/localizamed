@@ -64,11 +64,14 @@ class UserBloc {
   Future<Map<String, dynamic>> updateImageUser(io.File imagemPerfil) async {
     Response response;
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('tokenjwt');
+
     Dio dio = Dio();
     dio.options.headers = {
       'Content-type': 'multipart/form-data',
       'Accept': 'application/json',
-      'Authtorization': 'token'
+      'x-access-token': token
     };
 
     String fileName = imagemPerfil.path.split('/').last;
