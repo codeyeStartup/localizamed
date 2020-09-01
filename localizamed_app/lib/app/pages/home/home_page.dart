@@ -21,7 +21,6 @@ class BottomMenu extends StatefulWidget {
 }
 
 class _BottomMenuState extends State<BottomMenu> {
-
   Future<Usuario> userData;
   var userBloc = UserBloc();
 
@@ -58,7 +57,7 @@ class _BottomMenuState extends State<BottomMenu> {
     var size = mediaQuery.size;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         body: Container(
           color: Colors.white,
           child: Center(
@@ -174,7 +173,6 @@ class _BottomMenuState extends State<BottomMenu> {
                   ),
                   GestureDetector(
                     child: Container(
-                        
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.only(left: 10, right: 20),
                         decoration: BoxDecoration(
@@ -188,23 +186,25 @@ class _BottomMenuState extends State<BottomMenu> {
                         child: FutureBuilder(
                           future: userData,
                           builder: (context, snapshot) {
-                            if(!snapshot.hasData){
+                            if (!snapshot.hasData) {
                               return CircularProgressIndicator();
-                            }else{
-                             return CircleAvatar(
-                               backgroundColor: Colors.transparent,
-                               radius: 20,
-                                child: snapshot.data.caminhoFoto == null
-                                    ? Image.asset(
-                                        'images/usuarioP.png',
-                                        fit: BoxFit.fill,
-                                      )
-                                    : Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: NetworkImage(snapshot.data.caminhoFoto), fit: BoxFit.cover)
-                                      ),
-                                    ));
+                            } else {
+                              return CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: 20,
+                                  child: snapshot.data.caminhoFoto == null
+                                      ? Image.asset(
+                                          'images/usuarioP.png',
+                                          fit: BoxFit.fill,
+                                        )
+                                      : Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(snapshot
+                                                      .data.caminhoFoto),
+                                                  fit: BoxFit.cover)),
+                                        ));
                             }
                           },
                         )),
