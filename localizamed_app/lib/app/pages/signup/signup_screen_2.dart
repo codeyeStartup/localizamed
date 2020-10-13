@@ -3,6 +3,7 @@ import 'package:localizamed_app/app/pages/signup/signup_bloc.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_3.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_home.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class SignUpScreen2 extends StatefulWidget {
   @override
@@ -67,8 +68,8 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                               size: 30,
                             ),
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignUpHome()));
+                              Navigator.push(
+                                  context, SlideRightRoute(page: SignUpHome()));
                             },
                           )),
                       SizedBox(
@@ -82,8 +83,7 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                           children: <Widget>[
                             Text(
                               'Olá, tudo bem? Eu gostaria de te conhecer melhor. Pode por favor me dizer seu Nome, sua Data de Nascimento e seu E-mail?',
-                              style:
-                                  TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -107,18 +107,17 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                             ? snapshot.error
                                             : null,
                                         hintText: 'Exemplo: Ana Laura Pereira',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'Nome Completo',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black,)
-                                        ),
+                                            borderSide: BorderSide(
+                                          color: Colors.black,
+                                        )),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -140,15 +139,15 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                         counter: SizedBox.shrink(),
                                         labelText: 'Data de Nascimento',
                                         hintText: 'AAAA/MM/DD',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -169,18 +168,17 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                             ? snapshot.error
                                             : null,
                                         hintText: 'você@gmail.com',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'E-mail',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -204,15 +202,12 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                 child: Text(
                                   'PRÓXIMO',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22),
+                                      color: Colors.white, fontSize: 22),
                                 ),
                                 onPressed: snapshot.hasData
                                     ? () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignUpScreen3()));
+                                        Navigator.push(context,
+                                            SlideLeftRoute(page: SignUpScreen3()));
                                       }
                                     : null);
                           })

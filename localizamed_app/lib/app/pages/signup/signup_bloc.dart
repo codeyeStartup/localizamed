@@ -29,9 +29,8 @@ class SingletonBloc with SignupValidator {
   BehaviorSubject<String> _cidadeController;
   BehaviorSubject<String> _telefoneController;
   BehaviorSubject<String> _senhaController;
-  BehaviorSubject<String> _cpfController;
-  BehaviorSubject<String> _rgController;
-  BehaviorSubject<String> _extraTelefoneController;
+  BehaviorSubject<String> _logradouroController;
+  BehaviorSubject<String> _bairroController;
   BehaviorSubject<SignupState> _stateController;
   BehaviorSubject<UpdateState> _updateController;
   BehaviorSubject<String> _ufUpdateController;
@@ -40,15 +39,14 @@ class SingletonBloc with SignupValidator {
   Stream<String> get outNome => _nomeController.stream.transform(validaNome);
   Stream<String> get outDataNasc => _dataNascController.stream;
   Stream<String> get outEmail => _emailController.stream.transform(validaEmail);
+  Stream<String> get outLogradouro => _logradouroController.stream;
+  Stream<String> get outBairro => _bairroController.stream;
   Stream<String> get outUf => _ufController.stream;
   Stream<String> get outCidade =>
       _cidadeController.stream.transform(validaCidade);
   Stream<String> get outTelefone =>
       _telefoneController.stream.transform(validaTelefone);
   Stream<String> get outSenha => _senhaController.stream.transform(validaSenha);
-  Stream<String> get outCpf => _cpfController.stream;
-  Stream<String> get outRg => _rgController.stream;
-  Stream<String> get outExtraTel => _extraTelefoneController.stream;
   Stream<SignupState> get outState => _stateController.stream;
   Stream<UpdateState> get outUpState => _updateController.stream;
   Stream<String> get outUfUpdate => _ufUpdateController.stream;
@@ -107,12 +105,11 @@ increment(); */
     _dataNascController = BehaviorSubject<String>();
     _emailController = BehaviorSubject<String>();
     _ufController = BehaviorSubject<String>();
+    _logradouroController = BehaviorSubject<String>();
+    _bairroController = BehaviorSubject<String>();
     _cidadeController = BehaviorSubject<String>();
     _telefoneController = BehaviorSubject<String>();
     _senhaController = BehaviorSubject<String>();
-    _cpfController = BehaviorSubject<String>();
-    _rgController = BehaviorSubject<String>();
-    _extraTelefoneController = BehaviorSubject<String>();
     _stateController = BehaviorSubject<SignupState>();
     _updateController = BehaviorSubject<UpdateState>();
     _ufUpdateController = BehaviorSubject<String>();
@@ -124,11 +121,10 @@ increment(); */
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changeUf => _ufController.sink.add;
   Function(String) get changeCidade => _cidadeController.sink.add;
+  Function(String) get changeLogradouro => _logradouroController.sink.add;
+  Function(String) get changeBairro => _bairroController.sink.add;
   Function(String) get changeTelefone => _telefoneController.sink.add;
   Function(String) get changeSenha => _senhaController.sink.add;
-  Function(String) get changeCpf => _cpfController.sink.add;
-  Function(String) get changeRg => _rgController.sink.add;
-  Function(String) get changeExtraTel => _extraTelefoneController.sink.add;
   Function(String) get changeUfUpdate => _ufUpdateController.sink.add;
 
 //se precisar chamar algum método, chama assim:
@@ -140,38 +136,34 @@ increment(); */
     final email = _emailController.value.trim();
     final uf = _ufController.value;
     final cidade = _cidadeController.value;
+    final bairro = _bairroController.value;
+    final logradouro = _logradouroController.value;
     final telefone = _telefoneController.value;
-    final cpf = ' ';
-    final rg = ' ';
-    final extraTel = ' ';
     final senha = _senhaController.value.trim();
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = ConexaoAPI().api + "usuarios";
     Map<String, String> headers = {"Accept": "application/json"};
 
     try {
-      http.Response response = await http.post(url, headers: headers, body: {
+      var response = await http.post(url, headers: headers, body: {
         "nome": nome,
         "email": email,
+        "logradouro": logradouro,
+        "bairro": bairro,
         "data_nascimento": dataNasc,
         "cidade": cidade,
         "uf": uf,
         "fone_1": telefone,
         "senha": senha,
-        "cpf": cpf.isEmpty || _cpfController.value == null
-            ? ''
-            : _cpfController.value,
-        "fone_2": extraTel.isEmpty || _extraTelefoneController.value == null
-            ? ''
-            : _extraTelefoneController.value,
-        "rg": rg.isEmpty || _rgController.value == null
-            ? ''
-            : _rgController.value,
       });
 
+      Map mapResponse = json.decode(response.body);
       if (response.statusCode == 201) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('email', _emailController.value);
+        
+        prefs.setString('tokenjwt', mapResponse['token']);
+        await LoginBloc().saveUserAuthentication(mapResponse);
+
         print("Cadastrado com Sucesso!");
         _stateController.add(SignupState.SUCESSO);
       } else {
@@ -179,7 +171,6 @@ increment(); */
         _stateController.add(SignupState.FALHA);
       }
     } catch (erro) {
-      print("robson");
       print(erro);
       return _stateController.add(SignupState.CATCH_ERRO);
     }
@@ -187,7 +178,6 @@ increment(); */
 
   //Função de ATUALIZAR usuário
   Future<void> updateUser() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var email = await UserBloc().getUserEmail();
     var token = prefs.getString('tokenjwt');
@@ -200,21 +190,20 @@ increment(); */
     Map payload = {
       "nome": _nomeController.value,
       "email": _emailController.value,
+      "logradouro": _logradouroController.value,
+      "bairro": _bairroController.value,
       "cidade": _cidadeController.value,
       "uf": _ufUpdateController.value?.toString() ?? _ufController.value,
       "fone_1": _telefoneController.value,
-      "cpf": _cpfController.value,
-      "rg": _cpfController.value
     };
 
     try {
-      http.Response response = await http.put(url, headers: headers, body: payload);
+      http.Response response =
+          await http.put(url, headers: headers, body: payload);
 
-      /*SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', _emailController.value);*/
       if (response.statusCode == 201) {
         await LoginBloc().saveUserAuthentication(jsonDecode(response.body));
-       
+
         print("Atualizado com Sucesso!");
         _updateController.add(UpdateState.SUCESSO);
       } else {
@@ -228,7 +217,7 @@ increment(); */
   }
 
 //feche suas streams quando o dispose for chamado
-  dispose() {
+  void dispose() {
     _nomeController.close();
     _dataNascController.close();
     _emailController.close();
@@ -236,9 +225,8 @@ increment(); */
     _cidadeController.close();
     _telefoneController.close();
     _senhaController.close();
-    _cpfController.close();
-    _rgController.close();
-    _extraTelefoneController.close();
+    _logradouroController.close();
+    _bairroController.close();
     _stateController.close();
     _updateController.close();
   }

@@ -56,7 +56,7 @@ class _ClinCardState extends State<ClinCard> {
                     onTap: () async {
                       SharedPreferences prefId =
                           await SharedPreferences.getInstance();
-                      prefId.setString('id', snapshot.data[index].id);
+                      prefId.setString('id', snapshot.data[index].sId);
                       Navigator.push(context, SlideTopRoute(page: ClinicScreen()));
                     },
                     child: Stack(
@@ -82,17 +82,6 @@ class _ClinCardState extends State<ClinCard> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.star,
-                                      size: 30,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
                                 ListTile(
                                     title: Text(
                                       snapshot.data[index].nome,

@@ -3,6 +3,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_2.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_4.dart';
 import 'package:localizamed_app/app/pages/signup/signup_bloc.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class SignUpScreen3 extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
     var size = mediaQuery.size;
 
     return Scaffold(
-            body: StreamBuilder<SignupState>(
+        body: StreamBuilder<SignupState>(
             stream: _signupBloc.outState,
             initialData: SignupState.IDLE,
             builder: (context, snapshot) {
@@ -99,8 +100,8 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                             size: 30,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop(MaterialPageRoute(
-                                builder: (context) => SignUpScreen2()));
+                            Navigator.push(
+                                context, SlideLeftRoute(page: SignUpScreen2()));
                           },
                         ),
                       ),
@@ -115,8 +116,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                           children: <Widget>[
                             Text(
                               'Um belo nome você tem! Agora vou precisar saber o seu Estado, sua Cidade e seu Telefone:',
-                              style:
-                                  TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -125,7 +125,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                           height: size.height / 2,
                           width: size.width / 1.3,
                           child: Form(
-                            child: ListView(
+                              child: ListView(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             children: <Widget>[
@@ -179,18 +179,69 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                             ? snapshot.error
                                             : null,
                                         hintText: 'Exemplo Limoeiro',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'Cidade',
-                                        labelStyle: TextStyle(
-                                            fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+
+                              StreamBuilder<String>(
+                                  stream: _signupBloc.outLogradouro,
+                                  builder: (context, snapshot) {
+                                    return TextFormField(
+                                      onChanged: _signupBloc.changeLogradouro,
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoration(
+                                        errorText: snapshot.hasError
+                                            ? snapshot.error
+                                            : null,
+                                        hintStyle: TextStyle(fontSize: 16),
+                                        labelText: 'Logradouro',
+                                        labelStyle: TextStyle(fontSize: 20),
+                                        enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                              BorderSide(color: Colors.black),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+
+                              StreamBuilder<String>(
+                                  stream: _signupBloc.outBairro,
+                                  builder: (context, snapshot) {
+                                    return TextFormField(
+                                      onChanged: _signupBloc.changeBairro,
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoration(
+                                        errorText: snapshot.hasError
+                                            ? snapshot.error
+                                            : null,
+                                        hintStyle: TextStyle(fontSize: 16),
+                                        labelText: 'Bairro',
+                                        labelStyle: TextStyle(fontSize: 20),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.black),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -215,18 +266,17 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                             ? snapshot.error
                                             : null,
                                         hintText: 'Seu número',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'Telefone',
-                                        labelStyle: TextStyle(
-                                           fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                       ),
                                     );
@@ -250,15 +300,14 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                 child: Text(
                                   'PRÓXIMO',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22),
+                                      color: Colors.white, fontSize: 22),
                                 ),
                                 onPressed: snapshot.hasData
                                     ? () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignUpScreen4()));
+                                        Navigator.push(
+                                            context,
+                                            SlideLeftRoute(
+                                                page: SignUpScreen4()));
                                       }
                                     : null);
                           })

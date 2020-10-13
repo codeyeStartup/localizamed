@@ -5,6 +5,7 @@ import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:localizamed_app/app/pages/login/login_screen.dart';
 import 'package:localizamed_app/app/pages/user_profile/update_user_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends StatefulWidget {
@@ -17,7 +18,7 @@ class _UserProfileState extends State<UserProfile> {
   var userBloc = UserBloc();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     userData = userBloc.getUser();
   }
@@ -37,10 +38,7 @@ class _UserProfileState extends State<UserProfile> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext ctx) => UpdateScreen()));
+                    Navigator.push(context, SlideTopRoute(page: UpdateScreen()));
                   }),
             )
           ],
@@ -74,14 +72,15 @@ class _UserProfileState extends State<UserProfile> {
                       child: Stack(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(top: 0),
-                            child: Fundo(600.0,200.0,Theme.of(context).primaryColor)
-                          ),
+                              padding: EdgeInsets.only(top: 0),
+                              child: Fundo(600.0, 200.0,
+                                  Theme.of(context).primaryColor)),
                           Stack(
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: MediaQuery.of(context).size.width / 10,
+                                    left:
+                                        MediaQuery.of(context).size.width / 10,
                                     top: 30),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,13 +138,15 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 10, top: 40),
+                          left: MediaQuery.of(context).size.width / 10,
+                          top: 40),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             'Dados',
-                            style: TextStyle(fontSize: 22,fontFamily: 'Montserrat-Bold'),
+                            style: TextStyle(
+                                fontSize: 22, fontFamily: 'Montserrat-Bold'),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
@@ -159,21 +160,6 @@ class _UserProfileState extends State<UserProfile> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
                           ),
-                          Card(
-                              FontAwesomeIcons.addressCard,
-                              "CPF:",
-                              snapshot.data.cpf == ''
-                                  ? 'CPF não informado'
-                                  : snapshot.data.cpf),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 35,
-                          ),
-                          Card(
-                              FontAwesomeIcons.addressCard,
-                              'RG:',
-                              snapshot.data.rg == ''
-                                  ? 'RG não informado'
-                                  : snapshot.data.rg)
                         ],
                       ),
                     )
@@ -212,27 +198,26 @@ Widget Card(@required IconData icons, @required String textOne,
       ],
     ),
   );
-  
 }
 
-Widget Fundo(double x,double y, Color color){
+Widget Fundo(double x, double y, Color color) {
   return Transform(
-            transform: Matrix4(0.87462, -0.48481, 0.0, 0.0, 0.48481, 0.87462,
-                0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -30, -5.83, 0.0, 0.7),
-            child: Container(
-              width: x ,
-              height: y ,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(39.0),
-                gradient: LinearGradient(
-                  begin: Alignment(-0.48,-0.17),
-                  end: Alignment(-0.94,0.93),
-                  colors: [color, const Color(0xff0075fb)],
-                  stops: [0.0, 1.0],
-                ),
-              ),
-            ),
-          );
+    transform: Matrix4(0.87462, -0.48481, 0.0, 0.0, 0.48481, 0.87462, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0, -30, -5.83, 0.0, 0.7),
+    child: Container(
+      width: x,
+      height: y,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(39.0),
+        gradient: LinearGradient(
+          begin: Alignment(-0.48, -0.17),
+          end: Alignment(-0.94, 0.93),
+          colors: [color, const Color(0xff0075fb)],
+          stops: [0.0, 1.0],
+        ),
+      ),
+    ),
+  );
 }
 
 class MyClipper extends CustomClipper<Path> {

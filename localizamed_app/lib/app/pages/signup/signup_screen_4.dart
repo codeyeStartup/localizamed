@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:localizamed_app/app/pages/home/home_page.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_3.dart';
-import 'package:localizamed_app/app/pages/signup/signup_screen_5.dart';
 import 'package:localizamed_app/app/pages/signup/signup_bloc.dart';
+import 'package:localizamed_app/app/pages/signup/signup_splash_page.dart';
+import 'package:localizamed_app/app/pages/splash_screen/splash_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class SignUpScreen4 extends StatefulWidget {
   @override
@@ -21,7 +24,34 @@ class _SignUpScreen4State extends State<SignUpScreen4>
   @override
   void initState() {
     super.initState();
-
+    _signupBloc.outState.listen((state) {
+      switch (state) {
+        case SignupState.SUCESSO:
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (BuildContext context) => SignupSplashPage()),
+              (Route<dynamic> route) => false);
+          break;
+        case SignupState.FALHA:
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Erro"),
+                    content: Text("ENTROU NO STATE FALHA"),
+                  ));
+          break;
+        case SignupState.CATCH_ERRO:
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Erro"),
+                    content: Text("ENTROU NO CATCH DE ERRO!"),
+                  ));
+          break;
+        case SignupState.CARREGANDO:
+        case SignupState.IDLE:
+      }
+    });
     invisible = true;
   }
 
@@ -69,8 +99,8 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                             size: 30,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop(MaterialPageRoute(
-                                builder: (context) => SignUpScreen3()));
+                            Navigator.push(
+                                context, SlideLeftRoute(page: SignUpScreen3()));
                           },
                         ),
                       ),
@@ -85,8 +115,7 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                           children: <Widget>[
                             Text(
                               'Agora crie uma senha. Só tenha cuidado para não esquecê-la!',
-                              style:
-                                  TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
@@ -112,18 +141,17 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                                             ? snapshot.error
                                             : null,
                                         hintText: 'Sua senha',
-                                        hintStyle: TextStyle(
-                                            fontSize: 16),
+                                        hintStyle: TextStyle(fontSize: 16),
                                         labelText: 'Senha',
-                                        labelStyle: TextStyle(
-                                           fontSize: 20),
+                                        labelStyle: TextStyle(fontSize: 20),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Theme.of(context).primaryColor),
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                         ),
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -131,7 +159,6 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                                                 ? Icons.visibility_off
                                                 : Icons.visibility,
                                             size: 20.0,
-                                            color: Colors.white,
                                           ),
                                           onPressed: () {
                                             setState(() {
@@ -145,31 +172,20 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                             ],
                           ))),
 
-                      //botão para a PROXIMA TELA
-                      StreamBuilder<bool>(
-                          stream: _signupBloc.outSubmitValidthree,
-                          builder: (context, snapshot) {
-                            return RaisedButton(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 100),
-                                color: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                                child: Text(
-                                  'PRÓXIMO',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22),
-                                ),
-                                onPressed: snapshot.hasData
-                                    ? () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignUpScreen5()));
-                                      }
-                                    : null);
+                      //botão Finalizar TELA
+                      RaisedButton(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 100),
+                          color: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                          child: Text(
+                            'FINALIZAR',
+                            style: TextStyle(color: Colors.white, fontSize: 22),
+                          ),
+                          onPressed: () {
+                            _signupBloc.signUp();
                           })
                     ]),
                   );

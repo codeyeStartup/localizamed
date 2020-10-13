@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localizamed_app/app/pages/login/login_bloc.dart';
 import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
 import 'package:localizamed_app/app/pages/signup/signup_screen_home.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,9 +15,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   final _loginBloc = LoginBloc();
 
   bool invisible;
+  var _state = 0;
 
   @override
   void initState() {
@@ -26,20 +29,24 @@ class LoginScreenState extends State<LoginScreen> {
     _loginBloc.outState.listen((state) {
       switch (state) {
         case LoginState.SUCESSO:
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => MsgInt()),
-              (Route<dynamic> route) => false);
+          Navigator.push(context, SlideLeftRoute(page: MsgInt()));
           break;
         case LoginState.FALHA:
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: Text("Erro"),
-                    content: Text(
-                        "Sinto muito, mas seu E-mail/Senha estão incorretos!"),
-                  ));
+          this.setState(() {
+            _state = 3;
+          });
+          _scaffoldkey.currentState.showSnackBar(SnackBar(
+            content: Text('Usuario e/ou senha incorretos. Tente novamente'),
+            backgroundColor: Colors.red,
+          ));
           break;
         case LoginState.CARREGANDO:
+          Future.delayed(Duration(seconds: 3), () {
+            this.setState(() {
+              _state = 2;
+            });
+          });
+          break;
         case LoginState.IDLE:
       }
     });
@@ -73,28 +80,14 @@ class LoginScreenState extends State<LoginScreen> {
     var mediaQuery = MediaQuery.of(context);
     var size = mediaQuery.size;
 
-    final FocusNode _email = FocusNode();
-    final FocusNode _password = FocusNode();
-
-    _fieldFocusChange(
-        BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
-      currentFocus.unfocus();
-      FocusScope.of(context).requestFocus(nextFocus);
-    }
-
     return Scaffold(
+        key: _scaffoldkey,
         body: StreamBuilder<LoginState>(
             stream: _loginBloc.outState,
             initialData: LoginState.IDLE,
             builder: (context, snapshot) {
               switch (snapshot.data) {
                 case LoginState.CARREGANDO:
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                          Color.fromARGB(255, 23, 29, 255)),
-                    ),
-                  );
                 case LoginState.FALHA:
                 case LoginState.SUCESSO:
                 case LoginState.IDLE:
@@ -176,21 +169,20 @@ class LoginScreenState extends State<LoginScreen> {
                                         stream: _loginBloc.outEmail,
                                         builder: (context, snapshot) {
                                           return TextFormField(
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            onChanged: _loginBloc.changeEmail,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            decoration: InputDecoration(
-                                                errorText: snapshot.hasError
-                                                    ? snapshot.error
-                                                    : null,
-                                                labelText: "E-mail"),
-                                            onFieldSubmitted: (term) {
-                                              _fieldFocusChange(
-                                                  context, _email, _password);
-                                            },
-                                          );
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              onChanged: _loginBloc.changeEmail,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              decoration: InputDecoration(
+                                                  errorText: snapshot.hasError
+                                                      ? snapshot.error
+                                                      : null,
+                                                  labelText: "E-mail"),
+                                              onEditingComplete: () {
+                                                FocusScope.of(context)
+                                                    .nextFocus();
+                                              });
                                         }),
 
                                     //campo de SENHA
@@ -200,13 +192,9 @@ class LoginScreenState extends State<LoginScreen> {
                                           return TextFormField(
                                             textInputAction:
                                                 TextInputAction.done,
-                                            focusNode: _password,
                                             onChanged:
                                                 _loginBloc.changePassword,
                                             obscureText: invisible,
-                                            onFieldSubmitted: (term) {
-                                              _password.unfocus();
-                                            },
                                             decoration: InputDecoration(
                                                 errorText: snapshot.hasError
                                                     ? snapshot.error
@@ -254,23 +242,20 @@ class LoginScreenState extends State<LoginScreen> {
                                                   vertical: size.height / 55,
                                                   horizontal:
                                                       size.width / 3.29),
-                                              color: Color.fromARGB(
-                                                  255, 23, 29, 255),
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           23)),
                                               onPressed: snapshot.hasData
-                                                  ? _loginBloc.login
+                                                  ? () {
+                                                      AnimatedButton();
+                                                      _loginBloc.login();
+                                                    }
                                                   : null,
                                               disabledColor: Colors.blue[300],
-                                              child: Text("Login",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: size.width / 25,
-                                                      fontWeight:
-                                                          FontWeight.bold)));
+                                              child: setUpButtonChild());
                                         }),
 
                                     SizedBox(
@@ -293,8 +278,10 @@ class LoginScreenState extends State<LoginScreen> {
                                           showAlert(context);
                                         },
                                         child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: <Widget>[
                                             Image(
                                               image: AssetImage(
@@ -336,10 +323,10 @@ class LoginScreenState extends State<LoginScreen> {
                                             FlatButton(
                                               padding: EdgeInsets.all(0),
                                               onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            SignUpHome()));
+                                                Navigator.push(
+                                                    context,
+                                                    SlideLeftRoute(
+                                                        page: SignUpHome()));
                                               },
                                               child: Text("Cadastre-se",
                                                   style: TextStyle(
@@ -361,5 +348,37 @@ class LoginScreenState extends State<LoginScreen> {
                   ));
               }
             }));
+  }
+
+  Widget setUpButtonChild() {
+    if (_state == 0) {
+      return new Text("Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.width / 25,
+              fontWeight: FontWeight.bold));
+    } else if (_state == 1) {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    } else if (_state == 3) {
+      return Text("Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.width / 25,
+              fontWeight: FontWeight.bold));
+    } else {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    }
+  }
+
+  void AnimatedButton() {
+    setState(() {
+      _state = 1;
+    });
   }
 }

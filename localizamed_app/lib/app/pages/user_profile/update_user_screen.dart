@@ -184,8 +184,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
               _signupBloc.changeCidade(snapshot.data.cidade);
               _signupBloc.changeUf(snapshot.data.uf);
               _signupBloc.changeTelefone(snapshot.data.fone_1);
-              _signupBloc.changeCpf(snapshot.data.cpf);
-
+        
               return SingleChildScrollView(
                 child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -217,8 +216,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                           if (snapshotImagem.data == null) {
                                             return CircleAvatar(
                                                 radius: 70,
-                                                backgroundImage: NetworkImage(
-                                                    snapshot.data.caminhoFoto));
+                                                backgroundImage: snapshot
+                                                            .data.caminhoFoto ==
+                                                        null
+                                                    ? AssetImage(
+                                                        'images/usuarioP.png')
+                                                    : NetworkImage(snapshot
+                                                        .data.caminhoFoto));
                                           } else {
                                             return CircleAvatar(
                                               radius: 70,
@@ -357,35 +361,41 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             },
                             value: _estadosItemSelected,
                           ),
-                          //ESTADO
+                          
                           TextFormField(
-                            //initialValue: snapshot.data.fone_1,
-                            onChanged: _signupBloc.changeCpf,
-                            controller: MaskedTextController(
-                                text: snapshot.data.cpf,
-                                mask: '000.000.000-00'),
-                            maxLength: 16,
-                            keyboardType: TextInputType.number,
+                            initialValue: snapshot.data.logradouro,
+                            onChanged: _signupBloc.changeLogradouro,
                             decoration: InputDecoration(
-                              counter: SizedBox.shrink(),
-                              prefixIcon: Icon(FontAwesomeIcons.idCard),
-                              labelText: "CPF",
+                              prefixIcon: Icon(Icons.location_city),
+                              labelText: "Logradouro",
                             ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Esse campo não pode ficar vazio!';
+                              } else if (value.length > 100) {
+                                return 'Logradouro grande demais!';
+                              }
+                              return null;
+                            },
                           ),
 
                           TextFormField(
-                            //initialValue: snapshot.data.fone_1,
-                            onChanged: _signupBloc.changeCpf,
-                            controller: MaskedTextController(
-                                text: snapshot.data.rg, mask: '00.000.000-00'),
-                            maxLength: 16,
-                            keyboardType: TextInputType.number,
+                            initialValue: snapshot.data.bairro,
+                            onChanged: _signupBloc.changeBairro,
                             decoration: InputDecoration(
-                              counter: SizedBox.shrink(),
-                              prefixIcon: Icon(FontAwesomeIcons.idCard),
-                              labelText: "RG",
+                              prefixIcon: Icon(Icons.location_city),
+                              labelText: "Bairro",
                             ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Esse campo não pode ficar vazio!';
+                              } else if (value.length > 100) {
+                                return 'Nome do bairrocidade grande demais!';
+                              }
+                              return null;
+                            },
                           ),
+
                           //TELEFONE
                           TextFormField(
                             //initialValue: snapshot.data.fone_1,
@@ -422,7 +432,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                             onPressed: () async {
                                               if (_formKey.currentState
                                                   .validate()) {
-                                                imagemAvatar == null ? '' : doChangeImage();    
+                                                imagemAvatar == null
+                                                    ? ''
+                                                    : doChangeImage();
                                                 _signupBloc.updateUser();
                                                 SharedPreferences prefs =
                                                     await SharedPreferences
