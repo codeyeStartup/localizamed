@@ -101,26 +101,30 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                   stream: _signupBloc.outNome,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeNome,
-                                      decoration: InputDecoration(
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintText: 'Exemplo: Ana Laura Pereira',
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'Nome Completo',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
+                                        onChanged: _signupBloc.changeNome,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintText:
+                                              'Exemplo: Ana Laura Pereira',
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'Nome Completo',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                            color: Colors.black,
+                                          )),
+                                          focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
-                                          color: Colors.black,
-                                        )),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).nextFocus();
+                                        });
                                   }),
                               SizedBox(
                                 height: size.height / 100,
@@ -131,26 +135,29 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                   stream: _signupBloc.outDataNasc,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeDataNasc,
-                                      controller: dateController,
-                                      maxLength: 10,
-                                      keyboardType: TextInputType.datetime,
-                                      decoration: InputDecoration(
-                                        counter: SizedBox.shrink(),
-                                        labelText: 'Data de Nascimento',
-                                        hintText: 'AAAA/MM/DD',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeDataNasc,
+                                        controller: dateController,
+                                        maxLength: 10,
+                                        textInputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.datetime,
+                                        decoration: InputDecoration(
+                                          counter: SizedBox.shrink(),
+                                          labelText: 'Data de Nascimento',
+                                          hintText: 'AAAA/MM/DD',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).nextFocus();
+                                        });
                                   }),
                               SizedBox(
                                 height: size.height / 100,
@@ -161,27 +168,31 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                   stream: _signupBloc.outEmail,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeEmail,
-                                      keyboardType: TextInputType.emailAddress,
-                                      decoration: InputDecoration(
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintText: 'você@gmail.com',
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'E-mail',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeEmail,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        textInputAction: TextInputAction.done,
+                                        decoration: InputDecoration(
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintText: 'você@gmail.com',
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'E-mail',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).unfocus();
+                                        });
                                   }),
                             ],
                           ))),
@@ -206,8 +217,10 @@ class _SignUpScreen2State extends State<SignUpScreen2>
                                 ),
                                 onPressed: snapshot.hasData
                                     ? () {
-                                        Navigator.push(context,
-                                            SlideLeftRoute(page: SignUpScreen3()));
+                                        Navigator.push(
+                                            context,
+                                            SlideLeftRoute(
+                                                page: SignUpScreen3()));
                                       }
                                     : null);
                           })

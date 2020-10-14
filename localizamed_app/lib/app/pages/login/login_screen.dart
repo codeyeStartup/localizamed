@@ -29,7 +29,7 @@ class LoginScreenState extends State<LoginScreen> {
     _loginBloc.outState.listen((state) {
       switch (state) {
         case LoginState.SUCESSO:
-          Navigator.push(context, SlideLeftRoute(page: MsgInt()));
+          Navigator.pushReplacement(context, SlideLeftRoute(page: MsgInt()));
           break;
         case LoginState.FALHA:
           this.setState(() {

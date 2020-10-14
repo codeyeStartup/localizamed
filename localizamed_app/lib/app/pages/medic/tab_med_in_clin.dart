@@ -11,19 +11,18 @@ class _MedCardState extends State<MedCardInClin> {
   ConexaoAPI conexaoApi;
 
   @override
-  void initState(){
+  void initState() {
     clinicaBloc.getClinica();
     super.initState();
   }
 
   @override
-  void dispose(){    
+  void dispose() {
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return new LayoutBuilder(
       builder: (context, constrains) {
         return Container(
@@ -51,6 +50,25 @@ class _MedCardState extends State<MedCardInClin> {
                       itemCount: snapshot?.data?.medicosClin?.length ?? 0,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        String image;
+                        String _setImage() {
+                          if (snapshot.data.medicosClin[index]
+                                        .medicoIdClass.temFoto == '0' &&
+                              snapshot.data.medicosClin[index]
+                                        .medicoIdClass.sexo == 'M') {
+                            image = 'images/homem_medico.png';
+                          } else if (snapshot.data.medicosClin[index]
+                                        .medicoIdClass.temFoto ==
+                                  '0' /*|| snapshot.data[index].temFoto == '1' */ &&
+                              snapshot.data.medicosClin[index]
+                                        .medicoIdClass.sexo != 'M') {
+                            image = 'images/mulher_medico.png';
+                          } else {
+                            image = 'images/placeholder.png';
+                          }
+                          return image;
+                        }
+
                         return Stack(
                           children: <Widget>[
                             Container(
@@ -102,17 +120,14 @@ class _MedCardState extends State<MedCardInClin> {
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
                                       image: snapshot.data.medicosClin[index]
-                                        .medicoIdClass.temFoto == '0'
-                                          ? snapshot.data.medicosClin[index]
-                                        .medicoIdClass.sexo == 'M'
-                                              ? AssetImage(
-                                                  "images/homem_medico.png")
-                                              : AssetImage(
-                                                  "images/mulher_medico.png")
-                                          : NetworkImage(ConexaoAPI().api +
-                                              'imagens/' +
-                                              snapshot.data.medicosClin[index]
-                                        .medicoIdClass.caminhoFoto),
+                                                  .medicoIdClass.caminhoFoto ==
+                                              null
+                                          ? AssetImage(_setImage())
+                                          : NetworkImage(snapshot
+                                              .data
+                                              .medicosClin[index]
+                                              .medicoIdClass
+                                              .caminhoFoto),
                                     )),
                               ),
                             ),

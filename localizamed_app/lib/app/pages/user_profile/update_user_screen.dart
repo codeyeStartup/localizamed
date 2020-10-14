@@ -302,24 +302,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               return null;
                             },
                           ),
-
-                          //CIDADE
-                          TextFormField(
-                            initialValue: snapshot.data.cidade,
-                            onChanged: _signupBloc.changeCidade,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.location_city),
-                              labelText: "Cidade",
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Esse campo não pode ficar vazio!';
-                              } else if (value.length > 100) {
-                                return 'Nome da cidade grande demais!';
-                              }
-                              return null;
-                            },
-                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 18, left: 4, bottom: 8),
@@ -360,6 +342,24 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               });
                             },
                             value: _estadosItemSelected,
+                          ),
+                          
+                          //CIDADE
+                          TextFormField(
+                            initialValue: snapshot.data.cidade,
+                            onChanged: _signupBloc.changeCidade,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.location_city),
+                              labelText: "Cidade",
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Esse campo não pode ficar vazio!';
+                              } else if (value.length > 100) {
+                                return 'Nome da cidade grande demais!';
+                              }
+                              return null;
+                            },
                           ),
                           
                           TextFormField(

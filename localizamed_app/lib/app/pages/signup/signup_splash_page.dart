@@ -21,7 +21,7 @@ class _SignupSplashPageState extends State<SignupSplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: LoadingJumpingLine.square(
+        child: LoadingBouncingLine.circle(
           backgroundColor: Theme.of(context).primaryColor,
         ),
       )
