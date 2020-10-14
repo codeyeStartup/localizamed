@@ -100,7 +100,7 @@ class _SignUpScreen4State extends State<SignUpScreen4>
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context, SlideLeftRoute(page: SignUpScreen3()));
+                                context, SlideRightRoute(page: SignUpScreen3()));
                           },
                         ),
                       ),

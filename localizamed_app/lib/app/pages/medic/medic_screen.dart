@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/medic_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/conexaoAPI.dart';
@@ -71,7 +72,11 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
             stream: medicoBloc.medico,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingBouncingLine.circle(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                );
               } else {
                 return ListView.separated(
                   separatorBuilder: (context, index) {
@@ -193,7 +198,6 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
   }
 
   medicInfo(context) {
-    // medicData = medicoBloc.medicInfo();
     AlertDialog info = AlertDialog(
       contentPadding: EdgeInsets.all(10),
       content: Container(
@@ -210,7 +214,7 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                       Navigator.of(context).pop();
                     }),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width / 8,
+                  width: MediaQuery.of(context).size.width / 6,
                 ),
                 Text('Clínicas'),
               ],
@@ -223,7 +227,12 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                       future: medicoBloc.medicInfo(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(
+                            child: LoadingBouncingLine.circle(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              size: 35,
+                            ),
+                          );
                         } else {
                           return ListView.builder(
                               itemCount: snapshot.data.length,

@@ -30,6 +30,7 @@ class _ClinicPageViewState extends State<ClinicPageView> {
     return StreamBuilder(
         stream: clinicaBloc.clinica,
         builder: (context, snapshot) {
+
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator(
@@ -76,7 +77,8 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                           width: size.width / 1.2,
                           height: size.height / 4,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                               image: DecorationImage(
                                   image: AssetImage('images/capturar3.png'),
                                   fit: BoxFit.cover),
@@ -153,10 +155,11 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                               Icon(FontAwesomeIcons.phoneAlt,
                                   color: Colors.green),
                               SizedBox(width: 10),
-                              Text(
-                                snapshot.data.fone_1,
-                                style: TextStyle(fontSize: 16),
-                              )
+                              snapshot.data.fone_1 == '' ? Text('Telefone não informado') :
+                                    Text(
+                                      snapshot.data.fone_1,
+                                      style: TextStyle(fontSize: 16),
+                                    )
                             ],
                           ),
                         ),
@@ -195,6 +198,7 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                                     Icon(FontAwesomeIcons.phoneAlt,
                                         color: Colors.green),
                                     SizedBox(width: 10),
+                                    snapshot.data.fone_2 == '' ? Text('Telefone não informado') :
                                     Text(
                                       snapshot.data.fone_2,
                                       style: TextStyle(fontSize: 16),
@@ -286,7 +290,8 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                         padding: EdgeInsets.all(8),
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: snapshot?.data?.examConsultaClin?.length ?? 0,
+                        itemCount:
+                            snapshot?.data?.examConsultaClin?.length ?? 0,
                         itemBuilder: (context, index) {
                           return Row(
                             children: <Widget>[

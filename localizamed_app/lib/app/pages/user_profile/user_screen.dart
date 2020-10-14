@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -60,7 +61,9 @@ class _UserProfileState extends State<UserProfile> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingBouncingLine.circle(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
                 );
               } else {
                 return Column(
@@ -155,7 +158,7 @@ class _UserProfileState extends State<UserProfile> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
                           ),
-                          Card(FontAwesomeIcons.addressCard, "Telefone:",
+                          Card(Icons.phone, "Telefone:",
                               snapshot.data.fone_1),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,

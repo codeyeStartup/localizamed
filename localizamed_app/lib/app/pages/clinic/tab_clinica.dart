@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
-import 'package:localizamed_app/app/utils/conexaoAPI.dart';
-import 'package:localizamed_app/app/models/clinica_model.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:localizamed_app/app/utils/slideRoutes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,8 +54,9 @@ class _ClinCardState extends State<ClinCard> {
                     onTap: () async {
                       SharedPreferences prefId =
                           await SharedPreferences.getInstance();
-                      prefId.setString('id', snapshot.data[index].sId);
-                      Navigator.push(context, SlideTopRoute(page: ClinicScreen()));
+                      prefId.setString('id', snapshot.data[index].id);
+                      Navigator.push(
+                          context, SlideTopRoute(page: ClinicScreen()));
                     },
                     child: Stack(
                       children: <Widget>[
@@ -129,14 +128,15 @@ class _ClinCardState extends State<ClinCard> {
                               bottom: 0,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                                color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(270)),
                                 image: DecorationImage(
-                                  image: snapshot.data[index].caminhoFoto == null ? 
-                                    AssetImage('images/LocalizaMed_T1.png')
-                                    : NetworkImage(
-                                      snapshot.data[index].caminhoFoto),
+                                  image: snapshot.data[index].caminhoFoto ==
+                                          null
+                                      ? AssetImage('images/LocalizaMed_T1.png')
+                                      : NetworkImage(
+                                          snapshot.data[index].caminhoFoto),
                                   fit: BoxFit.fill,
                                 )),
                           ),

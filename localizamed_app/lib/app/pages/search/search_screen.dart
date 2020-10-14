@@ -56,6 +56,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ]),
                 child: Center(
                     child: TextField(
+                  textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(15.0),
                     hintText: 'Pesquisar',
@@ -85,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ? Expanded(
                     child: Center(
                     child: Text(
-                      "Nenhuma Clinica",
+                      "Pesquisar Clínicas",
                       style: TextStyle(color: Colors.grey),
                     ),
                   ))

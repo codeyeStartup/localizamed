@@ -101,7 +101,7 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context, SlideLeftRoute(page: SignUpScreen2()));
+                                context, SlideRightRoute(page: SignUpScreen2()));
                           },
                         ),
                       ),
@@ -172,79 +172,88 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                   stream: _signupBloc.outCidade,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeCidade,
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintText: 'Exemplo Limoeiro',
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'Cidade',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeCidade,
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintText: 'Exemplo Limoeiro',
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'Cidade',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).nextFocus();
+                                        });
                                   }),
 
                               StreamBuilder<String>(
                                   stream: _signupBloc.outLogradouro,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeLogradouro,
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'Logradouro',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeLogradouro,
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'Logradouro',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).nextFocus();
+                                        });
                                   }),
 
                               StreamBuilder<String>(
                                   stream: _signupBloc.outBairro,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeBairro,
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'Bairro',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeBairro,
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'Bairro',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).nextFocus();
+                                        });
                                   }),
 
                               SizedBox(
@@ -256,30 +265,33 @@ class _SignUpScreen3State extends State<SignUpScreen3>
                                   stream: _signupBloc.outTelefone,
                                   builder: (context, snapshot) {
                                     return TextFormField(
-                                      onChanged: _signupBloc.changeTelefone,
-                                      controller: phoneController,
-                                      maxLength: 16,
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                        counter: SizedBox.shrink(),
-                                        errorText: snapshot.hasError
-                                            ? snapshot.error
-                                            : null,
-                                        hintText: 'Seu número',
-                                        hintStyle: TextStyle(fontSize: 16),
-                                        labelText: 'Telefone',
-                                        labelStyle: TextStyle(fontSize: 20),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
+                                        onChanged: _signupBloc.changeTelefone,
+                                        controller: phoneController,
+                                        maxLength: 16,
+                                        keyboardType: TextInputType.phone,
+                                        textInputAction: TextInputAction.done,
+                                        decoration: InputDecoration(
+                                          counter: SizedBox.shrink(),
+                                          errorText: snapshot.hasError
+                                              ? snapshot.error
+                                              : null,
+                                          hintText: 'Seu número',
+                                          hintStyle: TextStyle(fontSize: 16),
+                                          labelText: 'Telefone',
+                                          labelStyle: TextStyle(fontSize: 20),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
-                                      ),
-                                    );
+                                        onEditingComplete: () {
+                                          FocusScope.of(context).unfocus();
+                                        });
                                   }),
                             ],
                           ))),
