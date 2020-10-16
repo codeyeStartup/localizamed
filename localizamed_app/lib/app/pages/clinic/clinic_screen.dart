@@ -1,18 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_page_view.dart';
 import 'dart:core';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+
 class ClinicScreen extends StatefulWidget {
+  
   @override
   _clinicScreenState createState() => _clinicScreenState();
 }
 
 class _clinicScreenState extends State<ClinicScreen> {
   double appBarHeight = 400;
+  double _state = 1;
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 2),() => setState((){
+      _state = 2;
+    }));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +42,7 @@ class _clinicScreenState extends State<ClinicScreen> {
                   SliverPersistentHeader(
                     delegate: MySliverAppBar(
                       expandedHeight: appBarHeight,
+                      state: _state
                     ),
                   ),
                   SliverList(
@@ -52,8 +65,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   }
 
   final double expandedHeight;
+  final double state;
 
-  MySliverAppBar({@required this.expandedHeight});
+  MySliverAppBar({@required this.expandedHeight, @required this.state});
 
   @override
   Widget build(
@@ -64,12 +78,14 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
     return StreamBuilder(
         stream: clinicaBloc.clinica,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || state == 1) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingBouncingLine.circle(
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
             );
           } else {
-           return Stack(
+            return Stack(
               fit: StackFit.expand,
               overflow: Overflow.visible,
               children: [

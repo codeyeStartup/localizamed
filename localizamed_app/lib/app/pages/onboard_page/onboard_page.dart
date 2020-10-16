@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localizamed_app/app/pages/login/login_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class OnboardPage extends StatefulWidget {
   @override
@@ -249,8 +250,7 @@ Widget animatedButton(BuildContext context) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+            Navigator.pushReplacement(context, SlideLeftRoute(page: LoginScreen()));
           },
           child: Text(
             "INICIAR",
