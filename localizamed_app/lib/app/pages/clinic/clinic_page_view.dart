@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/pages/medic/tab_med_in_clin.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,9 +12,15 @@ class ClinicPageView extends StatefulWidget {
 }
 
 class _ClinicPageViewState extends State<ClinicPageView> {
+
+  var _state = 1;
+
   @override
   void initState() {
     clinicaBloc.getClinica();
+    Future.delayed(Duration(seconds: 2),()=> setState((){
+      _state = 2;
+    }));
     super.initState();
   }
 
@@ -30,12 +37,12 @@ class _ClinicPageViewState extends State<ClinicPageView> {
     return StreamBuilder(
         stream: clinicaBloc.clinica,
         builder: (context, snapshot) {
-
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || _state == 1) {
             return Center(
-                child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-            ));
+              child: LoadingBouncingLine.circle(
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+            );
           } else {
             return Container(
               child: Column(
@@ -155,8 +162,9 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                               Icon(FontAwesomeIcons.phoneAlt,
                                   color: Colors.green),
                               SizedBox(width: 10),
-                              snapshot.data.fone_1 == '' ? Text('Telefone não informado') :
-                                    Text(
+                              snapshot.data.fone_1 == ''
+                                  ? Text('Telefone não informado')
+                                  : Text(
                                       snapshot.data.fone_1,
                                       style: TextStyle(fontSize: 16),
                                     )
@@ -164,7 +172,7 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        snapshot.data.fone_2 == '0'
+                        snapshot.data.fone_2 == ''
                             ? Container()
                             : GestureDetector(
                                 onTap: () {
@@ -198,11 +206,12 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                                     Icon(FontAwesomeIcons.phoneAlt,
                                         color: Colors.green),
                                     SizedBox(width: 10),
-                                    snapshot.data.fone_2 == '' ? Text('Telefone não informado') :
-                                    Text(
-                                      snapshot.data.fone_2,
-                                      style: TextStyle(fontSize: 16),
-                                    )
+                                    snapshot.data.fone_2 == ''
+                                        ? Text('Telefone não informado')
+                                        : Text(
+                                            snapshot.data.fone_2,
+                                            style: TextStyle(fontSize: 16),
+                                          )
                                   ],
                                 ),
                               )

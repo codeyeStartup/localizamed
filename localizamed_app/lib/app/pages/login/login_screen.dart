@@ -41,11 +41,9 @@ class LoginScreenState extends State<LoginScreen> {
           ));
           break;
         case LoginState.CARREGANDO:
-          Future.delayed(Duration(seconds: 3), () {
-            this.setState(() {
+          this.setState(() {
               _state = 2;
             });
-          });
           break;
         case LoginState.IDLE:
       }

@@ -7,16 +7,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ClinicaApiProvider {
   Future<Clinicas2> getClinicaById() async {
-    SharedPreferences prefs= await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('id');
     var token = prefs.getString('tokenjwt');
 
     final response = await http.get(ConexaoAPI().api + 'clinica/' + id,
-        headers: {"Accept": "application/json", "x-access-token" : token});
+        headers: {"Accept": "application/json", "x-access-token": token});
 
     if (response.statusCode == 200) {
       //print(response.body);
-      return Clinicas2.fromJson(json.decode(response.body));      
+      final responseMap = await Future.delayed(Duration(seconds: 2),
+          () => Clinicas2.fromJson(json.decode(response.body)));
+      return responseMap;
     } else {
       print("Entrou no exception de erro");
       throw Exception('Falha ao carregar Clinica T-T');

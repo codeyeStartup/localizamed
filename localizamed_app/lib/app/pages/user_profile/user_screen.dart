@@ -17,10 +17,14 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   Future<Usuario> userData;
   var userBloc = UserBloc();
+  var _state = 1; 
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(milliseconds: 500), () => setState((){
+      _state = 2;
+    }));
     userData = userBloc.getUser();
   }
 
@@ -59,7 +63,7 @@ class _UserProfileState extends State<UserProfile> {
         body: FutureBuilder(
             future: userData,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState != ConnectionState.done || _state == 1) {
                 return Center(
                   child: LoadingBouncingLine.circle(
                     backgroundColor: Theme.of(context).primaryColor,

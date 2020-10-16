@@ -186,7 +186,7 @@ class _BottomMenuState extends State<BottomMenu> {
                         child: FutureBuilder(
                           future: userData,
                           builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
+                            if (snapshot.connectionState != ConnectionState.done) {
                               return CircularProgressIndicator();
                             } else {
                               return CircleAvatar(

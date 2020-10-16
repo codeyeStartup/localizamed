@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -173,13 +174,17 @@ class _UpdateScreenState extends State<UpdateScreen> {
         child: FutureBuilder(
             future: userData,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState != ConnectionState.done) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingBouncingLine.circle(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
                 );
               }
 
               _signupBloc.changeNome(snapshot.data.nome);
+              _signupBloc.changeBairro(snapshot.data.bairro);
+              _signupBloc.changeLogradouro(snapshot.data.logradouro);
               _signupBloc.changeEmail(snapshot.data.email);
               _signupBloc.changeCidade(snapshot.data.cidade);
               _signupBloc.changeUf(snapshot.data.uf);
@@ -436,10 +441,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                                     ? ''
                                                     : doChangeImage();
                                                 _signupBloc.updateUser();
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.setInt('index', 4);
                                                 Navigator.of(context).pop();
                                               } else {
                                                 Navigator.of(context).pop();
