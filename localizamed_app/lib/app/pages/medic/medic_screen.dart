@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:loading_animations/loading_animations.dart';
-import 'package:localizamed_app/app/models/medic_info.dart';
+import 'package:localizamed_app/app/models/medic_infoModel.dart';
+import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
+import 'package:localizamed_app/app/utils/slideRoutes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/conexaoAPI.dart';
 import 'medicos_bloc.dart';
@@ -237,9 +239,15 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                           return ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(snapshot.data[index].nome),
-                                );
+                                return GestureDetector(
+                                    child: ListTile(
+                                      title: Text(snapshot.data[index].nome),
+                                    ),
+                                    onTap: () async {
+                                      SharedPreferences prefId = await SharedPreferences.getInstance();
+                                      prefId.setString('id', snapshot.data[index].sId);
+                                      Navigator.push(context, SlideTopRoute(page: ClinicScreen()));
+                                    });
                               });
                         }
                       })),

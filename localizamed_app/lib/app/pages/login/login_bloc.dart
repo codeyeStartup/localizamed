@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:localizamed_app/app/models/token_model.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';

@@ -17,15 +17,49 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   Future<Usuario> userData;
   var userBloc = UserBloc();
-  var _state = 1; 
+  var _state = 1;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 500), () => setState((){
-      _state = 2;
-    }));
+    Future.delayed(
+        Duration(milliseconds: 500),
+        () => setState(() {
+              _state = 2;
+            }));
     userData = userBloc.getUser();
+  }
+
+  alertDialog(context) {
+    AlertDialog logout = AlertDialog(
+      title: Text('Sair'),
+      content: Container(
+        child: Text('Você quer mesmo sair?'),
+      ),
+      actions: [
+        FlatButton(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs?.clear();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen()),
+                  (Route<dynamic> route) => false);
+            },
+            child: Text('Sim')),
+        FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Não')),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return logout;
+        });
   }
 
   @override
@@ -43,27 +77,24 @@ class _UserProfileState extends State<UserProfile> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.push(context, SlideTopRoute(page: UpdateScreen()));
+                    Navigator.push(
+                        context, SlideTopRoute(page: UpdateScreen()));
                   }),
             )
           ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
-          onPressed: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs?.clear();
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext ctx) => LoginScreen()));
+          onPressed: () {
+            alertDialog(context);
           },
           child: Icon(Icons.exit_to_app),
         ),
         body: FutureBuilder(
             future: userData,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done || _state == 1) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  _state == 1) {
                 return Center(
                   child: LoadingBouncingLine.circle(
                     backgroundColor: Theme.of(context).primaryColor,
@@ -103,13 +134,22 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        snapshot.data.cidade +
-                                            ',' +
-                                            snapshot.data.uf,
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.white),
-                                      ),
+                                      child: snapshot.data.cidade == null &&
+                                              snapshot.data.uf == null
+                                          ? Text(
+                                              'Cidade e estados não informados',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            )
+                                          : Text(
+                                              snapshot.data.cidade +
+                                                  ',' +
+                                                  snapshot.data.uf,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            ),
                                     )
                                   ],
                                 ),
@@ -162,8 +202,7 @@ class _UserProfileState extends State<UserProfile> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
                           ),
-                          Card(Icons.phone, "Telefone:",
-                              snapshot.data.fone_1),
+                          Card(Icons.phone, "Telefone:", snapshot.data.fone_1),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 35,
                           ),
@@ -245,161 +284,3 @@ class MyClipper extends CustomClipper<Path> {
     return false;
   }
 }
-
-//Anterior
-/*     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverPersistentHeader(
-            delegate: MySliverAppBar(expandedHeight: 250),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(<Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 130, left: 50),
-                          child: Text(
-                            "Informações",
-                            style: TextStyle(
-                              fontSize: 30,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 50),
-                          padding: EdgeInsets.only(left: 10),
-                          width: 300,
-                          height: 60,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              gradient: LinearGradient(colors: [
-                                Color.fromARGB(255, 255, 0, 0),
-                                Color.fromARGB(255, 139, 0, 0)
-                              ])),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.email,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              StreamBuilder(
-                                  stream: userBloc.usuario,
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    } else {
-                                      return Text(
-                                        snapshot.data.email,
-                                        style: TextStyle(color: Colors.white),
-                                      );
-                                    }
-                                  }),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ]),
-          )
-        ],
-      ),
-      floatingActionButton: SpeedDial(
-        backgroundColor: Theme.of(context).primaryColor,
-        overlayColor: Colors.transparent,
-        overlayOpacity: 0.1,
-        animatedIcon: AnimatedIcons.menu_close,
-        children: [
-          SpeedDialChild(
-              child: Icon(Icons.settings),
-              label: "Alterar dados",
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext ctx) => UpdateScreen()));
-              }),
-          SpeedDialChild(
-              child: Icon(Icons.panorama),
-              label: "Alterar foto de capa",
-              onTap: () => print("primeiro")),
-          SpeedDialChild(
-              child: Icon(Icons.camera_alt),
-              label: "Alterar foto de perfil",
-              backgroundColor: Theme.of(context).primaryColor,
-              onTap: () => print("segundo")),
-          SpeedDialChild(
-            child: Icon(Icons.exit_to_app),
-            label: "Sair da conta",
-            backgroundColor: Colors.redAccent,
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.remove('email');
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext ctx) => LoginScreen()));
-            },
-          )
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-  }
-}
-
-class MySliverAppBar extends SliverPersistentHeaderDelegate {
-  final double expandedHeight;
-
-  MySliverAppBar({@required this.expandedHeight});
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Stack(
-      fit: StackFit.expand,
-      overflow: Overflow.visible,
-      children: <Widget>[
-        Image.asset(
-          'images/usuarioN.png',
-          fit: BoxFit.cover,
-        ),
-        Container(
-          color: Color.fromRGBO(255, 56, 46, 0.3),
-        ),
-        Positioned(
-            top: expandedHeight / 200 - shrinkOffset,
-            left: MediaQuery.of(context).size.width / 80,
-            child: UsuCard()),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-        ),
-      ],
-    );
-  }
-
-  @override
-  double get maxExtent => expandedHeight;
-
-  @override
-  double get minExtent => kToolbarHeight;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-} */

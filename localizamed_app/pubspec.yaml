@@ -41,7 +41,8 @@ dependencies:
   flutter_offline: ^0.3.0
   image_picker: ^0.6.7+2
   dio: ^3.0.9
-  loading_animations: "^2.1.0"
+  loading_animations: ^2.1.0
+  flushbar: ^1.10.4
 
 dev_dependencies:
   flutter_test:

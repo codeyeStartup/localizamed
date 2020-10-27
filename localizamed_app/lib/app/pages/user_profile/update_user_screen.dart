@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
@@ -17,12 +18,24 @@ class UpdateScreen extends StatefulWidget {
 }
 
 class _UpdateScreenState extends State<UpdateScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+
   Future<Usuario> userData;
   var bloc = UserBloc();
 
   io.File imagemAvatar;
   io.File imagemPerfil;
   final picker = ImagePicker();
+
+  TextEditingController nomeController;
+  TextEditingController emailController;
+  String ufController;
+  TextEditingController cidadeController;
+  TextEditingController bairroController;
+  TextEditingController logradouroController;
+  TextEditingController telefoneController;
+  TextEditingController phoneController;
 
   _getImageFromGallery(BuildContext context) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -56,17 +69,75 @@ class _UpdateScreenState extends State<UpdateScreen> {
     }
   }
 
+  doChangeData() async {
+    String nome = nomeController.text ??= '';
+    String email = emailController.text ??= '';
+    String uf = ufController ??= '';
+    String cidade = cidadeController.text ??= '';
+    String bairro = bairroController.text ??= '';
+    String logradouro = logradouroController.text ??= '';
+    String phone = phoneController.text ??= '';
+
+    var change  = await bloc.changeUser(nome, email , uf, cidade, bairro, logradouro, phone);
+
+    switch (change['code']) {
+      case 201:
+        Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.greenAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Dados alterados com sucesso!',
+        )..show(context);
+        break;
+      case 400:
+        Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.redAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Não foi possível concluir o cadastro. Tente novamente!',
+        )..show(context);
+        break;
+      case 500:
+        Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.redAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Verifique sua internet',
+        )..show(context);
+        break;
+      default:
+    }
+  }
+
   @override
   void initState() {
     userData = bloc.getUser();
     super.initState();
   }
-
-  final _formKey = GlobalKey<FormState>();
-
-  final _signupBloc = SingletonBloc();
-
-  var phoneController = new MaskedTextController(mask: '(00) 0 0000-0000');
 
   var _estados = [
     'Selecione seu estado',
@@ -156,6 +227,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldkey,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -174,7 +246,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
         child: FutureBuilder(
             future: userData,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
+              if (!snapshot.hasData) {
                 return Center(
                   child: LoadingBouncingLine.circle(
                     backgroundColor: Theme.of(context).primaryColor,
@@ -182,14 +254,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 );
               }
 
-              _signupBloc.changeNome(snapshot.data.nome);
-              _signupBloc.changeBairro(snapshot.data.bairro);
-              _signupBloc.changeLogradouro(snapshot.data.logradouro);
-              _signupBloc.changeEmail(snapshot.data.email);
-              _signupBloc.changeCidade(snapshot.data.cidade);
-              _signupBloc.changeUf(snapshot.data.uf);
-              _signupBloc.changeTelefone(snapshot.data.fone_1);
-        
               return SingleChildScrollView(
                 child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -266,8 +330,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           ),
                           //NOME
                           TextFormField(
-                            initialValue: snapshot.data.nome,
-                            onChanged: _signupBloc.changeNome,
+                            controller: nomeController =
+                                TextEditingController(text: snapshot.data.nome),
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.person_outline),
                               labelText: "Nome",
@@ -289,8 +353,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
                           //EMAIL
                           TextFormField(
-                            initialValue: snapshot.data.email,
-                            onChanged: _signupBloc.changeEmail,
+                            controller: emailController = TextEditingController(
+                                text: snapshot.data.email),
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               errorText:
@@ -311,7 +375,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             padding: const EdgeInsets.only(
                                 top: 18, left: 4, bottom: 8),
                             child: Text(
-                              'Seu atual Estado: ' + snapshot.data.uf,
+                              snapshot.data.uf == null ? 'Estado não informado' : 'Seu atual Estado: ' + snapshot.data.uf,
                               style: TextStyle(fontSize: 17),
                             ),
                           ),
@@ -342,70 +406,60 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               //your code to execute, when a menu item is selected from drop down
                               setState(() {
                                 this._estadosItemSelected = newValueSelected;
-                                _signupBloc
-                                    .changeUfUpdate(_estadosItemSelected);
+                                ufController = _estadosItemSelected;
                               });
                             },
                             value: _estadosItemSelected,
                           ),
-                          
+
                           //CIDADE
                           TextFormField(
-                            initialValue: snapshot.data.cidade,
-                            onChanged: _signupBloc.changeCidade,
+                            controller: cidadeController =
+                                TextEditingController(
+                                    text: snapshot.data.cidade),
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.location_city),
                               labelText: "Cidade",
                             ),
                             validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Esse campo não pode ficar vazio!';
-                              } else if (value.length > 100) {
+                              if (value.length > 100) {
                                 return 'Nome da cidade grande demais!';
-                              }
-                              return null;
-                            },
+                              }}
                           ),
-                          
+
                           TextFormField(
-                            initialValue: snapshot.data.logradouro,
-                            onChanged: _signupBloc.changeLogradouro,
+                            controller: logradouroController =
+                                TextEditingController(
+                                    text: snapshot.data.logradouro),
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.location_city),
                               labelText: "Logradouro",
                             ),
                             validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Esse campo não pode ficar vazio!';
-                              } else if (value.length > 100) {
+                             if (value.length > 100) {
                                 return 'Logradouro grande demais!';
                               }
-                              return null;
                             },
                           ),
 
                           TextFormField(
-                            initialValue: snapshot.data.bairro,
-                            onChanged: _signupBloc.changeBairro,
+                            controller: bairroController =
+                                TextEditingController(
+                                    text: snapshot.data.bairro),
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.location_city),
                               labelText: "Bairro",
                             ),
                             validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Esse campo não pode ficar vazio!';
-                              } else if (value.length > 100) {
-                                return 'Nome do bairrocidade grande demais!';
+                              if (value.length > 100) {
+                                return 'Nome do bairro grande demais!';
                               }
-                              return null;
                             },
                           ),
 
                           //TELEFONE
                           TextFormField(
-                            //initialValue: snapshot.data.fone_1,
-                            onChanged: _signupBloc.changeTelefone,
-                            controller: MaskedTextController(
+                            controller: phoneController = MaskedTextController(
                                 text: snapshot.data.fone_1,
                                 mask: '(00) 0 0000-0000'),
                             maxLength: 16,
@@ -440,7 +494,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                                 imagemAvatar == null
                                                     ? ''
                                                     : doChangeImage();
-                                                _signupBloc.updateUser();
+                                                doChangeData();
                                                 Navigator.of(context).pop();
                                               } else {
                                                 Navigator.of(context).pop();

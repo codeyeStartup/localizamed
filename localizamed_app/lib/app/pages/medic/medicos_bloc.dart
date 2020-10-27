@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:localizamed_app/app/models/medic_info.dart';
+import 'package:localizamed_app/app/models/medic_infoModel.dart';
 import 'package:localizamed_app/app/models/medicos_model.dart';
 import 'package:localizamed_app/app/repositories/repositories.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';

@@ -1,8 +1,9 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:localizamed_app/app/pages/login/login_bloc.dart';
+import 'package:localizamed_app/app/pages/signup/signUp_page.dart';
 import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
-import 'package:localizamed_app/app/pages/signup/signup_screen_home.dart';
 import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,10 +36,23 @@ class LoginScreenState extends State<LoginScreen> {
           this.setState(() {
             _state = 3;
           });
-          _scaffoldkey.currentState.showSnackBar(SnackBar(
-            content: Text('Usuario e/ou senha incorretos. Tente novamente'),
-            backgroundColor: Colors.red,
-          ));
+          Flushbar(
+            duration: Duration(seconds: 3),
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            borderRadius: 8,
+            backgroundColor: Colors.redAccent,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(3, 3),
+                blurRadius: 5
+              )
+            ],
+            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+            message: 'Usuario e/ou senha incorretos',
+          )..show(context);
           break;
         case LoginState.CARREGANDO:
           this.setState(() {
@@ -324,7 +338,7 @@ class LoginScreenState extends State<LoginScreen> {
                                                 Navigator.push(
                                                     context,
                                                     SlideLeftRoute(
-                                                        page: SignUpHome()));
+                                                        page: SignUpPage()));
                                               },
                                               child: Text("Cadastre-se",
                                                   style: TextStyle(

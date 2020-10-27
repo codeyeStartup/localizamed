@@ -5,7 +5,7 @@ class Medic_info {
   Medic_info({this.sId, this.nome});
 
   Medic_info.fromJson(Map<String, dynamic> json) {
-    sId = json['id'];
+    sId = json['_id'];
     nome = json['nome'];
   }
 
