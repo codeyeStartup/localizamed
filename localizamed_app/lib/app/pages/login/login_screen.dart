@@ -19,6 +19,8 @@ class LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   final _loginBloc = LoginBloc();
 
+  final inputEmailController = TextEditingController();
+
   bool invisible;
   var _state = 0;
 
@@ -64,6 +66,69 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     invisible = true;
+  }
+
+  doRecoverPass() async{
+    String email = inputEmailController.text ??= "";
+
+    if(email.trim().isEmpty){
+       Flushbar(
+            duration: Duration(seconds: 3),
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            borderRadius: 8,
+            backgroundColor: Colors.redAccent,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(3, 3),
+                blurRadius: 5
+              )
+            ],
+            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+            message: 'Preencha seu e-mail!',
+          )..show(context);
+    }
+
+    var recoverPass = await _loginBloc.recoverPassword(email);
+    if(recoverPass['code'] == 200){
+      Flushbar(
+            duration: Duration(seconds: 3),
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            borderRadius: 8,
+            backgroundColor: Colors.greenAccent,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(3, 3),
+                blurRadius: 5
+              )
+            ],
+            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+            message: 'Verifique seu e-mail para recuperar sua senha',
+          )..show(context);
+    } else if(recoverPass['code'] == 400 || recoverPass['code'] == 500){
+      Flushbar(
+            duration: Duration(seconds: 3),
+            padding: EdgeInsets.all(12),
+            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            borderRadius: 8,
+            backgroundColor: Colors.redAccent,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(3, 3),
+                blurRadius: 5
+              )
+            ],
+            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+            message: 'E-mail não encontrado. Cadastre-se para continuar',
+          )..show(context);
+    }
   }
 
   showAlert(BuildContext context) {
@@ -181,6 +246,7 @@ class LoginScreenState extends State<LoginScreen> {
                                         stream: _loginBloc.outEmail,
                                         builder: (context, snapshot) {
                                           return TextFormField(
+                                              controller: inputEmailController,
                                               textInputAction:
                                                   TextInputAction.next,
                                               onChanged: _loginBloc.changeEmail,
@@ -232,13 +298,13 @@ class LoginScreenState extends State<LoginScreen> {
                                     Container(
                                       alignment: Alignment.centerRight,
                                       child: FlatButton(
-                                        onPressed: () {},
+                                        onPressed: doRecoverPass,
                                         child: Text(
-                                          "Esqueceu a senha?",
+                                          "Esqueci a minha senha",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor,
-                                              fontSize: size.width / 25),
+                                              fontSize: size.width / 28),
                                         ),
                                       ),
                                     ),

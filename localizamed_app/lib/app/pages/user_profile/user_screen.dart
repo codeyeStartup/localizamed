@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:localizamed_app/app/pages/login/login_screen.dart';
 import 'package:localizamed_app/app/pages/user_profile/update_user_screen.dart';
 import 'package:localizamed_app/app/utils/slideRoutes.dart';
@@ -19,9 +21,16 @@ class _UserProfileState extends State<UserProfile> {
   var userBloc = UserBloc();
   var _state = 1;
 
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
+    _initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     Future.delayed(
         Duration(milliseconds: 500),
         () => setState(() {
@@ -90,129 +99,169 @@ class _UserProfileState extends State<UserProfile> {
           },
           child: Icon(Icons.exit_to_app),
         ),
-        body: FutureBuilder(
-            future: userData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done ||
-                  _state == 1) {
-                return Center(
-                  child: LoadingBouncingLine.circle(
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
-                );
-              } else {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      height: 200,
-                      child: Stack(
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(top: 0),
-                              child: Fundo(600.0, 200.0,
-                                  Theme.of(context).primaryColor)),
-                          Stack(
+        body: _connectionStatus == 'ConnectivityResult.none'
+            ? Center(
+                child: Text(
+              'Não foi possível se conectar. Tente novamente.',
+              textAlign: TextAlign.center,
+            ))
+            : FutureBuilder(
+                future: userData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done ||
+                      _state == 1) {
+                    return Center(
+                      child: LoadingBouncingLine.circle(
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 200,
+                          child: Stack(
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.only(
-                                    left:
-                                        MediaQuery.of(context).size.width / 10,
-                                    top: 30),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text(
-                                        snapshot.data.nome,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: snapshot.data.cidade == null &&
-                                              snapshot.data.uf == null
-                                          ? Text(
-                                              'Cidade e estados não informados',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white),
-                                            )
-                                          : Text(
-                                              snapshot.data.cidade +
-                                                  ',' +
-                                                  snapshot.data.uf,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white),
+                                  padding: EdgeInsets.only(top: 0),
+                                  child: Fundo(600.0, 200.0,
+                                      Theme.of(context).primaryColor)),
+                              Stack(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left:
+                                            MediaQuery.of(context).size.width /
+                                                10,
+                                        top: 30),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Flexible(
+                                          child: Text(
+                                            snapshot.data.nome,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.white,
                                             ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width /
-                                          1.8,
-                                      top: MediaQuery.of(context).size.height /
-                                          14),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black26,
-                                              offset: new Offset(2, 3),
-                                              blurRadius: 4)
-                                        ]),
-                                    child: CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: snapshot
-                                                    .data.caminhoFoto ==
-                                                null
-                                            ? AssetImage('images/usuarioP.png')
-                                            : NetworkImage(
-                                                snapshot.data.caminhoFoto)),
-                                  ))
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: snapshot.data.cidade == null &&
+                                                  snapshot.data.uf == null
+                                              ? Text(
+                                                  'Cidade e estados não informados',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                )
+                                              : Text(
+                                                  snapshot.data.cidade +
+                                                      ',' +
+                                                      snapshot.data.uf,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.8,
+                                          top: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              14),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: new Offset(2, 3),
+                                                  blurRadius: 4)
+                                            ]),
+                                        child: CircleAvatar(
+                                            radius: 70,
+                                            backgroundImage: snapshot
+                                                        .data.caminhoFoto ==
+                                                    null
+                                                ? AssetImage(
+                                                    'images/usuarioP.png')
+                                                : NetworkImage(
+                                                    snapshot.data.caminhoFoto)),
+                                      ))
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 10,
-                          top: 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Dados',
-                            style: TextStyle(
-                                fontSize: 22, fontFamily: 'Montserrat-Bold'),
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 35,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 10,
+                              top: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Dados',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontFamily: 'Montserrat-Bold'),
+                              ),
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 35,
+                              ),
+                              Card(Icons.email, 'Email:', snapshot.data.email),
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 35,
+                              ),
+                              Card(Icons.phone, "Telefone:",
+                                  snapshot.data.fone_1),
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 35,
+                              ),
+                            ],
                           ),
-                          Card(Icons.email, 'Email:', snapshot.data.email),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 35,
-                          ),
-                          Card(Icons.phone, "Telefone:", snapshot.data.fone_1),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 35,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              }
-            }));
+                        )
+                      ],
+                    );
+                  }
+                }));
+  }
+
+  Future<void> _initConnectivity() async {
+    ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = result.toString());
+        break;
+    }
   }
 }
 

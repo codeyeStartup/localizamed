@@ -1,8 +1,10 @@
+import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/app/pages/initial/initial_card.dart';
-import 'package:localizamed_app/app/pages/home/home_page.dart';
 import 'package:localizamed_app/app/pages/search/search_screen.dart';
 import 'package:localizamed_app/app/utils/slideRoutes.dart';
 
@@ -13,6 +15,23 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
   bool isActive = false;
+
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  @override
+  void initState(){ 
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    super.initState();   
+  }
+
+  @override
+  void dispose(){
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +136,47 @@ class _InitialScreenState extends State<InitialScreen> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 30,
                   ),
-                  InitialCard()
+                   _connectionStatus == 'ConnectivityResult.none'
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height / 4),
+                              child: Center(
+                                  child: Text(
+                                    'Não foi possível se conectar. Tente novamente.',
+                                    textAlign: TextAlign.center,
+                                  )),
+                            )
+                          : InitialCard()  
                 ],
               ),
             );
           },
         ));
+  }
+
+  Future<void> _initConnectivity() async{
+    ConnectivityResult result;
+
+    try{
+      result = await _connectivity.checkConnectivity();
+    } catch(e){
+      print(e.toString());
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async{
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(()=> _connectionStatus = result.toString());
+        break;
+    }
   }
 }

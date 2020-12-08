@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/models/search_model.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
@@ -15,17 +16,20 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   List<Search_model> _list = List<Search_model>();
+  bool resultList;
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   TextEditingController _controller = TextEditingController();
 
   bool _showClearButton = false;
-  var loading = false;
+  var loading;
 
   Timer _debounce;
 
   @override
   void initState() {
+    resultList = true;
+    loading = 1;
     super.initState();
     _controller.addListener(() {
       setState(() {
@@ -82,40 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
         body: SafeArea(
             child: Column(
           children: <Widget>[
-            loading || _list == null || _controller.text.isEmpty
-                ? Expanded(
-                    child: Center(
-                    child: Text(
-                      "Pesquisar Clínicas",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ))
-                : Expanded(
-                    child: ListView.builder(
-                        itemCount: _list?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          var i = _list[index];
-                          if (index.hashCode == null) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          return GestureDetector(
-                            onTap: () async {
-                              SharedPreferences prefId =
-                                  await SharedPreferences.getInstance();
-                              prefId.setString("id", i.iId.id);
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ClinicScreen()));
-                            },
-                            child: Card(
-                                margin: EdgeInsets.all(10),
-                                child: ListTile(
-                                  title: Text(i.iId.nome),
-                                  subtitle: Text(i.iId.cidade),
-                                )),
-                          );
-                        }))
+            _result()
           ],
         )));
   }
@@ -141,6 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
         onPressed: () {
           _list.clear();
           _controller.clear();
+          resultList = true;
         });
   }
 
@@ -148,11 +120,13 @@ class _SearchScreenState extends State<SearchScreen> {
     if (_controller.text == null || _controller.text.length == 0) {
       setState(() {
         _list.clear();
+        loading = 1;
       });
-      loading = false;
       return null;
     } else {
-      loading = true;
+      setState(() {
+        loading = 2;
+      });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('tokenjwt');
       String _url = ConexaoAPI().api + 'search_clinica';
@@ -163,12 +137,73 @@ class _SearchScreenState extends State<SearchScreen> {
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
         setState(() {
-          loading = false;
+          loading = 3;
         });
-        return data.forEach((e) {
+        if(data.length >= 1){
+          resultList = true;
+          return data.forEach((e) {
           _list.add(Search_model.fromJson(e));
-        });
-      }
+          });  
+        } else {
+          return resultList = false;
+        }
     }
+  }
+  }
+
+  Widget _result() {
+    if (loading == 1 || _list == null || _controller.text.isEmpty) {
+      return Expanded(
+          child: Center(
+        child: Text(
+          "Pesquise por Clínicas, \n  exames ou médicos",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ));
+    } else if (loading == 2) {
+      return Expanded(
+        child: Center(
+          child: LoadingBouncingLine.circle(
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+        ),
+      );
+    } else if (loading == 3 && resultList == true) {
+      return Expanded(
+          child: ListView.builder(
+              itemCount: _list?.length ?? 0,
+              itemBuilder: (context, index) {
+                var i = _list[index];
+                if (index.hashCode == null) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return GestureDetector(
+                  onTap: () async {
+                    SharedPreferences prefId =
+                        await SharedPreferences.getInstance();
+                    prefId.setString("id", i.iId.id);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ClinicScreen()));
+                  },
+                  child: Card(
+                      margin: EdgeInsets.all(10),
+                      child: ListTile(
+                        title: Text(i.iId.nome),
+                        subtitle: Text(i.iId.cidade),
+                      )),
+                );
+              }));
+    } else if(loading == 3 && resultList == false){
+      return Expanded(
+          child: Center(
+        child: Text(
+          "Nenhuma Clínica foi encontrada",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ));
+    }
+
   }
 }
