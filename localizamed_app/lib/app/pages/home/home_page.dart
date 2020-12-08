@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_bloc.dart';
@@ -11,7 +14,6 @@ import 'package:localizamed_app/app/pages/medic/medic_screen.dart';
 import 'package:localizamed_app/app/pages/search/search_screen.dart';
 import 'package:localizamed_app/app/pages/user_profile/user_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 
 class BottomMenu extends StatefulWidget {
   BottomMenu({Key key}) : super(key: key);
@@ -23,6 +25,10 @@ class BottomMenu extends StatefulWidget {
 class _BottomMenuState extends State<BottomMenu> {
   Future<Usuario> userData;
   var userBloc = UserBloc();
+
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   int _selectedIndex = 0;
   static TextStyle optionStyle =
@@ -42,12 +48,16 @@ class _BottomMenuState extends State<BottomMenu> {
   }
 
   void initState() {
+    _initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     userData = userBloc.getUser();
     super.initState();
   }
 
   @override
   void dispose() {
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -183,31 +193,48 @@ class _BottomMenuState extends State<BottomMenu> {
                                         ? Colors.cyanAccent
                                         : Colors.white))),
                         height: size.height,
-                        child: FutureBuilder(
-                          future: userData,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState != ConnectionState.done) {
-                              return CircularProgressIndicator();
-                            } else {
-                              return CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  radius: 20,
-                                  child: snapshot.data.caminhoFoto == null
-                                      ? Image.asset(
-                                          'images/usuarioP.png',
-                                          fit: BoxFit.fill,
-                                        )
-                                      : Container(
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: NetworkImage(snapshot
-                                                      .data.caminhoFoto),
-                                                  fit: BoxFit.cover)),
-                                        ));
-                            }
-                          },
-                        )),
+                        child: _connectionStatus == 'ConnectivityResult.none'
+                            ? CircleAvatar(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                        Theme.of(context).primaryColor,
+                                        Color.fromARGB(255, 0, 191, 255)
+                                      ]
+                                    )
+                                  ),
+                                ),
+                              )
+                            : FutureBuilder(
+                                future: userData,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState !=
+                                      ConnectionState.done) {
+                                    return CircularProgressIndicator();
+                                  } else {
+                                    return CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        radius: 20,
+                                        child: snapshot.data.caminhoFoto == null
+                                            ? Image.asset(
+                                                'images/usuarioP.png',
+                                                fit: BoxFit.fill,
+                                              )
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            snapshot.data
+                                                                .caminhoFoto),
+                                                        fit: BoxFit.cover)),
+                                              ));
+                                  }
+                                })),
                     onTap: () {
                       onItemTapped(4);
                     },
@@ -215,5 +242,30 @@ class _BottomMenuState extends State<BottomMenu> {
                 ],
               )),
         ));
+  }
+
+  Future<void> _initConnectivity() async {
+    ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = result.toString());
+        break;
+    }
   }
 }

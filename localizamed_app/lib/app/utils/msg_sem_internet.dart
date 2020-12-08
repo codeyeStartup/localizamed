@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:localizamed_app/app/pages/home/home_page.dart';
-import 'package:localizamed_app/app/pages/splash_screen/splash_screen.dart';
 
 class MsgInt extends StatelessWidget {
   @override

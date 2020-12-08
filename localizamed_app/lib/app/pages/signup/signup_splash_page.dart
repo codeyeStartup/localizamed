@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
-import 'package:localizamed_app/app/pages/home/home_page.dart';
+import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
 
 class SignupSplashPage extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _SignupSplashPageState extends State<SignupSplashPage> {
     super.initState();
     Future.delayed(Duration(seconds: 4)).then((_) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BottomMenu()));
+          context, MaterialPageRoute(builder: (context) => MsgInt()));
     });
   }
 

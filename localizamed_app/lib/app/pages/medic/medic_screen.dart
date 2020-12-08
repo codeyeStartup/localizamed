@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:loading_animations/loading_animations.dart';
@@ -20,12 +20,24 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
   Future<Medic_info> medicData;
   final medicoBloc = MedicosBloc();
 
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
   void initState() {
     medicoBloc.getMedicos();
+    _initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     super.initState();
   }
 
+  @override
+  void dispose(){
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -56,7 +68,17 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                   ],
                 ),
               ),
-              medCard(),
+               _connectionStatus == 'ConnectivityResult.none'
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 3),
+                            child: Center(
+                                child: Text(
+                                  'Não foi possível se conectar. Tente novamente.',
+                                  textAlign: TextAlign.center,
+                                )),
+                          )
+                        : medCard()
             ],
           ),
         ),
@@ -261,5 +283,30 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
         builder: (BuildContext context) {
           return info;
         });
+  }
+
+  Future<void> _initConnectivity() async{
+    ConnectivityResult result;
+
+    try{
+      result = await _connectivity.checkConnectivity();
+    } catch(e){
+      print(e.toString());
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async{
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(()=> _connectionStatus = result.toString());
+        break;
+    }
   }
 }

@@ -138,7 +138,7 @@ class _ClinicPageViewState extends State<ClinicPageView> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                        "Desejar ligar para o número ${snapshot.data.fone_1} ?"),
+                                        "Deseja ligar para o número ${snapshot.data.fone_1} ?"),
                                     actions: <Widget>[
                                       FlatButton(
                                         child: Text("Sim"),

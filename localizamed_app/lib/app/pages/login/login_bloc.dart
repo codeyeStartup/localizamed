@@ -75,8 +75,29 @@ class LoginBloc extends BlocBase with LoginValidators {
       }
     } catch (erro) {
       print(_emailController);
-      return /* _stateController.add(LoginState.FALHA )*/ erro;
+      return erro;
     }
+  }
+
+  Future<Map<String, dynamic>> recoverPassword(String email) async{
+    
+    String url = ConexaoAPI().api + 'send_mail';
+    Map<String, String> headers = {"Accept": "application/json"};
+
+    Map payload = {
+      'email': email
+    };
+      
+    try{
+      http.Response response = await http.post(url, headers: headers, body: payload);
+      return {'message': 'send email complete', 'code': response.statusCode};
+    }catch(err){
+      return {
+        'mensage' : err.error, 
+        'code': err.response.data['code']
+      };
+    }
+
   }
 
   @override
