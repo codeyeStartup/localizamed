@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:localizamed_app/app/pages/login/login_bloc.dart';
 import 'package:localizamed_app/app/pages/signup/signUp_page.dart';
 import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
@@ -21,12 +24,19 @@ class LoginScreenState extends State<LoginScreen> {
 
   final inputEmailController = TextEditingController();
 
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   bool invisible;
   var _state = 0;
 
   @override
   void initState() {
     super.initState();
+    _initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     //estados de acordo com o que é retornado do Bloc -> API -> Banco
     _loginBloc.outState.listen((state) {
@@ -46,10 +56,7 @@ class LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.redAccent,
             boxShadows: [
               BoxShadow(
-                color: Colors.black12,
-                offset: Offset(3, 3),
-                blurRadius: 5
-              )
+                  color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
             ],
             dismissDirection: FlushbarDismissDirection.HORIZONTAL,
             forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
@@ -58,8 +65,8 @@ class LoginScreenState extends State<LoginScreen> {
           break;
         case LoginState.CARREGANDO:
           this.setState(() {
-              _state = 2;
-            });
+            _state = 2;
+          });
           break;
         case LoginState.IDLE:
       }
@@ -68,66 +75,54 @@ class LoginScreenState extends State<LoginScreen> {
     invisible = true;
   }
 
-  doRecoverPass() async{
+  doRecoverPass() async {
     String email = inputEmailController.text ??= "";
 
-    if(email.trim().isEmpty){
-       Flushbar(
-            duration: Duration(seconds: 3),
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-            borderRadius: 8,
-            backgroundColor: Colors.redAccent,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black12,
-                offset: Offset(3, 3),
-                blurRadius: 5
-              )
-            ],
-            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-            message: 'Preencha seu e-mail!',
-          )..show(context);
+    if (email.trim().isEmpty) {
+      Flushbar(
+        duration: Duration(seconds: 3),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        borderRadius: 8,
+        backgroundColor: Colors.redAccent,
+        boxShadows: [
+          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+        ],
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+        message: 'Preencha seu e-mail!',
+      )..show(context);
     }
 
     var recoverPass = await _loginBloc.recoverPassword(email);
-    if(recoverPass['code'] == 200){
+    if (recoverPass['code'] == 200) {
       Flushbar(
-            duration: Duration(seconds: 3),
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-            borderRadius: 8,
-            backgroundColor: Colors.greenAccent,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black12,
-                offset: Offset(3, 3),
-                blurRadius: 5
-              )
-            ],
-            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-            message: 'Verifique seu e-mail para recuperar sua senha',
-          )..show(context);
-    } else if(recoverPass['code'] == 400 || recoverPass['code'] == 500){
+        duration: Duration(seconds: 3),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        borderRadius: 8,
+        backgroundColor: Colors.greenAccent,
+        boxShadows: [
+          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+        ],
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+        message: 'Verifique seu e-mail para recuperar sua senha',
+      )..show(context);
+    } else if (recoverPass['code'] == 400 || recoverPass['code'] == 500) {
       Flushbar(
-            duration: Duration(seconds: 3),
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-            borderRadius: 8,
-            backgroundColor: Colors.redAccent,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black12,
-                offset: Offset(3, 3),
-                blurRadius: 5
-              )
-            ],
-            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-            forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-            message: 'E-mail não encontrado. Cadastre-se para continuar',
-          )..show(context);
+        duration: Duration(seconds: 3),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        borderRadius: 8,
+        backgroundColor: Colors.redAccent,
+        boxShadows: [
+          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+        ],
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+        message: 'E-mail não encontrado. Cadastre-se para continuar',
+      )..show(context);
     }
   }
 
@@ -146,8 +141,25 @@ class LoginScreenState extends State<LoginScreen> {
         });
   }
 
+  noConnectionAlert() {
+    Flushbar(
+      duration: Duration(seconds: 3),
+      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      borderRadius: 8,
+      backgroundColor: Colors.redAccent,
+      boxShadows: [
+        BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+      ],
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+      message: 'Verifique sua conexão com a internet e tente novamente.',
+    )..show(context);
+  }
+
   @override
-  void dispose() {
+  void dispose() { 
+    _connectivitySubscription.cancel();
     _loginBloc.dispose();
     super.dispose();
   }
@@ -312,29 +324,34 @@ class LoginScreenState extends State<LoginScreen> {
                                       height: size.height / 50,
                                     ),
                                     //botão de LOGIN
-                                    StreamBuilder<bool>(
-                                        stream: _loginBloc.outSubmitValid,
-                                        builder: (context, snapshot) {
-                                          return RaisedButton(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: size.height / 55,
-                                                  horizontal:
-                                                      size.width / 3.29),
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          23)),
-                                              onPressed: snapshot.hasData
-                                                  ? () {
-                                                      AnimatedButton();
-                                                      _loginBloc.login();
-                                                    }
-                                                  : null,
-                                              disabledColor: Colors.blue[300],
-                                              child: setUpButtonChild());
-                                        }),
+                                    _connectionStatus ==
+                                            'ConnectivityResult.none'
+                                        ? noConnectionButton()
+                                        : StreamBuilder<bool>(
+                                            stream: _loginBloc.outSubmitValid,
+                                            builder: (context, snapshot) {
+                                              return RaisedButton(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical:
+                                                          size.height / 55,
+                                                      horizontal:
+                                                          size.width / 3.29),
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              23)),
+                                                  onPressed: snapshot.hasData
+                                                      ? () {
+                                                          AnimatedButton();
+                                                          _loginBloc.login();
+                                                        }
+                                                      : null,
+                                                  disabledColor:
+                                                      Colors.blue[300],
+                                                  child: setUpButtonChild());
+                                            }),
 
                                     SizedBox(
                                       height: size.height / 50,
@@ -428,6 +445,25 @@ class LoginScreenState extends State<LoginScreen> {
             }));
   }
 
+  Widget noConnectionButton() {
+    return RaisedButton(
+        padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height / 55,
+            horizontal: MediaQuery.of(context).size.width / 3.29),
+        color: Theme.of(context).primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        onPressed: () {
+          noConnectionAlert();
+        },
+        disabledColor: Colors.blue[300],
+        child: Text("Login",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width / 25,
+                fontWeight: FontWeight.bold)));
+  }
+
   Widget setUpButtonChild() {
     if (_state == 0) {
       return new Text("Login",
@@ -458,5 +494,30 @@ class LoginScreenState extends State<LoginScreen> {
     setState(() {
       _state = 1;
     });
+  }
+
+  Future<void> _initConnectivity() async {
+    ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = result.toString());
+        break;
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:loading_animations/loading_animations.dart';
@@ -18,6 +20,10 @@ class _SearchScreenState extends State<SearchScreen> {
   List<Search_model> _list = List<Search_model>();
   bool resultList;
 
+  String _connectionStatus = 'unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   TextEditingController _controller = TextEditingController();
 
@@ -28,6 +34,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
+    _initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     resultList = true;
     loading = 1;
     super.initState();
@@ -36,6 +45,12 @@ class _SearchScreenState extends State<SearchScreen> {
         _showClearButton = _controller.text.length > 0;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -85,9 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: SafeArea(
             child: Column(
-          children: <Widget>[
-            _result()
-          ],
+          children: <Widget>[_result()],
         )));
   }
 
@@ -139,71 +152,105 @@ class _SearchScreenState extends State<SearchScreen> {
         setState(() {
           loading = 3;
         });
-        if(data.length >= 1){
+        if (data.length >= 1) {
           resultList = true;
           return data.forEach((e) {
-          _list.add(Search_model.fromJson(e));
-          });  
+            _list.add(Search_model.fromJson(e));
+          });
         } else {
           return resultList = false;
         }
+      }
     }
-  }
   }
 
   Widget _result() {
-    if (loading == 1 || _list == null || _controller.text.isEmpty) {
+    if (_connectionStatus == 'ConnectivityResult.none') {
       return Expanded(
-          child: Center(
-        child: Text(
-          "Pesquise por Clínicas, \n  exames ou médicos",
-          style: TextStyle(color: Colors.grey),
-        ),
-      ));
-    } else if (loading == 2) {
-      return Expanded(
-        child: Center(
-          child: LoadingBouncingLine.circle(
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-        ),
+              child: Center(
+            child: Text(
+          'Não foi possível se conectar. Tente novamente.',
+          textAlign: TextAlign.center,
+        )),
       );
-    } else if (loading == 3 && resultList == true) {
-      return Expanded(
-          child: ListView.builder(
-              itemCount: _list?.length ?? 0,
-              itemBuilder: (context, index) {
-                var i = _list[index];
-                if (index.hashCode == null) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return GestureDetector(
-                  onTap: () async {
-                    SharedPreferences prefId =
-                        await SharedPreferences.getInstance();
-                    prefId.setString("id", i.iId.id);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ClinicScreen()));
-                  },
-                  child: Card(
-                      margin: EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(i.iId.nome),
-                        subtitle: Text(i.iId.cidade),
-                      )),
-                );
-              }));
-    } else if(loading == 3 && resultList == false){
-      return Expanded(
+    } else {
+      if (loading == 1 || _list == null || _controller.text.isEmpty) {
+        return Expanded(
+            child: Center(
+          child: Text(
+            "Pesquise por Clínicas, \n  exames ou médicos",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ));
+      } else if (loading == 2) {
+        return Expanded(
           child: Center(
-        child: Text(
-          "Nenhuma Clínica foi encontrada",
-          style: TextStyle(color: Colors.grey),
-        ),
-      ));
+            child: LoadingBouncingLine.circle(
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+          ),
+        );
+      } else if (loading == 3 && resultList == true) {
+        return Expanded(
+            child: ListView.builder(
+                itemCount: _list?.length ?? 0,
+                itemBuilder: (context, index) {
+                  var i = _list[index];
+                  if (index.hashCode == null) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GestureDetector(
+                    onTap: () async {
+                      SharedPreferences prefId =
+                          await SharedPreferences.getInstance();
+                      prefId.setString("id", i.iId.id);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ClinicScreen()));
+                    },
+                    child: Card(
+                        margin: EdgeInsets.all(10),
+                        child: ListTile(
+                          title: Text(i.iId.nome),
+                          subtitle: Text(i.iId.cidade),
+                        )),
+                  );
+                }));
+      } else if (loading == 3 && resultList == false) {
+        return Expanded(
+            child: Center(
+          child: Text(
+            "Nenhuma Clínica foi encontrada",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ));
+      }
+    }
+  }
+
+  Future<void> _initConnectivity() async {
+    ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      print(e.toString());
     }
 
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = result.toString());
+        break;
+    }
   }
 }

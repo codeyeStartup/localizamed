@@ -54,6 +54,7 @@ class _InitialCardState extends State<InitialCard> {
                     },
                     child: Container(
                         margin: EdgeInsets.only(
+                          top: 12,
                           bottom: MediaQuery.of(context).size.height / 60,
                           left: MediaQuery.of(context).size.width / 16,
                         ),
@@ -71,7 +72,7 @@ class _InitialCardState extends State<InitialCard> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
+                                color: Colors.black12,
                                 offset: new Offset(2.0, 2.0),
                                 blurRadius: 5,
                               )
@@ -84,8 +85,8 @@ class _InitialCardState extends State<InitialCard> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(300),
-                                      bottomLeft: Radius.circular(40),
-                                      bottomRight: Radius.circular(40)),
+                                      bottomLeft: Radius.circular(60),
+                                      bottomRight: Radius.circular(60)),
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.height /
@@ -100,8 +101,8 @@ class _InitialCardState extends State<InitialCard> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(800),
-                                      bottomLeft: Radius.circular(40),
-                                      bottomRight: Radius.circular(40)),
+                                      bottomLeft: Radius.circular(80),
+                                      bottomRight: Radius.circular(80)),
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.height /

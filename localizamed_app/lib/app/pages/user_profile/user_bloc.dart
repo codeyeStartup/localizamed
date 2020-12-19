@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:localizamed_app/app/models/user_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:localizamed_app/app/pages/login/login_bloc.dart';
 import 'package:localizamed_app/app/utils/conexaoAPI.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,9 +76,10 @@ class UserBloc {
 
     String fileName = imagemPerfil.path.split('/').last;
 
-    FormData payload = FormData.fromMap({
-      "caminho_foto":
-          await MultipartFile.fromFile(imagemPerfil.path, filename: fileName)
+    var file = await MultipartFile.fromFile(imagemPerfil.path, filename: fileName);
+
+    var payload = new FormData.fromMap({
+      "caminho_foto": file
     });
 
     try {
@@ -88,6 +88,7 @@ class UserBloc {
 
       response = await dio.patch(url, data: payload);
       await response.data;
+      print(file);
       return {'mensage': 'Change Image sucessful', 'code': response.statusCode};
     } on DioError catch (e) {
       return {

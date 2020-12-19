@@ -12,10 +12,10 @@ class SingletonBloc with SignupValidator {
   Future<Map<String, dynamic>> signUp(String nome, String dateNasc, String phone, String email, String senha) async{
     Map payload = {
        "nome": nome,
-        "email": email,
-        "data_nascimento": dateNasc,
-        "fone_1": phone,
-        "senha": senha,
+       "email": email,
+       "data_nascimento": dateNasc,
+       "fone_1": phone,
+       "senha": senha,
     };
 
     SharedPreferences prefs = await SharedPreferences.getInstance();

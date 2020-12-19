@@ -74,7 +74,7 @@ class _InitialScreenState extends State<InitialScreen> {
                         boxShadow: [
                           BoxShadow(
                               blurRadius: 5,
-                              color: Colors.black26,
+                              color: Colors.black12,
                               offset: Offset(1, 2))
                         ]),
                     child: FlatButton(

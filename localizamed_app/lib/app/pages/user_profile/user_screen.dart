@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +18,9 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   Future<Usuario> userData;
   var userBloc = UserBloc();
-  var _state = 1;
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   String _connectionStatus = 'unknown';
   final Connectivity _connectivity = Connectivity();
@@ -34,9 +35,8 @@ class _UserProfileState extends State<UserProfile> {
     Future.delayed(
         Duration(milliseconds: 500),
         () => setState(() {
-              _state = 2;
+              userData = userBloc.getUser();
             }));
-    userData = userBloc.getUser();
   }
 
   alertDialog(context) {
@@ -71,6 +71,19 @@ class _UserProfileState extends State<UserProfile> {
         });
   }
 
+  Future<Null> _refreshData() async {
+    setState(() {
+      userData = userBloc.getUser();
+    });
+    return null;
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,138 +115,193 @@ class _UserProfileState extends State<UserProfile> {
         body: _connectionStatus == 'ConnectivityResult.none'
             ? Center(
                 child: Text(
-              'Não foi possível se conectar. Tente novamente.',
-              textAlign: TextAlign.center,
-            ))
+                'Não foi possível se conectar. Tente novamente.',
+                textAlign: TextAlign.center,
+              ))
             : FutureBuilder(
                 future: userData,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done ||
-                      _state == 1) {
+                  if (snapshot.connectionState != ConnectionState.done) {
                     return Center(
                       child: LoadingBouncingLine.circle(
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
                   } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: 200,
-                          child: Stack(
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.only(top: 0),
-                                  child: Fundo(600.0, 200.0,
-                                      Theme.of(context).primaryColor)),
-                              Stack(
+                    return RefreshIndicator(
+                      color: Theme.of(context).primaryColor,
+                      key: _refreshIndicatorKey,
+                      onRefresh: _refreshData,
+                      child: SingleChildScrollView(
+                        physics:  AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              height: 200,
+                              child: Stack(
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left:
-                                            MediaQuery.of(context).size.width /
+                                      padding: EdgeInsets.only(top: 0),
+                                      child: Fundo(600.0, 200.0,
+                                          Theme.of(context).primaryColor)),
+                                  Stack(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
                                                 10,
-                                        top: 30),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: Text(
-                                            snapshot.data.nome,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 24,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Flexible(
-                                          child: snapshot.data.cidade == null &&
-                                                  snapshot.data.uf == null
-                                              ? Text(
-                                                  'Cidade e estados não informados',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white),
-                                                )
-                                              : Text(
-                                                  snapshot.data.cidade +
-                                                      ',' +
-                                                      snapshot.data.uf,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.white),
+                                            top: 30),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Text(
+                                                snapshot.data.nome,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.white,
                                                 ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              1.8,
-                                          top: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              14),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black26,
-                                                  offset: new Offset(2, 3),
-                                                  blurRadius: 4)
-                                            ]),
-                                        child: CircleAvatar(
-                                            radius: 70,
-                                            backgroundImage: snapshot
-                                                        .data.caminhoFoto ==
-                                                    null
-                                                ? AssetImage(
-                                                    'images/usuarioP.png')
-                                                : NetworkImage(
-                                                    snapshot.data.caminhoFoto)),
-                                      ))
+                                              ),
+                                            ),
+                                            Flexible(
+                                                child: snapshot.data.cidade ==
+                                                            '' &&
+                                                        snapshot.data.uf == ''
+                                                    ? Text(
+                                                        'Cidade e estado não informados',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white),
+                                                      )
+                                                    : Row(
+                                                        children: [
+                                                          snapshot.data.cidade ==
+                                                                      null ||
+                                                                  snapshot.data
+                                                                          .cidade ==
+                                                                      ''
+                                                              ? Text(
+                                                                  'Cidade não informada',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .white),
+                                                                )
+                                                              : Text(
+                                                                  snapshot.data
+                                                                      .cidade,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                          snapshot.data.uf ==
+                                                                      null ||
+                                                                  snapshot.data
+                                                                          .uf ==
+                                                                      ''
+                                                              ? Text(
+                                                                  ', Estado não informado',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .white),
+                                                                )
+                                                              : Text(
+                                                                  ', ' +
+                                                                      snapshot
+                                                                          .data
+                                                                          .uf,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                        ],
+                                                      ))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.8,
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  14),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: Colors.black26,
+                                                      offset: new Offset(2, 3),
+                                                      blurRadius: 4)
+                                                ]),
+                                            child: CircleAvatar(
+                                                radius: 70,
+                                                backgroundImage: snapshot
+                                                            .data.caminhoFoto ==
+                                                        null
+                                                    ? AssetImage(
+                                                        'images/usuarioP.png')
+                                                    : NetworkImage(snapshot
+                                                        .data.caminhoFoto)),
+                                          ))
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.width / 10,
+                                  top: 40),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Dados',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontFamily: 'Montserrat-Bold'),
+                                  ),
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 35,
+                                  ),
+                                  Card(Icons.email, 'Email:',
+                                      snapshot.data.email),
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 35,
+                                  ),
+                                  Card(Icons.phone, "Telefone:",
+                                      snapshot.data.fone_1),
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 35,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width / 10,
-                              top: 40),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Dados',
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontFamily: 'Montserrat-Bold'),
-                              ),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height / 35,
-                              ),
-                              Card(Icons.email, 'Email:', snapshot.data.email),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height / 35,
-                              ),
-                              Card(Icons.phone, "Telefone:",
-                                  snapshot.data.fone_1),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height / 35,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                      ),
                     );
                   }
                 }));

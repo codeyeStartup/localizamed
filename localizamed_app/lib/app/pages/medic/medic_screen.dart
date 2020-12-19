@@ -146,7 +146,7 @@ class _CardMedicoScreenState extends State<CardMedicoScreen> {
                                 borderRadius: new BorderRadius.circular(8.0),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.black26,
+                                    color: Colors.black12,
                                     blurRadius: 5.0,
                                     offset: new Offset(2.0, 5.0),
                                   )

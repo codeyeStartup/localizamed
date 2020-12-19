@@ -337,6 +337,26 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (checkVal == true &&
                                 _formKeySignUp.currentState.validate()) {
                               doSignUp();
+                            } else if (checkVal != true) {
+                              Flushbar(
+                                duration: Duration(seconds: 3),
+                                padding: EdgeInsets.all(12),
+                                margin: EdgeInsets.only(
+                                    bottom: 20, left: 20, right: 20),
+                                borderRadius: 8,
+                                backgroundColor: Colors.redAccent,
+                                boxShadows: [
+                                  BoxShadow(
+                                      color: Colors.black12,
+                                      offset: Offset(3, 3),
+                                      blurRadius: 5)
+                                ],
+                                dismissDirection:
+                                    FlushbarDismissDirection.HORIZONTAL,
+                                forwardAnimationCurve:
+                                    Curves.fastLinearToSlowEaseIn,
+                                message: 'Por-favor aceitar termos de uso.',
+                              )..show(context);
                             }
                           }))
                 ],

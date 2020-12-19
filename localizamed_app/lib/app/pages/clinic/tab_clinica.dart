@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/pages/clinic/clinic_screen.dart';
 import 'package:localizamed_app/app/utils/slideRoutes.dart';
@@ -35,9 +36,9 @@ class _ClinCardState extends State<ClinCard> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
-                  child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              ));
+                  child: LoadingBouncingLine.circle(
+              backgroundColor: Theme.of(context).primaryColor,
+            ),);
             } else {
               return ListView.separated(
                 separatorBuilder: (context, index) {
@@ -71,7 +72,7 @@ class _ClinCardState extends State<ClinCard> {
                               borderRadius: new BorderRadius.circular(8.0),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.black26,
+                                  color: Colors.black12,
                                   blurRadius: 5.0,
                                   offset: new Offset(2.0, 5.0),
                                 )
@@ -84,7 +85,7 @@ class _ClinCardState extends State<ClinCard> {
                                 ListTile(
                                     title: Text(
                                       snapshot.data[index].nome,
-                                      style: TextStyle(fontSize: 20),
+                                      style: TextStyle(fontSize: snapshot.data[index].nome.length <= 8 ? 20 : 16),
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.right,
                                     ),

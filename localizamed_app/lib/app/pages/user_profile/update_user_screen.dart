@@ -65,8 +65,36 @@ class _UpdateScreenState extends State<UpdateScreen> {
     var change = await bloc.changeUserImage(imagemPerfil);
     if (change['code'] == 200) {
       bloc.changeImage(imagemAvatar);
+      Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Theme.of(context).primaryColor,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Imagem alterada com sucesso!',
+        )..show(context);
       return print('imagem alterada');
     } else {
+      Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.redAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Ocorreu um erro ao alterar sua imagem!',
+        )..show(context);
       return print('error');
     }
   }
@@ -85,6 +113,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
     switch (change['code']) {
       case 201:
+        setState(() {
+          userData = bloc.getUser();
+        });
         Flushbar(
           duration: Duration(seconds: 3),
           padding: EdgeInsets.all(12),
@@ -143,6 +174,12 @@ class _UpdateScreenState extends State<UpdateScreen> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     userData = bloc.getUser();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   var _estados = [
@@ -497,6 +534,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                     prefixIcon: Icon(Icons.phone),
                                     labelText: "Telefone",
                                   ),
+                                  validator: (value) {
+                                    if (value.length < 11) {
+                                      return 'Preencha seu telefone corretamente';
+                                    }
+                                  }
                                 ),
 
                                 //botão de ATUALIZAR

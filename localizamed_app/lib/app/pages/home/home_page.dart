@@ -51,7 +51,9 @@ class _BottomMenuState extends State<BottomMenu> {
     _initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    userData = userBloc.getUser();
+    setState(() {
+      userData = userBloc.getUser();
+    });
     super.initState();
   }
 
@@ -79,7 +81,7 @@ class _BottomMenuState extends State<BottomMenu> {
               height: size.height / 15,
               decoration: BoxDecoration(color: Colors.white, boxShadow: [
                 BoxShadow(
-                    color: Colors.black45,
+                    color: Colors.black12,
                     offset: new Offset(5, 5),
                     blurRadius: 10)
               ]),
@@ -105,7 +107,7 @@ class _BottomMenuState extends State<BottomMenu> {
                         size: 30,
                         color: _selectedIndex == 0
                             ? Theme.of(context).primaryColor
-                            : Colors.grey[500],
+                            : Colors.grey[400],
                       ),
                     ),
                     onTap: () {
@@ -129,7 +131,7 @@ class _BottomMenuState extends State<BottomMenu> {
                           size: 30,
                           color: _selectedIndex == 1
                               ? Color.fromARGB(255, 255, 215, 0)
-                              : Colors.grey[500]),
+                              : Colors.grey[400]),
                     ),
                     onTap: () {
                       onItemTapped(1);
@@ -152,7 +154,7 @@ class _BottomMenuState extends State<BottomMenu> {
                           size: 30,
                           color: _selectedIndex == 2
                               ? Colors.red
-                              : Colors.grey[500]),
+                              : Colors.grey[400]),
                     ),
                     onTap: () {
                       onItemTapped(2);
@@ -175,7 +177,7 @@ class _BottomMenuState extends State<BottomMenu> {
                           size: 24,
                           color: _selectedIndex == 3
                               ? Colors.green
-                              : Colors.grey[500]),
+                              : Colors.grey[400]),
                     ),
                     onTap: () {
                       onItemTapped(3);
