@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "845605877079",
+    "project_id": "localizamed-86e46",
+    "storage_bucket": "localizamed-86e46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845605877079:android:6109ad026b4ad429393a12",
+        "android_client_info": {
+          "package_name": "com.example.localizamed_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "845605877079-g5moukmqhb3s7l5aotbqjpo2ktri8htn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.localizamed_app",
+            "certificate_hash": "168e42275e3af10d033b6ae8bde9cd5c59124515"
+          }
+        },
+        {
+          "client_id": "845605877079-oesm796givbletf9ja5kej4b5n3pb7s2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlA65_BqgKLr7rrZ18eLbJ_sx_zEY_qi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845605877079-oesm796givbletf9ja5kej4b5n3pb7s2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

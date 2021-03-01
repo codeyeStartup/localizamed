@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:localizamed_app/app/pages/clinic/clinica.bloc.dart';
 import 'package:localizamed_app/app/pages/medic/tab_med_in_clin.dart';
@@ -12,16 +13,28 @@ class ClinicPageView extends StatefulWidget {
 }
 
 class _ClinicPageViewState extends State<ClinicPageView> {
-
   var _state = 1;
+
+  GoogleMapController controller;
+  Set<Marker> _markers = {};
+  BitmapDescriptor pinLocationIcon;
+
+  void setCustomMapPin() async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 10),
+        'images/pin_localization.png');
+  }
 
   @override
   void initState() {
     clinicaBloc.getClinica();
-    Future.delayed(Duration(seconds: 2),()=> setState((){
-      _state = 2;
-    }));
+    Future.delayed(
+        Duration(seconds: 2),
+        () => setState(() {
+              _state = 2;
+            }));
     super.initState();
+    setCustomMapPin();
   }
 
   @override
@@ -48,78 +61,106 @@ class _ClinicPageViewState extends State<ClinicPageView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(
-                                  "Deseja ver a localização desta clínica no mapa?"),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text("Sim"),
-                                  onPressed: () {
-                                    launch(
-                                        "https://www.google.com/maps/search/?api=1&query="
-                                        "${snapshot.data.latitute},"
-                                        "${snapshot.data.longitude}");
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                FlatButton(
-                                  child: Text("Não"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
-                          });
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.only(top: size.height / 12),
-                        child: Container(
-                          padding: EdgeInsets.all(18),
-                          width: size.width / 1.2,
-                          height: size.height / 4,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              image: DecorationImage(
-                                  image: AssetImage('images/capturar3.png'),
-                                  fit: BoxFit.cover),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 5,
-                                    color: Colors.black12,
-                                    offset: Offset(1, 2))
-                              ]),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Text("Localização",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      shadows: <Shadow>[
-                                        Shadow(
-                                            offset: Offset(2.0, 2.0),
-                                            blurRadius: 3.0,
-                                            color: Colors.black26),
-                                      ],
-                                      color: Color.fromARGB(255, 32, 32, 255))),
-                              SizedBox(
-                                width: size.width / 2.9,
+                  Padding(
+                      padding: EdgeInsets.only(top: size.height / 12),
+                      child: Container(
+                        margin: EdgeInsets.all(18),
+                        padding: EdgeInsets.all(0),
+                        width: size.width / 1.2,
+                        height: size.height / 4,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5,
+                                  color: Colors.black12,
+                                  offset: Offset(1, 2))
+                            ]),
+                        child: Stack(
+                          fit: StackFit.loose,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
                               ),
-                              Icon(
-                                FontAwesomeIcons.locationArrow,
-                                color: Color.fromARGB(255, 32, 32, 255),
-                                size: 30,
+                              child: GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                    target: LatLng(snapshot.data.latitute,
+                                        snapshot.data.longitude),
+                                    zoom: 17.0),
+                                markers: _markers,
+                                onMapCreated: (GoogleMapController cntr) {
+                                  controller = cntr;
+                                  setState(() {
+                                    _markers.add(Marker(
+                                        markerId: MarkerId('<MARKER_ID>'),
+                                        position: LatLng(snapshot.data.latitute,
+                                            snapshot.data.longitude),
+                                        icon: pinLocationIcon));
+                                  });
+                                },
                               ),
-                            ],
-                          ),
-                        )),
-                  ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20)),
+                                  color: Colors.black87),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text("Localização",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.white)),
+                                  SizedBox(
+                                    width: size.width / 2.8,
+                                  ),
+                                  IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.locationArrow,
+                                      ),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    "Deseja ver a localização desta clínica no mapa?"),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text("Sim"),
+                                                    onPressed: () {
+                                                      launch(
+                                                          "https://www.google.com/maps/search/?api=1&query="
+                                                          "${snapshot.data.latitute},"
+                                                          "${snapshot.data.longitude}");
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text("Não"),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      }),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
                   SizedBox(
                     height: size.height / 16,
                   ),

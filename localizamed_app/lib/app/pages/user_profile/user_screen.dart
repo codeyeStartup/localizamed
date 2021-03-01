@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +20,8 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   Future<Usuario> userData;
   var userBloc = UserBloc();
+
+  final user = FirebaseAuth.instance.currentUser;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -48,13 +52,24 @@ class _UserProfileState extends State<UserProfile> {
       actions: [
         FlatButton(
             onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs?.clear();
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => LoginScreen()),
-                  (Route<dynamic> route) => false);
+              if (user == null) {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs?.clear();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => LoginScreen()),
+                    (Route<dynamic> route) => false);
+              } else {
+                FirebaseAuth.instance.signOut();
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs?.clear();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => LoginScreen()),
+                    (Route<dynamic> route) => false);
+              }
             },
             child: Text('Sim')),
         FlatButton(
@@ -133,7 +148,7 @@ class _UserProfileState extends State<UserProfile> {
                       key: _refreshIndicatorKey,
                       onRefresh: _refreshData,
                       child: SingleChildScrollView(
-                        physics:  AlwaysScrollableScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,

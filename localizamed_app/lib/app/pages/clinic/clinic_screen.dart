@@ -78,6 +78,15 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
     return StreamBuilder(
         stream: clinicaBloc.clinica,
         builder: (context, snapshot) {
+          String phone;
+          String _setPhone(){
+            if( snapshot.data.fone_1 == '' || snapshot.data.fone_2 == ''){
+              phone = '1';
+            } else {
+              phone = '2';
+            }
+            return phone;
+          } 
           if (!snapshot.hasData || state == 1) {
             return Center(
               child: LoadingBouncingLine.circle(
@@ -161,7 +170,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                                         FontAwesomeIcons.phoneAlt,
                                         color: Colors.green,
                                       ),
-                                      Text('2'),
+                                      Text(_setPhone()),
                                     ],
                                   ),
                                   SizedBox(height: 10),

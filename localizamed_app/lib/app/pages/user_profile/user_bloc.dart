@@ -88,7 +88,7 @@ class UserBloc {
 
       response = await dio.patch(url, data: payload);
       await response.data;
-      print(file);
+
       return {'mensage': 'Change Image sucessful', 'code': response.statusCode};
     } on DioError catch (e) {
       return {
