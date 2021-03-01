@@ -4,6 +4,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localizamed_app/app/pages/login/login_bloc.dart';
 import 'package:localizamed_app/app/pages/signup/signUp_page.dart';
 import 'package:localizamed_app/app/utils/msg_sem_internet.dart';
@@ -92,53 +93,40 @@ class LoginScreenState extends State<LoginScreen> {
         forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
         message: 'Preencha seu e-mail!',
       )..show(context);
+    } else {
+      var recoverPass = await _loginBloc.recoverPassword(email);
+      if (recoverPass['code'] == 200) {
+        Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.greenAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'Verifique seu e-mail para recuperar sua senha',
+        )..show(context);
+      } else if (recoverPass['code'] == 400 || recoverPass['code'] == 500) {
+        Flushbar(
+          duration: Duration(seconds: 3),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          borderRadius: 8,
+          backgroundColor: Colors.redAccent,
+          boxShadows: [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+          ],
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+          message: 'E-mail não encontrado. Cadastre-se para continuar',
+        )..show(context);
+      }
     }
-
-    var recoverPass = await _loginBloc.recoverPassword(email);
-    if (recoverPass['code'] == 200) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-        borderRadius: 8,
-        backgroundColor: Colors.greenAccent,
-        boxShadows: [
-          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
-        ],
-        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-        message: 'Verifique seu e-mail para recuperar sua senha',
-      )..show(context);
-    } else if (recoverPass['code'] == 400 || recoverPass['code'] == 500) {
-      Flushbar(
-        duration: Duration(seconds: 3),
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-        borderRadius: 8,
-        backgroundColor: Colors.redAccent,
-        boxShadows: [
-          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
-        ],
-        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-        message: 'E-mail não encontrado. Cadastre-se para continuar',
-      )..show(context);
-    }
-  }
-
-  showAlert(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-      title: Text('Login pelo Facebook'),
-      content: Container(
-        child: Text('Estamos trabalhando para resolver este problema'),
-      ),
-    );
-
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return alert;
-        });
   }
 
   noConnectionAlert() {
@@ -158,7 +146,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     _connectivitySubscription.cancel();
     _loginBloc.dispose();
     super.dispose();
@@ -356,7 +344,7 @@ class LoginScreenState extends State<LoginScreen> {
                                     SizedBox(
                                       height: size.height / 50,
                                     ),
-                                    //botão de LOGAR PELO FACEBOOK
+                                    //botão de LOGAR PELO GOOGLE
                                     Container(
                                       width: size.width / 1.4,
                                       child: RaisedButton(
@@ -369,8 +357,14 @@ class LoginScreenState extends State<LoginScreen> {
                                                 BorderRadius.circular(23),
                                             side: BorderSide(
                                                 color: Colors.black, width: 2)),
-                                        onPressed: () {
-                                          showAlert(context);
+                                        onPressed: () async {
+                                          var loginWithGoogle = await _loginBloc.signInWithGoogle();
+
+                                          if(loginWithGoogle['code'] == 200){
+                                            Navigator.pushReplacement(context,
+                                                SlideLeftRoute(page: MsgInt()));
+                                          }
+                                    
                                         },
                                         child: Row(
                                           crossAxisAlignment:
@@ -378,14 +372,10 @@ class LoginScreenState extends State<LoginScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
-                                            Image(
-                                              image: AssetImage(
-                                                  'images/facebook_logo1.png'),
-                                              width: 15,
-                                              height: 15,
-                                            ),
+                                            Icon(FontAwesomeIcons.google),
+                                            SizedBox(width: 10),
                                             Text(
-                                              "Logar pelo Facebook",
+                                              "Logar pelo Google",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   color: Colors.black,

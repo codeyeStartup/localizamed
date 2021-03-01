@@ -221,7 +221,7 @@ class _SearchScreenState extends State<SearchScreen> {
         return Expanded(
             child: Center(
           child: Text(
-            "Nenhuma Clínica foi encontrada",
+            "Nenhuma resultado foi encontrado",
             style: TextStyle(color: Colors.grey),
           ),
         ));

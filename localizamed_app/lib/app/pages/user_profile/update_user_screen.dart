@@ -66,35 +66,33 @@ class _UpdateScreenState extends State<UpdateScreen> {
     if (change['code'] == 200) {
       bloc.changeImage(imagemAvatar);
       Flushbar(
-          duration: Duration(seconds: 3),
-          padding: EdgeInsets.all(12),
-          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-          borderRadius: 8,
-          backgroundColor: Theme.of(context).primaryColor,
-          boxShadows: [
-            BoxShadow(
-                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
-          ],
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-          message: 'Imagem alterada com sucesso!',
-        )..show(context);
+        duration: Duration(seconds: 3),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        borderRadius: 8,
+        backgroundColor: Theme.of(context).primaryColor,
+        boxShadows: [
+          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+        ],
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+        message: 'Imagem alterada com sucesso!',
+      )..show(context);
       return print('imagem alterada');
     } else {
       Flushbar(
-          duration: Duration(seconds: 3),
-          padding: EdgeInsets.all(12),
-          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-          borderRadius: 8,
-          backgroundColor: Colors.redAccent,
-          boxShadows: [
-            BoxShadow(
-                color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
-          ],
-          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-          forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-          message: 'Ocorreu um erro ao alterar sua imagem!',
-        )..show(context);
+        duration: Duration(seconds: 3),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        borderRadius: 8,
+        backgroundColor: Colors.redAccent,
+        boxShadows: [
+          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 5)
+        ],
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+        message: 'Ocorreu um erro ao alterar sua imagem!',
+      )..show(context);
       return print('error');
     }
   }
@@ -289,9 +287,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
           child: _connectionStatus == 'ConnectivityResult.none'
               ? Center(
                   child: Text(
-                'Não foi possível se conectar. Tente novamente.',
-                textAlign: TextAlign.center,
-              ))
+                  'Não foi possível se conectar. Tente novamente.',
+                  textAlign: TextAlign.center,
+                ))
               : FutureBuilder(
                   future: userData,
                   builder: (context, snapshot) {
@@ -523,23 +521,22 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
                                 //TELEFONE
                                 TextFormField(
-                                  controller: phoneController =
-                                      MaskedTextController(
-                                          text: snapshot.data.fone_1,
-                                          mask: '(00) 0 0000-0000'),
-                                  maxLength: 16,
-                                  keyboardType: TextInputType.phone,
-                                  decoration: InputDecoration(
-                                    counter: SizedBox.shrink(),
-                                    prefixIcon: Icon(Icons.phone),
-                                    labelText: "Telefone",
-                                  ),
-                                  validator: (value) {
-                                    if (value.length < 11) {
-                                      return 'Preencha seu telefone corretamente';
-                                    }
-                                  }
-                                ),
+                                    controller: phoneController =
+                                        MaskedTextController(
+                                            text: snapshot.data.fone_1,
+                                            mask: '(00) 0 0000-0000'),
+                                    maxLength: 16,
+                                    keyboardType: TextInputType.phone,
+                                    decoration: InputDecoration(
+                                      counter: SizedBox.shrink(),
+                                      prefixIcon: Icon(Icons.phone),
+                                      labelText: "Telefone",
+                                    ),
+                                    validator: (value) {
+                                      if (value.length < 16) {
+                                        return 'Preencha seu telefone corretamente';
+                                      }
+                                    }),
 
                                 //botão de ATUALIZAR
                                 Container(
@@ -582,9 +579,36 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                             );
                                           });
                                     },
-                                    child: Text("Alterar"),
+                                    child: Ink(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(255, 23, 55, 254),
+                                            Color.fromARGB(255, 0,191,255)
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(80.0)),
+                                      ),
+                                      child: Container(
+                                        constraints: BoxConstraints(
+                                            minWidth: 88.0,
+                                            minHeight:
+                                                36.0),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Alterar',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(0),
                                     textColor: Colors.white,
-                                    color: Theme.of(context).primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(80)),
                                     splashColor: Colors.white,
                                   ),
                                 )

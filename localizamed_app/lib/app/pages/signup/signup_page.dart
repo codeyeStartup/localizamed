@@ -355,7 +355,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     FlushbarDismissDirection.HORIZONTAL,
                                 forwardAnimationCurve:
                                     Curves.fastLinearToSlowEaseIn,
-                                message: 'Por-favor aceitar termos de uso.',
+                                message: 'Concordar com os termos de uso para continuar!',
                               )..show(context);
                             }
                           }))
