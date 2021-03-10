@@ -76,7 +76,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Center(
                     child: TextField(
                   textInputAction: TextInputAction.search,
+                  maxLength: 200,
                   decoration: InputDecoration(
+                    counter: SizedBox.shrink(),
                     contentPadding: EdgeInsets.all(15.0),
                     hintText: 'Pesquisar',
                     suffixIcon: _getButton(),

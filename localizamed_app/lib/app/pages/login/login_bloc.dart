@@ -112,12 +112,10 @@ class LoginBloc extends BlocBase with LoginValidators {
       if (user != null) {
 
         Map payload = {
-          "profileObj": {
             "email": email,
             "name": nome,
             "googleId": googleId,
             "imageUrl": imageUrl
-          }
         };
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -125,7 +123,7 @@ class LoginBloc extends BlocBase with LoginValidators {
         Map<String, String> headers = {"Accept": "application/json"};
 
         try {
-
+          print(payload);
           var response = await http.post(url, headers: headers, body: payload);
           Map mapResponse = json.decode(response.body);
 
