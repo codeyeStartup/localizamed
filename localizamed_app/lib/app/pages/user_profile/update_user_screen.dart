@@ -236,7 +236,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
               GestureDetector(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  child: Text('Camera'),
+                  child: Text('Câmera'),
                 ),
                 onTap: () {
                   _getImageFromCamera(context);
@@ -431,7 +431,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                   padding: const EdgeInsets.only(
                                       top: 18, left: 4, bottom: 8),
                                   child: Text(
-                                    snapshot.data.uf == null
+                                    snapshot.data.uf == null || snapshot.data.uf == ""
                                         ? 'Estado não informado'
                                         : 'Seu atual Estado: ' +
                                             snapshot.data.uf,

@@ -186,8 +186,12 @@ class _UserProfileState extends State<UserProfile> {
                                             ),
                                             Flexible(
                                                 child: snapshot.data.cidade ==
-                                                            '' &&
-                                                        snapshot.data.uf == ''
+                                                            '' ||
+                                                        snapshot.data.cidade ==
+                                                                null &&
+                                                            snapshot.data.uf ==
+                                                                '' ||
+                                                        snapshot.data.uf == null
                                                     ? Text(
                                                         'Cidade e estado não informados',
                                                         style: TextStyle(
@@ -305,8 +309,12 @@ class _UserProfileState extends State<UserProfile> {
                                     height:
                                         MediaQuery.of(context).size.height / 35,
                                   ),
-                                  Card(Icons.phone, "Telefone:",
-                                      snapshot.data.fone_1),
+                                  Card(
+                                      Icons.phone,
+                                      "Telefone:",
+                                      snapshot.data.fone_1 == null
+                                          ? "Telefone não informado"
+                                          : snapshot.data.fone_1),
                                   SizedBox(
                                     height:
                                         MediaQuery.of(context).size.height / 35,

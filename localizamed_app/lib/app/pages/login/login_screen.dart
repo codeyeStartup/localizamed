@@ -360,7 +360,7 @@ class LoginScreenState extends State<LoginScreen> {
                                         onPressed: () async {
                                           var loginWithGoogle = await _loginBloc.signInWithGoogle();
 
-                                          if(loginWithGoogle['code'] == 200){
+                                          if(loginWithGoogle['code'] == 200 || loginWithGoogle['code'] == 201){
                                             Navigator.pushReplacement(context,
                                                 SlideLeftRoute(page: MsgInt()));
                                           }
