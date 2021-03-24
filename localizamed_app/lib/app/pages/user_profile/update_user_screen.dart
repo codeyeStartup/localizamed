@@ -210,7 +210,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
     'SE',
     'TO'
   ];
-  var _estadosItemSelected = 'Selecione seu estado';
+  var _estadosItemSelected = "Selecione seu estado";
 
   showOptions(BuildContext context) {
     AlertDialog showOption = AlertDialog(
@@ -431,14 +431,15 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                   padding: const EdgeInsets.only(
                                       top: 18, left: 4, bottom: 8),
                                   child: Text(
-                                    snapshot.data.uf == null || snapshot.data.uf == ""
+                                    snapshot.data.uf == null ||
+                                            snapshot.data.uf == ""
                                         ? 'Estado não informado'
                                         : 'Seu atual Estado: ' +
                                             snapshot.data.uf,
                                     style: TextStyle(fontSize: 17),
                                   ),
                                 ),
-                                //DATA
+                                //ESTADO
                                 DropdownButton<String>(
                                   items:
                                       _estados.map((String dropDownStringItem) {
@@ -560,7 +561,14 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                                       imagemAvatar == null
                                                           ? ''
                                                           : doChangeImage();
-                                                      doChangeData();
+                                                      if(ufController == ""){
+                                                        setState((){
+                                                          ufController == snapshot.data.uf;
+                                                        });     
+                                                        doChangeData();
+                                                      } else {
+                                                        doChangeData();
+                                                      }
                                                       Navigator.of(context)
                                                           .pop();
                                                     } else {
@@ -584,7 +592,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                         gradient: LinearGradient(
                                           colors: [
                                             Color.fromARGB(255, 23, 55, 254),
-                                            Color.fromARGB(255, 0,191,255)
+                                            Color.fromARGB(255, 0, 191, 255)
                                           ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
@@ -594,9 +602,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                       ),
                                       child: Container(
                                         constraints: BoxConstraints(
-                                            minWidth: 88.0,
-                                            minHeight:
-                                                36.0),
+                                            minWidth: 88.0, minHeight: 36.0),
                                         alignment: Alignment.center,
                                         child: Text(
                                           'Alterar',

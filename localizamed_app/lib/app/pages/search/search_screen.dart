@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
           bottom: PreferredSize(
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.2,
-                height: MediaQuery.of(context).size.height / 14,
+                height: MediaQuery.of(context).size.height / 16,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(38),
                     color: Colors.white,
@@ -79,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   maxLength: 200,
                   decoration: InputDecoration(
                     counter: SizedBox.shrink(),
-                    contentPadding: EdgeInsets.all(15.0),
+                    contentPadding: EdgeInsets.all(16.0),
                     hintText: 'Pesquisar',
                     suffixIcon: _getButton(),
                     hintStyle: TextStyle(fontSize: 15),
