@@ -175,7 +175,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value.isEmpty) {
                                   return 'Preecha o campo com sua data de nascimento';
                                 } else if (value.length < 8) {
-                                  return 'O campo deve conter 8 caracteres';
+                                  return 'O campo deve conter uma data de nascimento válida';
                                 }
                               },
                               onEditingComplete: () {
@@ -204,7 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value.isEmpty) {
                                   return 'Preencha o campo com seu telefone';
                                 } else if (value.length < 11) {
-                                  return 'O campo deve conter 11 caracteres';
+                                  return 'O campo deve conter um número de telefone válido';
                                 }
                               },
                               onEditingComplete: () {
