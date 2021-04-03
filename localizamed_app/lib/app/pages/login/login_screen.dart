@@ -129,6 +129,14 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  doLoginGoogle() async {
+    var loginWithGoogle = await _loginBloc.signInWithGoogle();
+
+    if (loginWithGoogle['code'] == 200 || loginWithGoogle['code'] == 201) {
+      Navigator.pushReplacement(context, SlideLeftRoute(page: MsgInt()));
+    }
+  }
+
   noConnectionAlert() {
     Flushbar(
       duration: Duration(seconds: 3),
@@ -357,14 +365,7 @@ class LoginScreenState extends State<LoginScreen> {
                                                 BorderRadius.circular(23),
                                             side: BorderSide(
                                                 color: Colors.black, width: 2)),
-                                        onPressed: () async {
-                                          var loginWithGoogle = await _loginBloc.signInWithGoogle();
-
-                                          if(loginWithGoogle['code'] == 200 || loginWithGoogle['code'] == 201){
-                                            Navigator.pushReplacement(context, SlideLeftRoute(page: MsgInt()));
-                                          }
-                                    
-                                        },
+                                        onPressed: doLoginGoogle,
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
