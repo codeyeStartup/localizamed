@@ -561,9 +561,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                                       imagemAvatar == null
                                                           ? ''
                                                           : doChangeImage();
-                                                      if(ufController == ""){
+                                                      if(ufController == null){
                                                         setState((){
-                                                          ufController == snapshot.data.uf;
+                                                          ufController = snapshot.data.uf;
                                                         });     
                                                         doChangeData();
                                                       } else {

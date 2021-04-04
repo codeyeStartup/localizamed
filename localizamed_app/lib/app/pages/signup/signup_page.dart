@@ -144,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Preecha o campo com seu nome';
+                                  return 'Preencha o campo com seu nome';
                                 } else if (value.length > 50) {
                                   return 'Este campo tem que conter entre 1 e 50 caracteres';
                                 }
@@ -173,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Preecha o campo com sua data de nascimento';
+                                  return 'Preencha o campo com sua data de nascimento';
                                 } else if (value.length < 8) {
                                   return 'O campo deve conter uma data de nascimento válida';
                                 }
@@ -229,7 +229,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Preecha o campo com seu e-mail';
+                                  return 'Preencha o campo com seu e-mail';
                                 } else if (!value.contains('@')) {
                                   return 'Digite um e-mail válido!';
                                 } else if (value.length > 50) {

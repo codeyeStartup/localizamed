@@ -95,7 +95,7 @@ class LoginScreenState extends State<LoginScreen> {
       )..show(context);
     } else {
       var recoverPass = await _loginBloc.recoverPassword(email);
-      if (recoverPass['code'] == 200 || recoverPass['code'] == 401) {
+      if (recoverPass['code'] == 201 || recoverPass['code'] == 401) {
         Flushbar(
           duration: Duration(seconds: 3),
           padding: EdgeInsets.all(12),
